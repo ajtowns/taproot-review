@@ -2,6 +2,7 @@
 
 ## Intro & Taproot
 
+* Week: Nov 3rd-9th
 * What questions to ask while reviewing BIPs?
   * Do the goals make sense?
   * Does the design actually work and achieve the goals?
@@ -24,6 +25,7 @@
 
 ## Tapscript
 
+* Week: Nov 10th-16th
 * Bip-taproot:
   * script path spending
   * Constructing and spending Taproot outputs
@@ -40,6 +42,7 @@
 
 ## Schnorr
 
+* Week: Nov 17th-23rd
 * Bip-schnorr without the Applications section
   * Motivation, Design
   * Key generation, Signing, Verification
@@ -51,6 +54,7 @@
 
 ## Signature Details and Resource Limits
 
+* Week: Nov 24th-30th
 * Bip-taproot
   * Signature validation rules
 * Bip-tapscript
@@ -72,6 +76,7 @@
 
 ## Schnorr Applications
 
+* Week: Dec 1st-7th
 * Bip-schnorr Applications section
   * MuSig
   * Adaptor Signatures
@@ -87,6 +92,7 @@
 
 ## Upgrades
 
+* Week: Dec 8th-14th
 * Bip-taproot:
   * Leaf versions
   * Annex
@@ -109,6 +115,7 @@
 
 ## Wrap-Up
 
+* Week: Dec 15th-21st
 * Results of dev projects / proof of concept attempts as at the end of the previous week
 * Collect questions, suggestions, problems discovered during review
 * Capture overall summary as ACK / HOLD (overall we expect to find some things to improve, so likely this will be HOLD)
