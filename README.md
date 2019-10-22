@@ -13,6 +13,7 @@ Benefits of participating:
  * Deeply understand schnorr and taproot
  * Be a stakeholder in Bitcoin consensus development
  * Support/safeguard decentralisation of Bitcoin protocol development
+ * Have fun!
 
 ## Sign up
 
@@ -25,7 +26,7 @@ Sign up via **google form**
  * Online study group availability: IRC/Slack/Video chat ; Times ; Not at all
  * Will you try building a proof-of-concept during the review period?
 
-If you sign up prior to **deadline** we’ll help you find other people to review with.
+If you sign up prior to Oct 30th (23:59 UTC-10) we’ll help you find other people to review with.
 
 ## What happens each week
 
@@ -37,9 +38,9 @@ If you sign up prior to **deadline** we’ll help you find other people to revie
 ## How the Q&A sessions work
 
 * They’ll go for 1 hour, starting at Tue 1900 UTC (America/Europe/Africa) and Thu 0200 UTC (America/Asia/Oceania)
-* They’ll happen on IRC (with **slack gateway**?) and be logged
+* They’ll happen on IRC and be logged
 * Depending on number of participants, they may be moderated, with questions submitted on one channel, and answers on another
-* We’ll have some experts available for answering questions at both sessions (**who?**)
+* We’ll have some experts available for answering questions at both sessions (including Jonas Nick, Andrew Poelstra, Tim Ruffing, Anthony Towns, and Pieter Wuille)
 
 ## What happens in the wrap-up week
 
@@ -58,6 +59,6 @@ If you sign up prior to **deadline** we’ll help you find other people to revie
 ## What if I want to do things differently?
 
 * This just aims to provide a helpful structure to reviewing the taproot bips -- if something else works for you, feel free to do things your way! Different perspectives are more likely to find more problems so this is a good thing!
-* If you aren’t confident in some area, you may want to skip it -- that’s okay, but being ignorant may just mean you’ve got fresh eyes and are able to find problems other people will overlook because they’re relying on assumptions that aren’t valid. So do at least consider trying to review everything.
+* If you aren’t confident in some area, you may want to skip it -- that’s okay, but being unfamiliar with something may just mean you’ve got fresh eyes and are able to find problems other people will overlook because they’re relying on assumptions that aren’t valid. So do at least consider trying to review everything.
 * If you want to do things out of order, you can find the curriculum info that we’ll be sending out for future sessions [here](Curriculum.md).
 
