@@ -9,7 +9,8 @@
   * What are the tradeoffs? Do they make sense?
   * How are end users affected?
   * Do all the details fit together and work right?
-* Bip-taproot, excluding “script path spending", “Signature validation rules”, “Constructing and spending Taproot outputs”
+* Previous [issues](https://github.com/sipa/bips/issues?q=is%3Aissue) and [pull requests](https://github.com/sipa/bips/pulls?q=is%3Apr) may provide useful examples
+* [bip-taproot][TR], excluding “script path spending", “Signature validation rules”, “Constructing and spending Taproot outputs”
   * Motivation, Design
   * Specification [partial]
   * Security
@@ -26,10 +27,10 @@
 ## Tapscript
 
 * Week: Nov 10th-16th
-* Bip-taproot:
+* [bip-taproot][TR]:
   * script path spending
   * Constructing and spending Taproot outputs
-* Bip-tapscript, excluding “Rules for signature opcodes”, “Transaction digest”, “Resource limits”, “Rationale” sections 2, 4-14.
+* [bip-tapscript][TS], excluding “Rules for signature opcodes”, “Transaction digest”, “Resource limits”, “Rationale” sections 2, 4-14.
   * Motivation, Design
   * Specification
   * Script execution
@@ -43,7 +44,7 @@
 ## Schnorr
 
 * Week: Nov 17th-23rd
-* Bip-schnorr without the Applications section
+* [bip-schnorr][SCH] without the Applications section
   * Motivation, Design
   * Key generation, Signing, Verification
   * Batch verification
@@ -55,9 +56,9 @@
 ## Signature Details and Resource Limits
 
 * Week: Nov 24th-30th
-* Bip-taproot
+* [bip-taproot][TR]:
   * Signature validation rules
-* Bip-tapscript
+* [bip-tapscript][TS]:
   * Rules for signature opcodes
   * Transaction Digest
   * Rationale, sections 4, 5, 7, 8 and 9.
@@ -77,7 +78,7 @@
 ## Schnorr Applications
 
 * Week: Dec 1st-7th
-* Bip-schnorr Applications section
+* [bip-schnorr][SCH] Applications section
   * MuSig
   * Adaptor Signatures
   * Threshold Signatures
@@ -93,11 +94,11 @@
 ## Upgrades
 
 * Week: Dec 8th-14th
-* Bip-taproot:
+* [bip-taproot][TR]:
   * Leaf versions
   * Annex
   * Unencumbered v1 spends (non-32B size, p2sh)
-* Bip-tapscript:
+* [bip-tapscript][TS]:
   * `OP_SUCCESS`
   * unknown public key version
   * Rationale, sections 2 and 6
@@ -120,4 +121,9 @@
 * Collect questions, suggestions, problems discovered during review
 * Capture overall summary as ACK / HOLD (overall we expect to find some things to improve, so likely this will be HOLD)
 * Where to go from here
+
+
+[TR]: https://github.com/sipa/bips/blob/bip-schnorr/bip-taproot.mediawiki
+[TS]: https://github.com/sipa/bips/blob/bip-schnorr/bip-tapscript.mediawiki
+[SCH]: https://github.com/sipa/bips/blob/bip-schnorr/bip-schnorr.mediawiki
 
