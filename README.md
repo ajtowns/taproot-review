@@ -17,7 +17,7 @@ Benefits of participating:
 
 ## Sign up
 
-You should expect to commit to 4 hours per week over 7 weeks; possibly more if you’re developing a proof-of-concept, or maybe less if you’re already familiar with some of the details, or only aiming to do a rough review.
+Beginning November 3, you should expect to commit to 4 hours per week over 7 weeks; possibly more if you’re developing a proof-of-concept, or maybe less if you’re already familiar with some of the details, or only aiming to do a rough review.
 
 Sign up via **google form**
  * NOTE: The information you share in the form will be shared with others completing the form.
