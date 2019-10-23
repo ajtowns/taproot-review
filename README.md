@@ -25,7 +25,7 @@ Benefits of participating:
 
 Beginning November 3, you should expect to commit to 4 hours per week over 7 weeks; possibly more if you’re developing a proof-of-concept, or maybe less if you’re already familiar with some of the details, or only aiming to do a rough review.
 
-Sign up via **google form**
+Sign up via [RSVP form](https://forms.gle/iiPaphTcYC5AZZKC8)
  * NOTE: The information you share in the form will be shared with others completing the form.
  * Name / pseudonym, Email address
  * Background info? (Academic, Developer, Bitcoin/lightning/…, etc)
@@ -33,6 +33,12 @@ Sign up via **google form**
  * Will you try building a proof-of-concept during the review period?
 
 If you sign up prior to Oct 30th (23:59 UTC-10) we’ll help you find other people to review with.
+
+## What if I want to do things differently?
+
+* This just aims to provide a helpful structure to reviewing the taproot bips -- if something else works for you, feel free to do things your way! Different perspectives are more likely to find more problems so this is a good thing!
+* If you aren’t confident in some area, you may want to skip it -- that’s okay, but being unfamiliar with something may just mean you’ve got fresh eyes and are able to find problems other people will overlook because they’re relying on assumptions that aren’t valid. So do at least consider trying to review everything.
+* If you want to do things out of order, you can find the curriculum info that we’ll be sending out for future sessions [here](Curriculum.md).
 
 ## What happens each week
 
@@ -50,7 +56,7 @@ If you sign up prior to Oct 30th (23:59 UTC-10) we’ll help you find other peop
 
 ## What happens in the wrap-up week
 
-* For people working on a proof-of-concept development project, we’ll send out a **google form** prior to the last week so you can summarise how you went, any problems you found, and include a link to your github so other people can check your work out.
+* For people working on a proof-of-concept development project, we’ll send out a google form prior to the last week so you can summarise how you went, any problems you found, and include a link to your github so other people can check your work out.
 * On the Sunday before the final week, we’ll send out info about the proof-of-concept results to everyone, and a google form for your overall conclusions
 * On Monday or Tuesday you should do any final review of the BIPs and look into any of the proof of concept work that interests you
 * The final Q&A sessions can be used to raise any concerns that haven’t already been covered, or discuss some of the proof of concept work
@@ -61,10 +67,4 @@ If you sign up prior to Oct 30th (23:59 UTC-10) we’ll help you find other peop
 * We’ll establish a wiki page with the final ACK / HOLD conclusion from each participant
 * We’ll pass on all the results and suggestions we’ve collected in the google forms to the BIP drafters
 * The BIP drafters will review any issues raised or pull requests and include changes they think make sense, and may also add additional rationale for why some changes weren’t made
-
-## What if I want to do things differently?
-
-* This just aims to provide a helpful structure to reviewing the taproot bips -- if something else works for you, feel free to do things your way! Different perspectives are more likely to find more problems so this is a good thing!
-* If you aren’t confident in some area, you may want to skip it -- that’s okay, but being unfamiliar with something may just mean you’ve got fresh eyes and are able to find problems other people will overlook because they’re relying on assumptions that aren’t valid. So do at least consider trying to review everything.
-* If you want to do things out of order, you can find the curriculum info that we’ll be sending out for future sessions [here](Curriculum.md).
 
