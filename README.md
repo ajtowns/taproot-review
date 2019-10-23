@@ -1,4 +1,4 @@
-# Taproot Review
+# Taproot BIP Review
 
 ## Pitch
 
