@@ -50,7 +50,7 @@ If you sign up prior to Oct 30th (23:59 UTC-10) we’ll help you find other peop
 * The final Q&A sessions can be used to raise any concerns that haven’t already been covered, or discuss some of the proof of concept work
 * And finally, on Thursday or Friday, you should complete your review and fill in the google form, and, if you have any concerns that haven’t already been addressed, work on ensuring that’s raised as an issue or pull request against the relevant BIPs.
 
-## What happens this review is over
+## What happens at the completion of the Taproot BIP review
 
 * We’ll establish a wiki page with the final ACK / HOLD conclusion from each participant
 * We’ll pass on all the results and suggestions we’ve collected in the google forms to the BIP drafters
