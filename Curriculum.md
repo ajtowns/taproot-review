@@ -1,4 +1,4 @@
-# Taproot Review - Curriculum
+# Taproot BIP Review - Curriculum
 
 ## Intro & Taproot
 
