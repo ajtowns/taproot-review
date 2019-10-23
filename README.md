@@ -26,7 +26,7 @@ Benefits of participating:
  * Consider whether you have time to try doing any proof-of-concept development work and if so, what project to work on.
  * Before Oct 30, sign up via [RSVP form](https://forms.gle/iiPaphTcYC5AZZKC8).
    **NOTE:** The information you share in the form will be shared with others completing the form, including your provided email address
- * If you sign up prior to Oct 30th (23:59 UTC-10) we’ll help you find other people to review with.
+ * If you sign up prior to Oct 30th (23:59 UTC-10) we’ll help you find other people to review with. Please join freenode IRC channel ##taproot-bip-review to join discussion with other reviewers and form study groups.
  * Beginning November 3, you should expect to commit to 4 hours per week over 7 weeks; possibly more if you’re developing a proof-of-concept, or maybe less if you’re already familiar with some of the details, or only aiming to do a rough review.
 
 ## What if I want to do things differently?
@@ -45,7 +45,7 @@ Benefits of participating:
 ## How the Q&A sessions work
 
 * They’ll go for 1 hour, starting at Tue 1900 UTC (America/Europe/Africa) and Thu 0200 UTC (America/Asia/Oceania)
-* They’ll happen on IRC and be logged
+* They’ll happen on IRC (##taproot-bip-review on freenode) and be logged
 * Depending on number of participants, they may be moderated, with questions submitted on one channel, and answers on another
 * We’ll have some experts available for answering questions at both sessions (including Jonas Nick, Andrew Poelstra, Tim Ruffing, Anthony Towns, and Pieter Wuille)
 
