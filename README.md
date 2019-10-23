@@ -15,6 +15,12 @@ Benefits of participating:
  * Support/safeguard decentralisation of Bitcoin protocol development
  * Have fun!
 
+## Timeline
+
+ * Oct 23rd to 30th - Signup
+ * Nov 3rd to Dec 14th - Structured review
+ * Dec 15th to 21st - Wrap up
+
 ## Sign up
 
 Beginning November 3, you should expect to commit to 4 hours per week over 7 weeks; possibly more if you’re developing a proof-of-concept, or maybe less if you’re already familiar with some of the details, or only aiming to do a rough review.
