@@ -23,7 +23,7 @@ Benefits of participating:
 
 ## Sign up
 
- * Consider whether you have time to try doing any proof-of-concept development work and if so, what project to work on.
+ * Consider whether you have time to try doing any [proof-of-concept development work](PoC-Projects.md) and if so, what project to work on.
  * Before Oct 30, sign up via [RSVP form](https://forms.gle/iiPaphTcYC5AZZKC8).
    **NOTE:** The information you share in the form will be shared with others completing the form, including your provided email address
  * If you sign up prior to Oct 30th (23:59 UTC-10) we’ll help you find other people to review with. Please join freenode IRC channel ##taproot-bip-review to join discussion with other reviewers and form study groups.
