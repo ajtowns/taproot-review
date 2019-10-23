@@ -17,22 +17,17 @@ Benefits of participating:
 
 ## Timeline
 
- * Oct 23rd to 30th - Signup
+ * Oct 23rd to 30th - Sign up
  * Nov 3rd to Dec 14th - Structured review
  * Dec 15th to 21st - Wrap up
 
 ## Sign up
 
-Beginning November 3, you should expect to commit to 4 hours per week over 7 weeks; possibly more if you’re developing a proof-of-concept, or maybe less if you’re already familiar with some of the details, or only aiming to do a rough review.
-
-Sign up via [RSVP form](https://forms.gle/iiPaphTcYC5AZZKC8)
- * NOTE: The information you share in the form will be shared with others completing the form.
- * Name / pseudonym, Email address
- * Background info? (Academic, Developer, Bitcoin/lightning/…, etc)
- * Online study group availability: IRC/Slack/Video chat ; Times ; Not at all
- * Will you try building a proof-of-concept during the review period?
-
-If you sign up prior to Oct 30th (23:59 UTC-10) we’ll help you find other people to review with.
+ * Consider whether you have time to try doing any proof-of-concept development work and if so, what project to work on.
+ * Before Oct 30, sign up via [RSVP form](https://forms.gle/iiPaphTcYC5AZZKC8).
+   **NOTE:** The information you share in the form will be shared with others completing the form, including your provided email address
+ * If you sign up prior to Oct 30th (23:59 UTC-10) we’ll help you find other people to review with.
+ * Beginning November 3, you should expect to commit to 4 hours per week over 7 weeks; possibly more if you’re developing a proof-of-concept, or maybe less if you’re already familiar with some of the details, or only aiming to do a rough review.
 
 ## What if I want to do things differently?
 
