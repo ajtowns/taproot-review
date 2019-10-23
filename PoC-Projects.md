@@ -7,5 +7,6 @@ These are some ideas for proof of concept projects to explore schnorr and/or tap
  * Off-chain 2-of-3 key rotation
  * Liquid-style 11-of-15 multisig
  * Taproot/Schnorr support for python-bitcoinlib (etc?)
+ * Continue updating the [Bitcoin Optech schnorr/taproot workshop](https://github.com/bitcoinops/taproot-workshop), including adding new case studies.
  * ...
 
