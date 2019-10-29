@@ -34,7 +34,7 @@
   * Motivation, Design
   * Specification
   * Script execution
-* Optech workshop: https://github.com/bitcoinops/taproot-workshop
+* Optech workshop: https://bitcoinops.org/en/schorr-taproot-workshop
 * Some things to consider:
   * How to do multisig (different MAST leaves, or CHECKSIGADD, or…)
   * How to change miniscript to cover MAST/script-path alternatives
