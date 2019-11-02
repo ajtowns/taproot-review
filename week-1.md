@@ -14,13 +14,14 @@ As a general reminder, BIPs are just proposals -- they're the first step on the 
  * [BIP 2 -- BIP policy](https://github.com/bitcoin/bips/blob/master/bip-0002.mediawiki)
  * [BIP PRs](https://github.com/bitcoin/bips/pulls?utf8=%E2%9C%93&q=is%3Apr)
 
- * Segwit address format PRs:
-   * [BIP 142](https://github.com/bitcoin/bips/blob/master/bip-0142.mediawiki); List disccusion: [(1)](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2015-December/012095.html) [(2)](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2015-December/012136.html); PRs: [PR #267](https://github.com/bitcoin/bips/pull/267), [PR #291](https://github.com/bitcoin/bips/pull/291), [PR #294](https://github.com/bitcoin/bips/pull/294)
-   * [BIP 173](https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki); List discussion: [(1)](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2017-March/013749.html) [(2)](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2017-May/014274.html); PRs: [PR #533](https://github.com/bitcoin/bips/pull/533), [PR #534](https://github.com/bitcoin/bips/pull/534), [PR #565](https://github.com/bitcoin/bips/pull/565), [PR #582](https://github.com/bitcoin/bips/pull/582), [PR #587](https://github.com/bitcoin/bips/pull/587), [PR #607](https://github.com/bitcoin/bips/pull/607), [PR #627](https://github.com/bitcoin/bips/pull/627)
+The bech32 segwit address format might serve as a helpful example if you haven't seen the process in action before. The initial proposal failed, and after a lot more development resulted in a new proposal that was eventually implemented and deployed:
+
+ * [BIP 142](https://github.com/bitcoin/bips/blob/master/bip-0142.mediawiki); List disccusion: [(1)](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2015-December/012095.html) [(2)](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2015-December/012136.html); PRs: [PR #267](https://github.com/bitcoin/bips/pull/267), [PR #291](https://github.com/bitcoin/bips/pull/291), [PR #294](https://github.com/bitcoin/bips/pull/294)
+ * [BIP 173](https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki); List discussion: [(1)](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2017-March/013749.html) [(2)](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2017-May/014274.html); PRs: [PR #533](https://github.com/bitcoin/bips/pull/533), [PR #534](https://github.com/bitcoin/bips/pull/534), [PR #565](https://github.com/bitcoin/bips/pull/565), [PR #582](https://github.com/bitcoin/bips/pull/582), [PR #587](https://github.com/bitcoin/bips/pull/587), [PR #607](https://github.com/bitcoin/bips/pull/607), [PR #627](https://github.com/bitcoin/bips/pull/627)
 
 Note that discussion of the details of proposals usually takes place outside of the PRs -- eg on the bitcoin-dev mailing list.
 
-It's probably a good idea to approach reviewing with a "constructive" mindset rather than a "judgemental" one -- that is coming up with ideas for how things might be changed to be better, or how things might not work as expected or hoped; rather than why particular approaches might be good or bad. In particular, Bitcoin might change in ways that even the smartest, most experienced Bitcoin developers think is a bad idea (or might not change in ways that they think is a good idea).
+It's probably a good idea to approach reviewing with a "constructive" mindset rather than a "judgemental" one -- that is coming up with ideas for how things might be changed to be better, or how things might not work as expected or hoped, rather than why particular approaches might be good or bad. In particular, Bitcoin might change in ways that even the smartest, most experienced Bitcoin developers think is a bad idea (or might not change in ways that they think is a good idea).
 
 One example of this might be the success of BIP 148, despite opposition by well respected developers and lack of support by the Bitcoin Core software:
 
@@ -38,7 +39,7 @@ Remember that this is being actively worked on, so there may have been changes i
 
 We'll be spending more time later on how "script path" spends work and the details of how signatures work, so you may wish to skip or skim the sections titled "script path spending", "Signature validation rules", and "Constructing and spending Taproot outputs" for now.
 
-Ideally reading the BIP (and its references) will already make it clear what the purpose of the proposal is; and how it achieves that purpose. Some good general questions to think about might include:
+Ideally reading the BIP (and its references) will already make it clear what the purpose of the proposal is and how it achieves that purpose. Some good general questions to think about might include:
 
  * Do the goals make sense?
  * Do the design decisions follow from the goals?
@@ -57,7 +58,7 @@ or you may want to review past discussion, such as on the bitcoin-dev mailing li
 
 Alternatively, you may want to just focus on the BIP text directly to see if it makes sense on its own.
 
-If there are parts you don't understand discuss them with others (such as your study group, or asking at the Q&A sessions, or raising a question on bitcoin.stackexchange.org, or however else you like. If that resolves the confusion, great! If not, it might be worth creating an issue or pull request against the bip-schnorr draft on github. It can be hard to find a balance between getting the details right and caught up in bikeshedding, so talking to other people first is usually a good idea!
+If there are parts you don't understand, discuss them with others, such as your study group, or asking at the Q&A sessions, or raising a question on bitcoin.stackexchange.org, or however else you like. If that resolves the confusion, great! If not, it might be worth creating an issue or pull request against the bip-schnorr draft on github. It can be hard to find a balance between getting the details right and caught up in bikeshedding, so talking to other people first is usually a good idea!
 
 ## Misc
 
