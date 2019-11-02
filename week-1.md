@@ -1,6 +1,5 @@
-Hi!
 
-Thanks heaps for signing up to help review the schnorr and taproot BIP drafts! We've had 163 sign ups, which is a great number (it's prime if nothing else!) and looking through the names there's a lot of experience there!
+# Week One Info
 
 > "Some people worry about developers attempting to take control, but the defense against that is for other developers to review their code and sound an alarm if they see something inappropriate." -- David Harding, [2017-07-28](https://dtrt.org/posts/minimum-majority-measure/)
 
@@ -62,7 +61,11 @@ If there are parts you don't understand, discuss them with others, such as your 
 
 ## Misc
 
-Reminder, the first Q&A sessions are on ##taproot-review on the Freenode IRC network at Tue 1900 UTC (America/Europe/Africa) and Thu 0200 UTC (America/Asia/Oceania). In different timezones these are:
+If you want to chat on Slack, there's an [invite site](https://bitcoin-review-slack-invite-site-automationd766.azurewebsites.net/) available for this project.
+
+Please see the [suggested study groups](study-groups.md) for some other people to talk to!
+
+The first Q&A sessions are on ##taproot-review on the Freenode IRC network at Tue 1900 UTC (America/Europe/Africa) and Thu 0200 UTC (America/Asia/Oceania). In different timezones these are:
 
  * Tue 05 Nov 11:00 -0800 Los Angeles
  * Tue 05 Nov 14:00 -0500 New York
