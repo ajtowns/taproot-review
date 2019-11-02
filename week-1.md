@@ -65,7 +65,7 @@ If you want to chat on Slack, there's an [invite site](https://bitcoin-review-sl
 
 Please see the [suggested study groups](study-groups.md) for some other people to talk to!
 
-The first Q&A sessions are on ##taproot-review on the Freenode IRC network at Tue 1900 UTC (America/Europe/Africa) and Thu 0200 UTC (America/Asia/Oceania). In different timezones these are:
+The first Q&A sessions are on ##taproot-bip-review on the Freenode IRC network at Tue 1900 UTC (America/Europe/Africa) and Thu 0200 UTC (America/Asia/Oceania). In different timezones these are:
 
  * Tue 05 Nov 11:00 -0800 Los Angeles
  * Tue 05 Nov 14:00 -0500 New York
