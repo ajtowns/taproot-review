@@ -44,6 +44,7 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 * Septem151
 * Max Hillebrand
 * keer4n
+* eltneg
 
 ## Group 5 - IRC 18:00-19:00
 
@@ -208,6 +209,5 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 
 * Codaelux
 * rusticbison / Justin Smith
-* eltneg
 * Moller40
 * paul
