@@ -212,3 +212,13 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 * rusticbison / Justin Smith
 * Moller40
 * paul
+* Wesley Brandi
+* Brad Stachurski
+* Ben
+* stefanwouldgo
+* Orfeas Thyfronitis
+* Rafe
+* felipetleite
+* Tony Cash
+* yas
+* Elton
