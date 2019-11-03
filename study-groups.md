@@ -56,6 +56,7 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 * qiwan
 * James Asefa
 * Eugene
+* Hennadii (hebasto)
 
 ## Group 6 - IRC 20:00-21:00
 
