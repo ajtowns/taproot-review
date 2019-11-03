@@ -49,7 +49,7 @@ Ideally reading the BIP (and its references) will already make it clear what the
 
 You may want to review the sample implementation, at
 
- * https://github.com/sipa/bitcoin/commits/taproot
+ * https://github.com/sipa/bitcoin/commits/taproot2
 
 or you may want to review past discussion, such as on the bitcoin-dev mailing list, in the OpTech newsletters, or looking through the git changelog of the BIP draft or the PRs or issues in the repository. If you do want to explore some of these paths, there are links in the curriculum doc mentioned above. If you find more resources, you may wish to open a PR to add them to the Resources doc:
 
