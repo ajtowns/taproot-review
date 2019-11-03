@@ -86,6 +86,7 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 * Dmitry Petukhov (dgpv)
 * Thibaut (Tibo)
 * Andrew Camilleri / Kukks
+* Joseph Peculiar / codaelux
 
 ## Group 9 - Slack 17:00-18:00
 
@@ -207,7 +208,6 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 
 ## Ungrouped :(
 
-* Codaelux
 * rusticbison / Justin Smith
 * Moller40
 * paul
