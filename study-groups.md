@@ -208,7 +208,6 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 
 ## Ungrouped :(
 
-* Codaelux
 * rusticbison / Justin Smith
 * Moller40
 * paul
