@@ -192,7 +192,7 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 * MATHI
 * Bartlomiej Tony Sanak
 * Youness
-* Gloria Wamg
+* Gloria Wang
 * Philipp/bonomat
 * felixweis
 * Ruben Somsen
