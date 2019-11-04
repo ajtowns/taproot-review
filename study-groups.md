@@ -57,6 +57,7 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 * James Asefa
 * Eugene
 * Hennadii (hebasto)
+* jb55
 
 ## Group 6 - IRC 20:00-21:00
 
@@ -200,7 +201,6 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 ## Group 19 - Mixed Preferred Communications 03:00-04:00
 
 * Steve Myers
-* jb55
 * Tony chew
 * Calvin Kim
 * Ariel
