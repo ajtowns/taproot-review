@@ -36,7 +36,7 @@ The current draft of the taproot BIP can be found at:
 
 Remember that this is being actively worked on, so there may have been changes if you've read it previously!
 
-We'll be spending more time later on how "script path" spends work and the details of how signatures work, so you may wish to skip or skim the sections titled "script path spending", "Signature validation rules", and "Constructing and spending Taproot outputs" for now.
+We'll be spending more time later on how "script path" spends work and the details of how signatures work, so you may wish to skip or skim the sections titled "Script validation rules", "Signature validation rules", and "Constructing and spending Taproot outputs" for now.
 
 Ideally reading the BIP (and its references) will already make it clear what the purpose of the proposal is and how it achieves that purpose. Some good general questions to think about might include:
 
