@@ -80,6 +80,7 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 * Alon Elmaliah
 * Eric Voskuil
 * felixweis
+* Orfeas Thyfronitis
 
 ## Group 8 - Slack 07:00-08:00
 
@@ -216,7 +217,6 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 * Brad Stachurski
 * Ben
 * stefanwouldgo
-* Orfeas Thyfronitis
 * Rafe
 * felipetleite
 * Tony Cash
