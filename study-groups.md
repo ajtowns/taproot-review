@@ -79,6 +79,7 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 * nickler
 * Alon Elmaliah
 * Eric Voskuil
+* felixweis
 
 ## Group 8 - Slack 07:00-08:00
 
@@ -195,7 +196,6 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 * Youness
 * Gloria Wang
 * Philipp/bonomat
-* felixweis
 * Ruben Somsen
 
 ## Group 19 - Mixed Preferred Communications 03:00-04:00
