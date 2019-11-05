@@ -24,7 +24,7 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 * disnocen
 * ariard
 
-## Group 3 - IRC 19:00-20:00
+## Group 3 - IRC 21:00-22:00
 
 * Christophe
 * Matthew L Grinshpun
