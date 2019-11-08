@@ -20,6 +20,8 @@ We had the first two Q&A sessions, and have logs of the conversations captured: 
 
 There's already been a few suggested changes to the BIPs, including [PR#122](https://github.com/sipa/bips/pull/122), [PR#126](https://github.com/sipa/bips/pull/126/files), and [PR#128](https://github.com/sipa/bips/pull/128/files) -- they're all pretty short, so if you haven't contributed to a BIP or Bitcoin core before, they make for pretty easy examples of how to contribute!
 
+One thing mentioned in a Q&A session which hasn't been resolved yet was the possible impact of a bech32 malleability misfeature on taproot upgradeability -- see [Pieter Wuille's post to bitcoin-dev](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2019-November/017443.html) and the following discussion for more information.
+
 ## Tapscript
 
 To understand how tapscript works, you need to see both the taproot and tapscript BIPs:
