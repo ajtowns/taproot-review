@@ -8,10 +8,12 @@ made some initial progress with review! If you haven't, that's fine --
 catch up as best you can, and feel free to ask questions about earlier
 topics even if we've supposedly moved on to later topics.
 
+We've got a short poll for [week 1 feedback](https://docs.google.com/forms/d/e/1FAIpQLSfX6OZ3rK0_EW_A2S8-TCVkeK7t_3Slagg9apVZ5dq-1eLk1w/viewform) to help track how the review is going so far, if you can spend a couple of minutes filling it in that would be great! If you have questions/problems that need a more immediate response, feel free to send an email, ask on IRC or create a PR or issue in the github repo as seems appropriate.
+
 Per the [curriculum](Curriculum.md) this week moves on from the overall
 taproot construction to looking at key path spends and the merkle
-construction that allows to have a multitude of scripts as an alternative
-to the direct key path spend.
+construction that allows a multitude of scripts as alternatives
+to direct key path spends.
 
 ## Results from Week One
 
@@ -22,6 +24,10 @@ There's already been a few suggested changes to the BIPs, including [PR#122](htt
 
 One thing mentioned in a Q&A session which hasn't been resolved yet was the possible impact of a bech32 malleability misfeature on taproot upgradeability -- see [Pieter Wuille's post to bitcoin-dev](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2019-November/017443.html) and the following discussion for more information.
 
+There have also been some interesting questions and answers on [bitcoin stackexchange](https://bitcoin.stackexchange.com/), eg:
+ * [MuSig Signature Interactivity](https://bitcoin.stackexchange.com/questions/91534/musig-signature-interactivity)
+ * [Taproot/Schnorr Pubkey lengths](https://bitcoin.stackexchange.com/questions/91531/would-a-schnorr-pubkey-be-a-different-length-than-a-taproot-pubkey-like-p2wpkh-a)
+
 ## Tapscript
 
 To understand how tapscript works, you need to see both the taproot and tapscript BIPs:
@@ -31,7 +37,7 @@ To understand how tapscript works, you need to see both the taproot and tapscrip
 
 You've hopefully already read much of the taproot BIP, but you'll need to add in the "Constructing and spending Taproot outputs" section and the bullet points under "If there are at least two witness elements left, script path spending is used" in "Script validation rules" if you missed them before.
 
-As far as the tapscript BIP goes, you may wish to skip or skim the sections "Rules for signature opcodes", "Transaction digest", "Resource limits" and the related items from the "Rationale" section.
+As far as the tapscript BIP goes, you may wish to skip or skim the sections "Rules for signature opcodes", "Transaction digest", "Resource limits" and the related items from the "Rationale" section, but should read the rest of it in depth.
 
 The generic suggestions about what sort of questions to consider from [last week](week-1.md) still apply -- so do consider rereading that.
 
@@ -62,6 +68,4 @@ and
  * Thu 07 Nov 13:00 +1100 Sydney
 
 There's also the dedicated [slack instance](https://bitcoin-review.slack.com/) if you prefer that method of communicating.
-
-
 
