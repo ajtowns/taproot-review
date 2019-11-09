@@ -13,6 +13,7 @@ These are some ideas for proof of concept projects to explore schnorr and/or tap
  * Taproot/schnorr support for bitcoinjs-lib
  * Taproot/schnorr support for acinq/bitcoin-lib (scala)
  * Taproot/schnorr support for bit-wasp/bitcoin-php
+ * Taproot/schnorr support for rust-bitcoin/rust-bitcoin
  * Miniscript extensions for Taproot/Tapscript
  * Atomic swaps / Submarine swaps
 
