@@ -52,6 +52,7 @@
   * Test vectors
   * Non-production Python reference implementation
 * libsecp256k1: https://github.com/bitcoin-core/secp256k1/pull/558
+* Jonas Nick's x-only pubkeys article: https://medium.com/blockstream/reducing-bitcoin-transaction-sizes-with-x-only-pubkeys-f86476af05d7
 
 ## Signature Details and Resource Limits
 
