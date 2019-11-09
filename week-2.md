@@ -8,7 +8,7 @@ made some initial progress with review! If you haven't, that's fine --
 catch up as best you can, and feel free to ask questions about earlier
 topics even if we've supposedly moved on to later topics.
 
-We've got a short poll for [week 1 feedback](https://docs.google.com/forms/d/e/1FAIpQLSfX6OZ3rK0_EW_A2S8-TCVkeK7t_3Slagg9apVZ5dq-1eLk1w/viewform) to help track how the review is going so far, if you can spend a couple of minutes filling it in that would be great! If you have questions/problems that need a more immediate response, feel free to send an email, ask on IRC or create a PR or issue in the github repo as seems appropriate.
+We've got a short poll for [week 1 feedback](https://docs.google.com/forms/d/e/1FAIpQLSfX6OZ3rK0_EW_A2S8-TCVkeK7t_3Slagg9apVZ5dq-1eLk1w/viewform) to help track how the review is going so far, if you can spend a couple of minutes filling it in that would be great! Note that this is an anonymous poll -- the idea is just to get a general idea how everyone is going. If you have questions/problems that need a more direct response, feel free to send an email, ask on IRC or create a PR or issue in the github repo as seems appropriate.
 
 Per the [curriculum](Curriculum.md) this week moves on from the overall
 taproot construction to looking at key path spends and the merkle
