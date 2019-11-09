@@ -15,10 +15,16 @@ Benefits of participating:
  * Support/safeguard decentralisation of Bitcoin protocol development
  * Have fun!
 
+An overview of the topics covered is outlined on the [curriculum](Curriculum.md)
+page.
+
+A list of background [resources](Resources.md) are available for review.
+
 ## Timeline
 
  * Oct 23rd to 30th - Sign up
  * Nov 3rd to Dec 14th - Structured review
+   * [Week 1](week-1.md)
  * Dec 15th to 21st - Wrap up
 
 ## Sign up

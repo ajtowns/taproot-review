@@ -1,8 +1,12 @@
 # Taproot BIP Review - Curriculum
 
+_Note: a list of helpful [related resources](Resources.md) has been compiled
+which can assist in reviewing._
+
 ## Intro & Taproot
 
 * Week: Nov 3rd-9th
+  * [Week 1 Notes](week-1.md)
 * What questions to ask while reviewing BIPs?
   * Do the goals make sense?
   * Does the design actually work and achieve the goals?
