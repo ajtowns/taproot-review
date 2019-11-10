@@ -49,23 +49,23 @@ Gregory Sanders (aka instagibbs) has made some progress on the proof of concept 
 
 The IRC channel for the Q&A sessions is ##taproot-bip-review on the Freenode IRC network. If you've got questions through the week, feel free to ask there -- if someone is around and available they might be able to answer. As well as the [meeting logs](http://www.erisian.com.au/meetbot/taproot-bip-review/2019/) there are ongoing [channel logs](http://www.erisian.com.au/meetbot/taproot-bip-review/2019/) as well, in case you want to see what's been going on there while you've been absent. The Q&A sessions this week are at the same times as last week: Tue 1900 UTC (America/Europe/Africa) and Thu 0200 UTC (America/Asia/Oceania). In different time zones these are:
 
- * Tue 05 Nov 11:00 -0800 Los Angeles
- * Tue 05 Nov 14:00 -0500 New York
- * Tue 05 Nov 19:00 +0000 UTC / London
- * Tue 05 Nov 20:00 +0100 Paris
- * Wed 06 Nov 00:30 +0530 Calcutta
- * Wed 06 Nov 04:00 +0900 Tokyo
- * Wed 06 Nov 06:00 +1100 Sydney
+ * Tue 12 Nov 11:00 -0800 Los Angeles
+ * Tue 12 Nov 14:00 -0500 New York
+ * Tue 12 Nov 19:00 +0000 UTC / London
+ * Tue 12 Nov 20:00 +0100 Paris
+ * Wed 13 Nov 00:30 +0530 Calcutta
+ * Wed 13 Nov 04:00 +0900 Tokyo
+ * Wed 13 Nov 06:00 +1100 Sydney
 
 and
 
- * Wed 06 Nov 18:00 -0800 Los Angeles
- * Wed 06 Nov 21:00 -0500 New York
- * Thu 07 Nov 02:00 +0000 UTC / London
- * Thu 07 Nov 03:00 +0100 Paris
- * Thu 07 Nov 07:30 +0530 Calcutta
- * Thu 07 Nov 11:00 +0900 Tokyo
- * Thu 07 Nov 13:00 +1100 Sydney
+ * Wed 13 Nov 18:00 -0800 Los Angeles
+ * Wed 13 Nov 21:00 -0500 New York
+ * Thu 14 Nov 02:00 +0000 UTC / London
+ * Thu 14 Nov 03:00 +0100 Paris
+ * Thu 14 Nov 07:30 +0530 Calcutta
+ * Thu 14 Nov 11:00 +0900 Tokyo
+ * Thu 14 Nov 13:00 +1100 Sydney
 
 There's also the dedicated [slack instance](https://bitcoin-review.slack.com/) if you prefer that method of communicating.
 
