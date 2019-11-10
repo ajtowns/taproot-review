@@ -91,6 +91,7 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 * Andrew Camilleri / Kukks
 * Joseph Peculiar / codaelux
 * Max Hillebrand
+* stefanwouldgo
 
 ## Group 9 - Slack 17:00-18:00
 
@@ -216,7 +217,6 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 * Wesley Brandi
 * Brad Stachurski
 * Ben
-* stefanwouldgo
 * Rafe
 * felipetleite
 * Tony Cash
