@@ -101,6 +101,7 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 * Jimmy Song
 * Jannes
 * rorp
+* Elichai
 
 ## Group 10 - Slack UTC 23:00-24:00
 
