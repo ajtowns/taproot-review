@@ -42,7 +42,6 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 * Ishmael 
 * nana
 * Septem151
-* Max Hillebrand
 * keer4n
 * eltneg
 
@@ -91,6 +90,7 @@ A good place to coordinate with your group is ##taproot-bip-review on Freednode 
 * Thibaut (Tibo)
 * Andrew Camilleri / Kukks
 * Joseph Peculiar / codaelux
+* Max Hillebrand
 
 ## Group 9 - Slack 17:00-18:00
 
