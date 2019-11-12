@@ -84,12 +84,13 @@ which can assist in reviewing._
 
 * Week: Dec 1st-7th
 * [bip-schnorr][SCH] Applications section
-  * MuSig
+  * [MuSig](https://blockstream.com/2019/02/18/en-musig-a-new-multisignature-standard/)
   * Adaptor Signatures
   * Threshold Signatures
   * Blind Signatures
 * Libsecp256k1-zkp: https://github.com/ElementsProject/secp256k1-zkp/blob/secp256k1-zkp/src/modules/musig/musig.md
 * Scriptless scripts: https://github.com/ElementsProject/scriptless-scripts
+* [On the Security of Two-Round Multi-Signatures](https://eprint.iacr.org/2018/417.pdf) -- paper breaking original MuSig protocol/security proof, see also related [twitter thread](https://twitter.com/pwuille/status/1015317105116188672)
 * Things to consider:
   * Are these approaches secure?
   * Are the proposed APIs for these applications likely to result in secure implementations?
