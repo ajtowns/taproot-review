@@ -31,6 +31,7 @@ which can assist in reviewing._
 ## Tapscript
 
 * Week: Nov 10th-16th
+  * [Week 2 Notes](week-2.md)
 * [bip-taproot][TR]:
   * script path spending
   * Constructing and spending Taproot outputs
@@ -48,6 +49,7 @@ which can assist in reviewing._
 ## Schnorr
 
 * Week: Nov 17th-23rd
+  * [Week 3 Notes](week-3.md)
 * [bip-schnorr][SCH] without the Applications section
   * Motivation, Design
   * Key generation, Signing, Verification

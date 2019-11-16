@@ -25,6 +25,8 @@ A list of background [resources](Resources.md) are available for review.
  * Oct 23rd to 30th - Sign up
  * Nov 3rd to Dec 14th - Structured review
    * [Week 1](week-1.md)
+   * [Week 2](week-2.md)
+   * [Week 3](week-3.md)
  * Dec 15th to 21st - Wrap up
 
 ## Sign up
