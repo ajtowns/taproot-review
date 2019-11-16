@@ -57,6 +57,7 @@ which can assist in reviewing._
   * Non-production Python reference implementation
 * libsecp256k1: https://github.com/bitcoin-core/secp256k1/pull/558
 * Jonas Nick's x-only pubkeys article: https://medium.com/blockstream/reducing-bitcoin-transaction-sizes-with-x-only-pubkeys-f86476af05d7
+* Paper on bad nonces (in ecdsa) https://eprint.iacr.org/2019/023.pdf
 
 ## Signature Details and Resource Limits
 
