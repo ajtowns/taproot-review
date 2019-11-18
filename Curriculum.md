@@ -31,6 +31,7 @@ which can assist in reviewing._
 ## Tapscript
 
 * Week: Nov 10th-16th
+  * [Week 2 Notes](week-2.md)
 * [bip-taproot][TR]:
   * script path spending
   * Constructing and spending Taproot outputs
@@ -48,6 +49,7 @@ which can assist in reviewing._
 ## Schnorr
 
 * Week: Nov 17th-23rd
+  * [Week 3 Notes](week-3.md)
 * [bip-schnorr][SCH] without the Applications section
   * Motivation, Design
   * Key generation, Signing, Verification
@@ -57,6 +59,7 @@ which can assist in reviewing._
   * Non-production Python reference implementation
 * libsecp256k1: https://github.com/bitcoin-core/secp256k1/pull/558
 * Jonas Nick's x-only pubkeys article: https://medium.com/blockstream/reducing-bitcoin-transaction-sizes-with-x-only-pubkeys-f86476af05d7
+* Paper on bad nonces (in ecdsa) https://eprint.iacr.org/2019/023.pdf
 
 ## Signature Details and Resource Limits
 
