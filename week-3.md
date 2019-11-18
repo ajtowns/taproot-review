@@ -4,9 +4,11 @@
 
 With luck, everyone's into the swing of things now, because we're moving on to the first look at the final BIP, both the alpha and omega, if you will: [bip-schnorr](https://github.com/sipa/bips/blob/bip-schnorr/bip-schnorr.mediawiki). This marks the halfway point -- by the end of this week we'll have gone through all the BIPs (if you're following the [curriculum](Curriculum.md) anyway!) and for the following three weeks we'll be focussing on some of the details (that you might have skipped over if you followed the suggestions here) and their implications.
 
+We've set up a "[knowledge check](https://forms.gle/rsezDoj2fChBj7u76)" survey this week so you can record where you think you're up to in understanding the BIPs, as well as some free fields for comments about the process or the BIPs. This survey is associated with your email, both on the off-chance that we might be able to find some interesting correlations, and so that we might be able to followup on any comments that get left. The idea is to do another one of these around the last week of the review.
+
 The quote this week emphasises the widely known wisdom that you shouldn't roll your own crypto -- even though that's essentially what we're doing here with both a new standard for schnorr signatures, and introducing the taproot construction for real world use. Both of these are security constructions that rely on mathematical assumptions working out as expected; so before adopting it, it's wise to make sure that these new constructions really can survive expert cryptanalysis. (We'll see in the "schnorr applications" week how the first version of the musig construction didn't survive expert review, eg)
 
-One thing that's been working out really well (in my opinion, anyway!) is how engaged reviewers have been with the regular processes of communicating online (irc, bitcoin-dev, etc), and filing issues and pull-requests on github to make improvements to the drafts. Since that's the usual way of improving most open source Bitcoin related things, we've been encouraging people to focus on that, rather than collecting review results via google forms or similar. But to help avoid things getting missed, we've added some free form fields to the knowledge check survey for capturing things that might need changes that haven't been filed in github.
+One thing that's been working out really well (in my opinion, anyway!) is how engaged reviewers have been with the regular processes of communicating online (irc, bitcoin-dev, etc), and filing issues and pull-requests on github to make improvements to the drafts. Since that's the usual way of improving most open source Bitcoin related things, we've been encouraging people to focus on that, rather than collecting review results via google forms or similar. But to help avoid things getting missed, we've added some free form fields to the [knowledge check](https://forms.gle/rsezDoj2fChBj7u76) survey for capturing things that might need changes that haven't been filed in github.
 
 ## Week 1 Feedback
 
@@ -45,11 +47,11 @@ If you're interested in looking at implementations, then you may wish to look at
 
  * the [python reference code](https://github.com/sipa/bips/tree/bip-schnorr/bip-schnorr/) (not for production use)
  * the [jupyter notebooks from the optech taproot workshop](https://github.com/bitcoinops/taproot-workshop/) (also not for production use)
- * [libsecp256k1 PR#558](https://github.com/bitcoin-core/secp256k1/pull/558) adds basic support schnorr signature
+ * [libsecp256k1 PR#558](https://github.com/bitcoin-core/secp256k1/pull/558) adds basic schnorr signature support
  
 ## Misc
 
-The IRC channel for the Q&A sessions is ##taproot-bip-review on the Freenode IRC network. If you've got questions through the week, feel free to ask there -- if someone is around and available they might be able to answer. As well as the [meeting logs](http://www.erisian.com.au/meetbot/taproot-bip-review/2019/) there are ongoing [channel logs](http://www.erisian.com.au/meetbot/taproot-bip-review/2019/) as well, in case you want to see what's been going on there while you've been absent. As mentioned above, there's only one scheduled Q&A session this week: Tue 1900 UTC (America/Europe/Africa).
+The IRC channel for the Q&A sessions is ##taproot-bip-review on the Freenode IRC network. If you've got questions through the week, feel free to ask there -- if someone is around and available they might be able to answer. As well as the [meeting logs](http://www.erisian.com.au/meetbot/taproot-bip-review/2019/) there are ongoing [channel logs](http://www.erisian.com.au/taproot-bip-review/) as well, in case you want to see what's been going on there while you've been absent. As mentioned above, there's only one scheduled Q&A session this week: Tue 1900 UTC (America/Europe/Africa).
 
  * Tue 19 Nov 11:00 -0800 Los Angeles
  * Tue 19 Nov 14:00 -0500 New York
