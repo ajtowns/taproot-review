@@ -94,6 +94,7 @@ which can assist in reviewing._
 * Libsecp256k1-zkp: https://github.com/ElementsProject/secp256k1-zkp/blob/secp256k1-zkp/src/modules/musig/musig.md
 * Scriptless scripts: https://github.com/ElementsProject/scriptless-scripts
 * [On the Security of Two-Round Multi-Signatures](https://eprint.iacr.org/2018/417.pdf) -- paper breaking original MuSig protocol/security proof, see also related [twitter thread](https://twitter.com/pwuille/status/1015317105116188672)
+* [Insecure shortcuts in MuSig](https://medium.com/blockstream/insecure-shortcuts-in-musig-2ad0d38a97da)
 * Things to consider:
   * Are these approaches secure?
   * Are the proposed APIs for these applications likely to result in secure implementations?
