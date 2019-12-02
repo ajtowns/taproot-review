@@ -64,6 +64,7 @@ which can assist in reviewing._
 ## Signature Details and Resource Limits
 
 * Week: Nov 24th-30th
+  * [Week 4 Notes](week-4.md)
 * [bip-taproot][TR]:
   * Signature validation rules
 * [bip-tapscript][TS]:
@@ -86,6 +87,7 @@ which can assist in reviewing._
 ## Schnorr Applications
 
 * Week: Dec 1st-7th
+  * [Week 5 Notes](week-5.md)
 * [bip-schnorr][SCH] Applications section
   * [MuSig](https://blockstream.com/2019/02/18/en-musig-a-new-multisignature-standard/)
   * Adaptor Signatures
