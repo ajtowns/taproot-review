@@ -25,4 +25,25 @@ MuSig essentially provides a way of doing n-of-n multisig, where everyone has to
 
 Adaptor signatures are well worth reading about -- they allow a signature to be conditionally valid upon revealing the discrete log of a point. This allows for "preimage" reveals (the basis for lightning's hash-timelock-contracts), or revealing a private key, or even revealing a secondary signature. Jonas Nick's ["scriptless scripts" repo](https://github.com/ElementsProject/scriptless-scripts/blob/master/md/) has some write ups of techniques likes this, and there's more resources, mostly focussed on lightning network use cases, at the end of the [multi-hop locks](https://github.com/ElementsProject/scriptless-scripts/blob/master/md/multi-hop-locks.md) document in particular. [Discreet log contracts](https://adiabat.github.io/dlc.pdf) are an interesting variation that you also might find worth looking into.
 
+## Week 4 Results
+
+Of the 160 or so people who signed up to the review, we've only had 22 responses to the "[knowledge check](https://forms.gle/rsezDoj2fChBj7u76)" poll; not sure if that just means the poll was boring, or if we've had an 88% attrition rate, or it's just badly timed with Thanksgiving and the like. Anyway, it's still open for filling out if you like! And if it has been attrition, that presumably makes those of you still reading along the best of the best!
+
+The [week 4 Q&A](http://www.erisian.com.au/meetbot/taproot-bip-review/2019/taproot-bip-review.2019-11-26-19.01.log.html) happened as usual, with some discussion of the digest details.
+
+If you've been following the bitcoin-dev list, Russell O'Connor has started a discussion on [replacing codesep_pos with the CHECKSIG position](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2019-November/017495.html) that's pretty relevant to last week's topic!
+
+## Miscellaneous
+
+The IRC channel for the Q&A sessions is ##taproot-bip-review on the Freenode IRC network. If you've got questions through the week, feel free to ask there -- if someone is around and available they might be able to answer. As well as the [meeting logs](http://www.erisian.com.au/meetbot/taproot-bip-review/2019/) there are ongoing [channel logs](http://www.erisian.com.au/taproot-bip-review/) as well, in case you want to see what's been going on there while you've been absent. There's only one scheduled Q&A session this week: Tue 1900 UTC (America/Europe/Africa), but feel free to ask questions at any time during the week.
+
+ * Tue  3 Dec 11:00 -0800 Los Angeles
+ * Tue  3 Dec 14:00 -0500 New York
+ * Tue  3 Dec 19:00 +0000 UTC / London
+ * Tue  3 Dec 20:00 +0100 Paris
+ * Wed  4 Dec 00:30 +0530 Calcutta
+ * Wed  4 Dec 04:00 +0900 Tokyo
+ * Wed  4 Dec 06:00 +1100 Sydney
+
+There's also the dedicated [slack instance](https://bitcoin-review.slack.com/) if you prefer that method of communicating.
 
