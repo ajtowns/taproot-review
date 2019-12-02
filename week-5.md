@@ -1,7 +1,7 @@
 
 # Week Five Info
 
-> "Our third objective of smart contract design is privity, the principle that knowledge and control over the contents and performance of a contract should be distributed among parties only as much as is necessary for the performance of that contract. This is a generalization of the common law principle of contract privity, which states that third parties, other than the designated adjudicators and intermediaries, should have no say in the enforcement of a contract." - Nick Szabo, ["Formalizing and Securing Relationships on Public Networks"](https://firstmonday.org/ojs/index.php/fm/article/view/548/469-publisher=First) 1997-09-01
+> "Our third objective of smart contract design is *privity*, the principle that knowledge and control over the contents and performance of a contract should be distributed among parties only as much as is necessary for the performance of that contract. This is a generalization of the common law principle of contract privity, which states that third parties, other than the designated adjudicators and intermediaries, should have no say in the enforcement of a contract." - Nick Szabo, ["Formalizing and Securing Relationships on Public Networks"](https://firstmonday.org/ojs/index.php/fm/article/view/548/469-publisher=First) 1997-09-01
 
 This week's topic -- applications of Schnorr signatures -- is quite a rabbit hole: you can probably keep diving into different applications of Schnorr for months or years, without running out of novel and useful things to think about. So don't be afraid to "blue pill" yourself at some point and wake up in your own bed, rather than forever lost in Wonderland!
 
