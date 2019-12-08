@@ -31,7 +31,7 @@ Of the 160 or so people who signed up to the review, we've only had 22 responses
 
 The [week 4 Q&A](http://www.erisian.com.au/meetbot/taproot-bip-review/2019/taproot-bip-review.2019-11-26-19.01.log.html) happened as usual, with some discussion of the digest details.
 
-If you've been following the bitcoin-dev list, Russell O'Connor has started a discussion on [replacing codesep_pos with the CHECKSIG position](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2019-November/017495.html) that's pretty relevant to last week's topic!
+If you've been following the bitcoin-dev list, Russell O'Connor has started a discussion on [replacing codesep_pos with the CHECKSIG position](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2019-November/017495.html) (continued [here](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2019-December/017500.html)) that's pretty relevant to last week's topic!
 
 ## Miscellaneous
 
