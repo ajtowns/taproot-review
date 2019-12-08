@@ -4,6 +4,8 @@
 
 Ten year anniversary of that quote this week!
 
+Note: [Week Five's notes](week-5.md) never got mailed out, so if you didn't find the URL yourself, you probably missed out!
+
 This is the last week of content for these sessions -- the final week (2019-12-16 to 2019-12-20) is intended for wrapping up. If you've been working on a proof-of-concept or other implementation of schnorr or taproot stuff these past weeks and would like to share your progress, please send an email or open a PR on the [taproot-review repo](https://github.com/ajtowns/taproot-review/pulls) to add it to [Resources.md](https://github.com/ajtowns/taproot-review/blob/master/Resources.md).
 
 As we near the end it's a good time to start thinking about what the next step is. The obvious path would be to propose the BIPs formally, get them assigned numbers, and then move onto reviewing the code in depth. But if there's bugs in the design, or missing features we should add, or if the entire strategy isn't quite right, now is a better time than later to talk about that. Small changes to the design as we do code review are fine, of course (though catching them earlier is always better).

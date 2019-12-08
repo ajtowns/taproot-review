@@ -25,7 +25,7 @@ MuSig essentially provides a way of doing n-of-n multisig, where everyone has to
 
 Adaptor signatures are well worth reading about -- they allow a signature to be conditionally valid upon revealing the discrete log of a point. This allows for "preimage" reveals (the basis for lightning's hash-timelock-contracts), or revealing a private key, or even revealing a secondary signature. Jonas Nick's ["scriptless scripts" repo](https://github.com/ElementsProject/scriptless-scripts/blob/master/md/) has some write ups of techniques likes this, and there's more resources, mostly focussed on lightning network use cases, at the end of the [multi-hop locks](https://github.com/ElementsProject/scriptless-scripts/blob/master/md/multi-hop-locks.md) document in particular. [Discreet log contracts](https://adiabat.github.io/dlc.pdf) are an interesting variation that you also might find worth looking into.
 
-## Week 4 Results
+## Results from Week Four
 
 Of the 160 or so people who signed up to the review, we've only had 22 responses to the "[knowledge check](https://forms.gle/rsezDoj2fChBj7u76)" poll; not sure if that just means the poll was boring, or if we've had an 88% attrition rate, or it's just badly timed with Thanksgiving and the like. Anyway, it's still open for filling out if you like! And if it has been attrition, that presumably makes those of you still reading along the best of the best!
 
