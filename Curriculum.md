@@ -106,6 +106,7 @@ which can assist in reviewing._
 ## Upgrades
 
 * Week: Dec 8th-14th
+  * [Week 6 Notes](week-6.md)
 * [bip-taproot][TR]:
   * Leaf versions
   * Annex

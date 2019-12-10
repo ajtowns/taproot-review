@@ -25,13 +25,13 @@ MuSig essentially provides a way of doing n-of-n multisig, where everyone has to
 
 Adaptor signatures are well worth reading about -- they allow a signature to be conditionally valid upon revealing the discrete log of a point. This allows for "preimage" reveals (the basis for lightning's hash-timelock-contracts), or revealing a private key, or even revealing a secondary signature. Jonas Nick's ["scriptless scripts" repo](https://github.com/ElementsProject/scriptless-scripts/blob/master/md/) has some write ups of techniques likes this, and there's more resources, mostly focussed on lightning network use cases, at the end of the [multi-hop locks](https://github.com/ElementsProject/scriptless-scripts/blob/master/md/multi-hop-locks.md) document in particular. [Discreet log contracts](https://adiabat.github.io/dlc.pdf) are an interesting variation that you also might find worth looking into.
 
-## Week 4 Results
+## Results from Week Four
 
 Of the 160 or so people who signed up to the review, we've only had 22 responses to the "[knowledge check](https://forms.gle/rsezDoj2fChBj7u76)" poll; not sure if that just means the poll was boring, or if we've had an 88% attrition rate, or it's just badly timed with Thanksgiving and the like. Anyway, it's still open for filling out if you like! And if it has been attrition, that presumably makes those of you still reading along the best of the best!
 
 The [week 4 Q&A](http://www.erisian.com.au/meetbot/taproot-bip-review/2019/taproot-bip-review.2019-11-26-19.01.log.html) happened as usual, with some discussion of the digest details.
 
-If you've been following the bitcoin-dev list, Russell O'Connor has started a discussion on [replacing codesep_pos with the CHECKSIG position](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2019-November/017495.html) that's pretty relevant to last week's topic!
+If you've been following the bitcoin-dev list, Russell O'Connor has started a discussion on [replacing codesep_pos with the CHECKSIG position](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2019-November/017495.html) (continued [here](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2019-December/017500.html)) that's pretty relevant to last week's topic!
 
 ## Miscellaneous
 
