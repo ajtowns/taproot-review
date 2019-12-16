@@ -31,6 +31,7 @@ A list of background [resources](Resources.md) are available for review.
    * [Week 5 - Schnorr applications](week-5.md)
    * [Week 6 - Upgrade Methods](week-6.md)
  * Dec 15th to 21st - Wrap up
+   * [Week 7 - Wrap up](week-7.md)
 
 ## Sign up
 
