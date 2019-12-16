@@ -15,7 +15,7 @@ You know, finding quotes has been more or less the hardest part of writing these
 >
 > [chorus]
 >
-> satoshi was more than a myth, and coderpunks was still a list,  
+> Satoshi was more than a myth, and coderpunks was still a list,  
 > Your identity was yours to keep and not just up for sale.  
 > When Pretty Good was the best we'd see, and information yearned to be free,  
 > And illegal weapons export meant a t-shirt in the mail.
@@ -25,7 +25,7 @@ You know, finding quotes has been more or less the hardest part of writing these
 > When manifestos were still cool, and governments were run by fools,  
 > And the greatest walls were stone and bricks just lying in the dirt.  
 > Hackers were lovable scamps, and everybody hated banks,  
-> And extropians still had long hair and dreamed they'd save the world.
+> And Extropians still had long hair and dreamed they'd save the world.
 >
 > [chorus, half-chorus]
 
