@@ -130,6 +130,7 @@ which can assist in reviewing._
 ## Wrap-Up
 
 * Week: Dec 15th-21st
+  * [Week 7 Notes](week-7.md)
 * Results of dev projects / proof of concept attempts as at the end of the previous week
 * Collect questions, suggestions, problems discovered during review
 * Capture overall summary as ACK / HOLD (overall we expect to find some things to improve, so likely this will be HOLD)
