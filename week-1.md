@@ -2,7 +2,7 @@
 
 > "Some people worry about developers attempting to take control, but the defense against that is for other developers to review their code and sound an alarm if they see something inappropriate." -- David Harding, [2017-07-28](https://dtrt.org/posts/minimum-majority-measure/)
 
-This first week's focus is on two things: getting set up to review the BIPs and taking a first pass at the taproot BIPs; see the [first section in the Curriculum cheat sheet](https://github.com/ajtowns/taproot-review/blob/master/Curriculum.md#intro--taproot).
+This first week's focus is on two things: getting set up to review the BIPs and taking a first pass at the taproot BIPs; see the [first section in the Curriculum cheat sheet](Curriculum.md#intro--taproot).
 
 ## Intro
 
@@ -50,9 +50,7 @@ You may want to review the sample implementation, at
 
  * https://github.com/sipa/bitcoin/commits/taproot
 
-or you may want to review past discussion, such as on the bitcoin-dev mailing list, in the Optech newsletters, or looking through the git changelog of the BIP draft or the PRs or issues in the repository. If you do want to explore some of these paths, there are links in the curriculum doc mentioned above. If you find more resources, you may wish to open a PR to add them to the Resources doc:
-
- * https://github.com/ajtowns/taproot-review/blob/master/Resources.md
+or you may want to review past discussion, such as on the bitcoin-dev mailing list, in the Optech newsletters, or looking through the git changelog of the BIP draft or the PRs or issues in the repository. If you do want to explore some of these paths, there are links in the curriculum doc mentioned above. If you find more resources, you may wish to open a PR to add them to the [Resources doc](Resources.md).
 
 Alternatively, you may want to just focus on the BIP text directly to see if it makes sense on its own.
 
