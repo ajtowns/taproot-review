@@ -1,0 +1,246 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>##taproot-bip-review log</title>
+<style type="text/css">
+/* For the .log.html */
+pre { /*line-height: 125%;*/
+      white-space: pre-wrap; }
+body { background: #f0f0f0; }
+
+body .tm  { color: #007020 }                      /* time */
+body .nk  { color: #062873; font-weight: bold }   /* nick, regular */
+body .nka { color: #007020; font-weight: bold }  /* action nick */
+body .ac  { color: #00A000 }                      /* action line */
+body .hi  { color: #4070a0 }                 /* hilights */
+/* Things to make particular MeetBot commands stick out */
+body .topic     { color: #007020; font-weight: bold }
+body .topicline { color: #000080; font-weight: bold }
+body .cmd       { color: #007020; font-weight: bold }
+body .cmdline  { font-weight: bold }
+
+</style>
+</head>
+
+<body>
+<pre><a name="l-1"></a><span class="tm">19:00:15</span><span class="nk"> &lt;aj&gt;</span> <span class="cmd">#startmeeting</span><span class="cmdline"></span>
+<a name="l-2"></a><span class="tm">19:00:15</span><span class="nk"> &lt;lightningbot&gt;</span> Meeting started Tue Nov 12 19:00:15 2019 UTC.  The chair is aj. Information about MeetBot at http://wiki.debian.org/MeetBot.
+<a name="l-3"></a><span class="tm">19:00:15</span><span class="nk"> &lt;lightningbot&gt;</span> Useful Commands: #action #agreed #help #info #idea #link #topic.
+<a name="l-4"></a><span class="tm">19:00:17</span><span class="nk"> &lt;jnewbery&gt;</span> hi
+<a name="l-5"></a><span class="tm">19:00:20</span><span class="nk"> &lt;sipa&gt;</span> hi
+<a name="l-6"></a><span class="tm">19:00:20</span><span class="nk"> &lt;bjarnem&gt;</span> hi
+<a name="l-7"></a><span class="tm">19:00:40</span><span class="nk"> &lt;schmidty&gt;</span> Hi
+<a name="l-8"></a><span class="tm">19:00:43</span><span class="nk"> &lt;moneyball&gt;</span> hi
+<a name="l-9"></a><span class="tm">19:00:44</span><span class="nk"> &lt;r251d&gt;</span> hi
+<a name="l-10"></a><span class="tm">19:00:49</span><span class="nk"> &lt;ariard&gt;</span> hi
+<a name="l-11"></a><span class="tm">19:00:54</span><span class="nk"> &lt;jonatack&gt;</span> hi
+<a name="l-12"></a><span class="tm">19:01:00</span><span class="nk"> &lt;devrandom&gt;</span> hi
+<a name="l-13"></a><span class="tm">19:01:31</span><span class="nk"> &lt;kabaum&gt;</span> hi
+<a name="l-14"></a><span class="tm">19:01:31</span><span class="nk"> &lt;aj&gt;</span> hi
+<a name="l-15"></a><span class="tm">19:01:31</span><span class="nk"> &lt;hebasto&gt;</span> hi
+<a name="l-16"></a><span class="tm">19:02:15</span><span class="nk"> &lt;cdecker&gt;</span> Hi
+<a name="l-17"></a><span class="tm">19:02:19</span><span class="nk"> &lt;hebasto&gt;</span> Q from group 5 (1/2): 1. What happens when using other leaf versions now before they are defined?
+<a name="l-18"></a><span class="tm">19:02:48</span><span class="nk"> &lt;fjahr&gt;</span> hi
+<a name="l-19"></a><span class="tm">19:03:22</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">hebasto:</span> they're spendable by anyone (who can give the internal key and merkle path)
+<a name="l-20"></a><span class="tm">19:03:51</span><span class="nk"> &lt;bjarnem&gt;</span> I was having the same question and I don't think this is specified in the BIP.
+<a name="l-21"></a><span class="tm">19:04:05</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">bjarnem:</span> it is, i think, though not explicitly
+<a name="l-22"></a><span class="tm">19:04:19</span><span class="nk"> &lt;hebasto&gt;</span> yes, it is not obvious from bip...
+<a name="l-23"></a><span class="tm">19:04:27</span><span class="nk"> &lt;sipa&gt;</span> bip-taproot just states that any relevant scripts are executed
+<a name="l-24"></a><span class="tm">19:04:43</span><span class="nk"> &lt;jnewbery&gt;</span> would those spends be non-standard initially?
+<a name="l-25"></a><span class="tm">19:04:48</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">jnewbery:</span> of course
+<a name="l-26"></a><span class="tm">19:04:49</span><span class="nk"> &lt;kabaum&gt;</span> I think taproot rationale [10] is what we're looking for,
+<a name="l-27"></a><span class="tm">19:04:58</span><span class="nk"> &lt;pyskell&gt;</span> hi
+<a name="l-28"></a><span class="tm">19:05:07</span><span class="nk"> &lt;sipa&gt;</span> bip-tapscript defines one for one particular leaf version
+<a name="l-29"></a><span class="tm">19:05:21</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">sipa:</span> "of course" -- should it be written down somewhere which bits should be treated as non-standard?
+<a name="l-30"></a><span class="tm">19:05:42</span><span class="nk"> &lt;jnewbery&gt;</span> I think standardness falls outside the BIPs, which only deal with consensus, no?
+<a name="l-31"></a><span class="tm">19:05:42</span><span class="nk"> &lt;sipa&gt;</span> perhaps we can add that if no script semantics are defined for a particular leaf version, the spend is unconditionally valid
+<a name="l-32"></a><span class="tm">19:05:52</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">jnewbery:</span> yeah, that's my thinking
+<a name="l-33"></a><span class="tm">19:05:53</span><span class="nk"> &lt;Moller40&gt;</span> Hi
+<a name="l-34"></a><span class="tm">19:06:23</span><span class="nk"> &lt;cdecker&gt;</span> That'd be a nice addition
+<a name="l-35"></a><span class="tm">19:06:45</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">aj:</span> it feels strange to specify standardness rules in these bips, as they're far less "everyoneust agree on this" than the consensus parts
+<a name="l-36"></a><span class="tm">19:06:52</span><span class="nk"> &lt;aj&gt;</span> treating things as non-standard is important for future soft-forks to be safe (so that nodes that don't validate the new rules dont relay new tx's that might violate them) though?
+<a name="l-37"></a><span class="tm">19:07:04</span><span class="nk"> &lt;sipa&gt;</span> but i also see that it'd be nice to have it written up somewhere
+<a name="l-38"></a><span class="tm">19:07:18</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">sipa:</span> yeah, agree on both points :)
+<a name="l-39"></a><span class="tm">19:08:04</span><span class="nk"> &lt;hebasto&gt;</span> Q from group 5 (2/2). Disabled script opcodes."unexecuted branch" means unexecuted branch in the revealed script?
+<a name="l-40"></a><span class="tm">19:08:18</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">hebasto:</span> correct
+<a name="l-41"></a><span class="tm">19:08:26</span><span class="nk"> &lt;hebasto&gt;</span> sipa; ty
+<a name="l-42"></a><span class="tm">19:08:27</span><span class="nk"> &lt;sipa&gt;</span> i see how branch can be confusing here
+<a name="l-43"></a><span class="tm">19:08:45</span><span class="nk"> &lt;hebasto&gt;</span> a bit ;)
+<a name="l-44"></a><span class="tm">19:08:49</span><span class="nk"> &lt;sipa&gt;</span> it means execution branch of the script, not merkle branch
+<a name="l-45"></a><span class="tm">19:09:08</span><span class="nk"> &lt;cdecker&gt;</span> <span class="hi">Related:</span> aborting when decoding the script instead of executing is merely a performance improvement, or am I missing something?
+<a name="l-46"></a><span class="tm">19:09:33</span><span class="nk"> &lt;hebasto&gt;</span> maybe "execution branch" and "merkle branch" are good wording for bip?
+<a name="l-47"></a><span class="tm">19:10:09</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">cdecker:</span> it also implies that any later success isn't apllicable
+<a name="l-48"></a><span class="tm">19:10:17</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">hebasto:</span> sure
+<a name="l-49"></a><span class="tm">19:10:23</span><span class="nk"> &lt;bjarnem&gt;</span> <span class="hi">Q:</span> Regarding the tweak value `t` must be less than the SECP256K1_ORDER: What to do if the calculated value is greater/equal?
+<a name="l-50"></a><span class="tm">19:10:33</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">bjarnem:</span> it won't be
+<a name="l-51"></a><span class="tm">19:10:44</span><span class="nk"> &lt;jnewbery&gt;</span> <span class="hi">bjarnem:</span> buy a lottery ticket
+<a name="l-52"></a><span class="tm">19:10:47</span><span class="nk"> &lt;cdecker&gt;</span> Right, but it allows statically discarding things early on, without having to execute
+<a name="l-53"></a><span class="tm">19:11:25</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">cdecker:</span> if your question is whether you can write an alternative way to interpreting that does not actually return false immediately upon abort, of course
+<a name="l-54"></a><span class="tm">19:12:05</span><span class="nk"> &lt;sipa&gt;</span> but abort in this context is more than giving a suggested optimization for implementers; it's stating that if that condition is reached, the script must fail
+<a name="l-55"></a><span class="tm">19:12:44</span><span class="nk"> &lt;pyskell&gt;</span> The Taproot BIP says:  "To the best of the authors' knowledge, no existing use of SHA256 in Bitcoin feeds it a message that starts with two single SHA256 outputs, making collisions between hashtag with other hashes extremely unlikely." What is meant by it and what would happen if it's true? Mostly interested because it's stated in somewhat uncertain terms.
+<a name="l-56"></a><span class="tm">19:12:44</span><span class="nk"> &lt;cdecker&gt;</span> Yep, just felt strange to abort on a script branch that isn't even executed :-)
+<a name="l-57"></a><span class="tm">19:13:11</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">cdecker:</span> i see
+<a name="l-58"></a><span class="tm">19:13:28</span><span class="nk"> &lt;bjarnem&gt;</span> <span class="hi">Q:</span> Regarding the squareness of `Q`: (Disclaimer: I am not a cryptographer, so I hope this question is not naive)
+<a name="l-59"></a><span class="tm">19:13:28</span><span class="nk"> &lt;bjarnem&gt;</span> I am unsure regarding the necesity of using a bit to indicate the `has_square_y(Q)` in the control block (Ad7 and Ad6 explain that the squareness of y cannot be guaranteed for `Q`).
+<a name="l-60"></a><span class="tm">19:13:28</span><span class="nk"> &lt;bjarnem&gt;</span> The `Q` value (tweaked pubkey) is commited as scriptPubKey. It can hence also be spend using the key path with a Schnorr signature. But BIP-Schnorr then requires the (tweaked) pubkey `Q` to pass `has_square_y(Q)`. Shouldn't it therefore be guaranteed that for `Q` such a y-coord exists? Or am I misunderstanding something completely?
+<a name="l-61"></a><span class="tm">19:14:17</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">cdecker:</span> not sure how to formulate more clearly... you can see it as a preprocessing step of executing the script (in which case it's just a failure rather than aborting during execution itself
+<a name="l-62"></a><span class="tm">19:15:16</span><span class="nk"> &lt;cdecker&gt;</span> The formulation is clear, I was just wondering about the rationale. All good, don't want to hold up the QA ^^
+<a name="l-63"></a><span class="tm">19:15:23</span><span class="nk"> &lt;nickler&gt;</span> <span class="hi">bjarnem:</span> for key spending Q doesn't have a y coordinate. So the verifier will choose the y coordinate that is square (there's only two options).
+<a name="l-64"></a><span class="tm">19:15:27</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">bjarnem:</span> when spending using the key path, you interpret Q as a has_square point, regardlesz of how it was constructed, and sign possibly with its negation
+<a name="l-65"></a><span class="tm">19:15:34</span><span class="nk"> &lt;pyskell&gt;</span> Is it referring to the SHA256 opcode or something else?
+<a name="l-66"></a><span class="tm">19:15:59</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">bjarnem:</span> when signing using the script path, you have to actually know the squaredness of Y, otherwise the commitment equation won't hold
+<a name="l-67"></a><span class="tm">19:16:20</span><span class="nk"> &lt;jnewbery&gt;</span> One thing that we spent a bit of time talking about in our group session was the annex. Both the format (ie starting with 0x50) and the purpose.
+<a name="l-68"></a><span class="tm">19:16:30</span><span class="nk"> &lt;jnewbery&gt;</span> For the format, I think we explicitly want a leading byte that can't be interpreted as a pubkey (so it can't be confused for P2WPKH) or a opcode (so it can't be confused for P2WSH). 0x50 fits the bill because it can't be a pubkey leading byte (which must be 0x02 or 0x03) and it's an invalid opcode (defined as OP_RESERVED internally, but with unconditional fail semantics).
+<a name="l-69"></a><span class="tm">19:16:45</span><span class="nk"> &lt;aj&gt;</span> sipa, bjarnem: and you can't just try both options if we want to batch verify to make it more efficient
+<a name="l-70"></a><span class="tm">19:17:26</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">jnewbery:</span> it's stronger than that! you can recognize an annex in an input without knowing which output is being spent
+<a name="l-71"></a><span class="tm">19:17:27</span><span class="nk"> &lt;jnewbery&gt;</span> citation 3: https://github.com/sipa/bips/blob/bip-schnorr/bip-taproot.mediawiki#cite_note-3 explains that briefly, but I think it could be expanded a bit (I had to dig around to find 0x50 in script/interpreter.cpp
+<a name="l-72"></a><span class="tm">19:17:39</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">jnewbery:</span> which is by design
+<a name="l-73"></a><span class="tm">19:17:40</span><span class="nk"> &lt;bjarnem&gt;</span> <span class="hi">sipa:</span> ok, I see, so for the script path it is important to show exactly which point, and the x-coord is not enough. I will try to read up on that to understand it a little better :)
+<a name="l-74"></a><span class="tm">19:18:13</span><span class="nk"> &lt;jnewbery&gt;</span> right. What are the benefits of being able to recognise a P2TR spend without having the UTXO being spent?
+<a name="l-75"></a><span class="tm">19:18:14</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">bjarnem:</span> feel free to PR a clarification if you find text that would make it easier to understand for you
+<a name="l-76"></a><span class="tm">19:18:46</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">jnewbery:</span> did you get the idea of using an annex to artifically increase an input's weight?
+<a name="l-77"></a><span class="tm">19:19:10</span><span class="nk"> &lt;jnewbery&gt;</span> I understood the purpose, but wondered why you couldn't just do that in the tapscript
+<a name="l-78"></a><span class="tm">19:19:21</span><span class="nk"> &lt;sipa&gt;</span> ?
+<a name="l-79"></a><span class="tm">19:19:51</span><span class="nk"> &lt;sipa&gt;</span> oh you mean by putting a big push + OP_DROP in the script?
+<a name="l-80"></a><span class="tm">19:20:24</span><span class="nk"> &lt;jnewbery&gt;</span> I think the idea is that if we redefine an OP_SUCCESS to be something like OP_VERIFYSNARK, then we want to increase the weight becuase of the increased validation cost
+<a name="l-81"></a><span class="tm">19:20:42</span><span class="nk"> &lt;jnewbery&gt;</span> yes, why not just add that weight to the script
+<a name="l-82"></a><span class="tm">19:20:57</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">jnewbery:</span> that seems.like highly inefficient use of the chain
+<a name="l-83"></a><span class="tm">19:21:17</span><span class="nk"> &lt;sipa&gt;</span> if you need to pad it with garbage
+<a name="l-84"></a><span class="tm">19:21:28</span><span class="nk"> &lt;jnewbery&gt;</span> isn't that what the annex is doing?
+<a name="l-85"></a><span class="tm">19:21:31</span><span class="nk"> &lt;bjarnem&gt;</span> <span class="hi">Q:</span> What is reasoning behind OP_SUCCESSx instead of only using the available versioning fields to soft-fork new Tapscript logic into the system (e.g. using the leaf version)?
+<a name="l-86"></a><span class="tm">19:21:32</span><span class="nk"> &lt;ariard&gt;</span> can't it be used also for a per-input locktime IIRC ?
+<a name="l-87"></a><span class="tm">19:21:35</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">jnewbery:</span> no!
+<a name="l-88"></a><span class="tm">19:21:46</span><span class="nk"> &lt;jnewbery&gt;</span> oh, then I misunderstand!
+<a name="l-89"></a><span class="tm">19:22:28</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">jnewbery:</span> the idea would be for example that an annex whose first byte (after the 0x50, using some encoding) is 0x37, a 2-byte field follows
+<a name="l-90"></a><span class="tm">19:22:47</span><span class="nk"> &lt;sipa&gt;</span> and the value of that two byte field is added to the weight of the tx
+<a name="l-91"></a><span class="tm">19:23:15</span><span class="nk"> &lt;sipa&gt;</span> while simultaneously equivalently increasing the budget for expensivw opcodes in tbe script
+<a name="l-92"></a><span class="tm">19:23:36</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">ariard:</span> for examlle
+<a name="l-93"></a><span class="tm">19:23:49</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">ariard:</span> or a block height hash requirement
+<a name="l-94"></a><span class="tm">19:23:55</span><span class="nk"> &lt;ariard&gt;</span> <span class="hi">sipa:</span> yes but the value of that two byte can be choosed by the spender how would you make it mandatory ?
+<a name="l-95"></a><span class="tm">19:24:21</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">ariard:</span> if they set it tol high, they'll pay extra fees
+<a name="l-96"></a><span class="tm">19:24:22</span><span class="nk"> &lt;jnewbery&gt;</span> after this imaginary future OP_VERIFYSNARK softfork, are unupgraded miners still able to mine? How do they account block weight?
+<a name="l-97"></a><span class="tm">19:24:29</span><span class="nk"> &lt;ariard&gt;</span> don't you need to combine with some sighash flags to force annex value being covered by transaction digest
+<a name="l-98"></a><span class="tm">19:24:35</span><span class="nk"> &lt;sipa&gt;</span> of they set it too low, the script will fail
+<a name="l-99"></a><span class="tm">19:24:37</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">ariard:</span> if you spend more computation than the budget, your tx is invalid; so to increase the budget, you put the smallest value you can into the annex
+<a name="l-100"></a><span class="tm">19:24:54</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">ariard:</span> annexes are always covered by signatures
+<a name="l-101"></a><span class="tm">19:24:58</span><span class="nk"> &lt;hebasto&gt;</span> <span class="hi">sipa:</span> annex could increase weight without bloating chain, right?
+<a name="l-102"></a><span class="tm">19:25:04</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">hebasto:</span> right
+<a name="l-103"></a><span class="tm">19:25:17</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">jnewbery:</span> increasing the weight for a transaction is a softfork
+<a name="l-104"></a><span class="tm">19:25:32</span><span class="nk"> &lt;sipa&gt;</span> and using an unknown annex is nonstandard
+<a name="l-105"></a><span class="tm">19:25:41</span><span class="nk"> &lt;sipa&gt;</span> so i think this is perfectly possible to deploy
+<a name="l-106"></a><span class="tm">19:25:59</span><span class="nk"> &lt;sipa&gt;</span> (that doesn't mean we need to; there may never be a reason to)
+<a name="l-107"></a><span class="tm">19:26:11</span><span class="nk"> &lt;ariard&gt;</span> <span class="hi">aj:</span> okay so it means we track budget during script evaluation and if committed budget in annex doesn't match it's a failure ?
+<a name="l-108"></a><span class="tm">19:26:13</span><span class="nk"> &lt;jnewbery&gt;</span> unupgraded miners just don't include anything with an annex because it's non-standard?
+<a name="l-109"></a><span class="tm">19:26:18</span><span class="nk"> &lt;sipa&gt;</span> right
+<a name="l-110"></a><span class="tm">19:26:45</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">ariard:</span> the budget is the size of the input, which if amended by an annex, includes that amount
+<a name="l-111"></a><span class="tm">19:27:07</span><span class="nk"> &lt;waxwing&gt;</span> wait surely we expect miners to upgrade in SF scenarios to avoid mis-mining?
+<a name="l-112"></a><span class="tm">19:27:27</span><span class="nk"> &lt;nickler&gt;</span> <span class="hi">sipa:</span> with op_zkverify would the limit be something like #(OP_CHECKSIG)*50 + #(OP_ZKVERIFY)*X &lt;= weight?
+<a name="l-113"></a><span class="tm">19:27:35</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">nickler:</span> exactly
+<a name="l-114"></a><span class="tm">19:27:36</span><span class="nk"> &lt;ariard&gt;</span> <span class="hi">sipa:</span> and you check the budget against which reference value ? that's where I choke
+<a name="l-115"></a><span class="tm">19:27:49</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">ariard:</span> the weight of the input
+<a name="l-116"></a><span class="tm">19:28:04</span><span class="nk"> &lt;sipa&gt;</span> right now that is literally the number of bytes of the witness
+<a name="l-117"></a><span class="tm">19:28:24</span><span class="nk"> &lt;sipa&gt;</span> if an annex is defined that increments the weight, that counts too
+<a name="l-118"></a><span class="tm">19:28:40</span><span class="nk"> &lt;elichai2&gt;</span> <span class="hi">nickler:</span> op_zkverify?
+<a name="l-119"></a><span class="tm">19:28:56</span><span class="nk"> &lt;moneyball&gt;</span> <span class="hi">elichai2:</span> a hypothetical example
+<a name="l-120"></a><span class="tm">19:29:34</span><span class="nk"> &lt;jnewbery&gt;</span> What are the benefits of being able to recognise a P2TR spend without having the UTXO being spent?
+<a name="l-121"></a><span class="tm">19:29:57</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">jnewbery:</span> for this annex weight increase example it's useful
+<a name="l-122"></a><span class="tm">19:30:17</span><span class="nk"> &lt;sipa&gt;</span> as otherwise you wouldn't be able to compute a tx's weight without access to the output being spent
+<a name="l-123"></a><span class="tm">19:30:53</span><span class="nk"> &lt;devrandom&gt;</span> group 3 Q 1/?: "The total number of bytes hashed is at most 211" - this doesn't include the sub-hashes, like computing sha_prevouts, etc., right?  the reason sub-hashes are not included in the 211 bytes is because they can be cached across sigs for the same tx?
+<a name="l-124"></a><span class="tm">19:31:09</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">devrandom:</span> exactly
+<a name="l-125"></a><span class="tm">19:31:19</span><span class="nk"> &lt;elichai2&gt;</span> <span class="hi">moneyball:</span> :) I thought we're already planning tapscript V2 :P
+<a name="l-126"></a><span class="tm">19:31:45</span><span class="nk"> &lt;devrandom&gt;</span> maybe that sentence can be expanded to mention the sub-hashes?  I can PR?  or do you think it's clear enough as is?
+<a name="l-127"></a><span class="tm">19:32:20</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">devrandom:</span> feel free
+<a name="l-128"></a><span class="tm">19:32:28</span><span class="nk"> &lt;devrandom&gt;</span> OK
+<a name="l-129"></a><span class="tm">19:32:57</span><span class="nk"> &lt;devrandom&gt;</span> group 3 Q/?: "Just like other existing output types, taproot outputs should never reuse keys" - this is for the standard privacy reason, as in "don't reuse addresses"?
+<a name="l-130"></a><span class="tm">19:32:59</span><span class="nk"> &lt;jnewbery&gt;</span> would there ever be a reason to need more than one annex?
+<a name="l-131"></a><span class="tm">19:33:19</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">jnewbery:</span> possibly
+<a name="l-132"></a><span class="tm">19:33:50</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">jnewbery:</span> if you need a per input timelock and are using OP_ZKVERIFY, you'd use two annex entries maybe
+<a name="l-133"></a><span class="tm">19:34:26</span><span class="nk"> &lt;cdecker&gt;</span> Couldn't they be serialized back to back then?
+<a name="l-134"></a><span class="tm">19:34:28</span><span class="nk"> &lt;jnewbery&gt;</span> so should we change the definition to be that any n trailing witness elements starting 0x50 are annexes?
+<a name="l-135"></a><span class="tm">19:34:58</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">jnewbery:</span> yes, that's possible, but concatenating them is more efficient i think
+<a name="l-136"></a><span class="tm">19:35:04</span><span class="nk"> &lt;aj&gt;</span> 0x50 { &lt;len&gt; &lt;tag&gt; &lt;values&gt; } seems a fine encoding to only use a single witness element
+<a name="l-137"></a><span class="tm">19:35:14</span><span class="nk"> &lt;jnewbery&gt;</span> got it
+<a name="l-138"></a><span class="tm">19:35:34</span><span class="nk"> &lt;aj&gt;</span> (makes lightning people twitch since they like tag/length/value though)
+<a name="l-139"></a><span class="tm">19:35:53</span><span class="nk"> &lt;sipa&gt;</span> it's also a tradeoff between taking a complexity hit now, and wondering whether we'll ever even need it
+<a name="l-140"></a><span class="tm">19:36:05</span><span class="nk"> &lt;cdecker&gt;</span> <span class="hi">aj:</span> just thought the same :-)
+<a name="l-141"></a><span class="tm">19:36:13</span><span class="nk"> &lt;nickler&gt;</span> <span class="hi">devrandom:</span> agree that this is confusing. Made more sense when the section was called Privacy.
+<a name="l-142"></a><span class="tm">19:36:24</span><span class="nk"> &lt;sipa&gt;</span> by saying some annex but not specifying any of its semantics we maximally defer the complexity to when it's needed
+<a name="l-143"></a><span class="tm">19:36:46</span><span class="nk"> &lt;jnewbery&gt;</span> <span class="hi">sipa:</span> makes sense. Thanks
+<a name="l-144"></a><span class="tm">19:39:00</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">pyskell:</span> the comment on the tagged hashes use refers to all sha256 anywhere in any protocol related to bitcoin
+<a name="l-145"></a><span class="tm">19:39:05</span><span class="nk"> &lt;sipa&gt;</span> not just inside script
+<a name="l-146"></a><span class="tm">19:39:20</span><span class="nk"> &lt;sipa&gt;</span> and the effect of being wrong about it is very likely nothing
+<a name="l-147"></a><span class="tm">19:40:08</span><span class="nk"> &lt;sipa&gt;</span> in most cases tagged hashing is not needed
+<a name="l-148"></a><span class="tm">19:40:19</span><span class="nk"> &lt;jnewbery&gt;</span> The control block can just be (one leading byte plus) the tapleaf hash in the case where only one script is committed. I thought it was slightly interesting that this is the only case where you can know for sure that no other spending conditions were committed to (with keypath spend you don't know whether there was a tweak and with a taptree spend you don't know the other branches)
+<a name="l-149"></a><span class="tm">19:40:52</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">jnewbery:</span> good point
+<a name="l-150"></a><span class="tm">19:41:07</span><span class="nk"> &lt;devrandom&gt;</span> group 3 Q 3/?: there was some group discussion about the fact that specifying the pubkey in the output saves bytes in the blockchain overall, but it's actually heavier in *vbytes*.  The discussion then got into whether the weight calculation should be different for taproot (I assume so as to encourage use by not penalizing with higher fees).  what do you think?
+<a name="l-151"></a><span class="tm">19:41:35</span><span class="nk"> &lt;pyskell&gt;</span> <span class="hi">sipa:</span> Gotcha, thanks for clarifying
+<a name="l-152"></a><span class="tm">19:41:54</span><span class="nk"> &lt;waxwing&gt;</span> devrandom, i think i remember coming up with 1.5 vbytes heavier for p2tr vs p2wpkh when discussing it with aj last week
+<a name="l-153"></a><span class="tm">19:41:55</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">devrandom:</span> for starters, i don't think this matters, because the output cost is paid by the sender
+<a name="l-154"></a><span class="tm">19:41:59</span><span class="nk"> &lt;waxwing&gt;</span> i mean average of course, not exact
+<a name="l-155"></a><span class="tm">19:42:28</span><span class="nk"> &lt;sipa&gt;</span> and the sender is already willing to pay fot 32-byte witness programs, or he'd not have implemented bip173
+<a name="l-156"></a><span class="tm">19:43:00</span><span class="nk"> &lt;waxwing&gt;</span> that's an argument on segwit v1 vs v0 uptake, but not legacy to v1 uptake right
+<a name="l-157"></a><span class="tm">19:43:06</span><span class="nk"> &lt;sipa&gt;</span> right
+<a name="l-158"></a><span class="tm">19:43:35</span><span class="nk"> &lt;bjarnem&gt;</span> <span class="hi">Q:</span> Regarding wording for signature hash:
+<a name="l-159"></a><span class="tm">19:43:35</span><span class="nk"> &lt;bjarnem&gt;</span> Under "Constructing and spending Taproot outputs" -&gt; "Spending using the key path":
+<a name="l-160"></a><span class="tm">19:43:35</span><span class="nk"> &lt;bjarnem&gt;</span> "[...] To do so, a witness stack consists of a single element: a bip-schnorr signature on the signature hash as defined above, [...]" &lt;- Is the "transaction digest" defined above the same as what is called "signature hash" here?
+<a name="l-161"></a><span class="tm">19:43:37</span><span class="nk"> &lt;nickler&gt;</span> <span class="hi">waxwing:</span> I came up with 1.25 :) https://medium.com/blockstream/reducing-bitcoin-transaction-sizes-with-x-only-pubkeys-f86476af05d7
+<a name="l-162"></a><span class="tm">19:44:25</span><span class="nk"> &lt;waxwing&gt;</span> nickler, lol i'll take it.
+<a name="l-163"></a><span class="tm">19:44:33</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">bjarnem:</span> yep
+<a name="l-164"></a><span class="tm">19:45:10</span><span class="nk"> &lt;devrandom&gt;</span> the difference in vbytes for the sender is (32 - 20) * 4 = 48 if I'm not mistaken.  that said I don't have an opinion about this personally, if anybody from group 3 does they can say something ;)
+<a name="l-165"></a><span class="tm">19:45:26</span><span class="nk"> &lt;moneyball&gt;</span> <span class="hi">sipa:</span> thoughts on adjusting the weight calculation to make spending PT2R slightly more favorable? advantage being increased adoption of it + improved privacy/fungibility
+<a name="l-166"></a><span class="tm">19:45:45</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">moneyball:</span> that would be a hard fork. good luck.
+<a name="l-167"></a><span class="tm">19:45:52</span><span class="nk"> &lt;moneyball&gt;</span> oh...
+<a name="l-168"></a><span class="tm">19:46:09</span><span class="nk"> &lt;waxwing&gt;</span> a much less technical point, but our group (6) felt that the Motivation section of BIP-taproot does not actually address the motivation, at least to a reader who doesn't know all historical context. it seems like the motivation is in the "Design" section that immediately follows.
+<a name="l-169"></a><span class="tm">19:47:34</span><span class="nk"> &lt;waxwing&gt;</span> sipa, or maybe swipe a byte or two off the witness program? :)
+<a name="l-170"></a><span class="tm">19:47:51</span><span class="nk"> &lt;bjarnem&gt;</span> <span class="hi">sipa:</span> I feel that those terms could be defined as being the same under "Transaction digest", or maybe just use one term. Becuase it also happens in BIP-Taproot that sometimes it refers to the "transaction digest" and other times to the "signature hash". But if they are the same maybe just use one term?
+<a name="l-171"></a><span class="tm">19:48:13</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">devrandom:</span> (32-20)*4 gives difference in weight units, vbytes is just (32-20) (and if you were counting witness data, you'd divide that part by 4)
+<a name="l-172"></a><span class="tm">19:48:14</span><span class="nk"> &lt;nickler&gt;</span> <span class="hi">bjarnem:</span> agreed
+<a name="l-173"></a><span class="tm">19:48:38</span><span class="nk"> &lt;bjarnem&gt;</span> <span class="hi">(edit:</span> I meant also in BIP-TapSCRIPT)
+<a name="l-174"></a><span class="tm">19:48:44</span><span class="nk"> &lt;devrandom&gt;</span> <span class="hi">aj:</span> got it
+<a name="l-175"></a><span class="tm">19:49:14</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">waxwing:</span> can you open an issue in my bips repo for that? i think that perhaps needs some more discussion than just a PR
+<a name="l-176"></a><span class="tm">19:49:48</span><span class="nk"> &lt;waxwing&gt;</span> sipa, the motivation? sure yeah that makes sense. i'll copy in the notes i made about it earlier.
+<a name="l-177"></a><span class="tm">19:50:04</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">bjarnem:</span> good point, let's use signature hash everywhere (transaction digest is confusing, as it contains some data that's not actually in the transaction)
+<a name="l-178"></a><span class="tm">19:50:07</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">waxwing:</span> yeah
+<a name="l-179"></a><span class="tm">19:50:35</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">sipa:</span> maybe "signature digest" for the stuff you feed into the hash function and "signature hash" for the result?
+<a name="l-180"></a><span class="tm">19:50:55</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">sipa:</span> it keeps annoying me there's no term to use for the stuff you feed into the hash
+<a name="l-181"></a><span class="tm">19:51:16</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">aj:</span> "message digest" is a historical name for cryptographic hash function, so i wouldn't use digest to refer to its preimage
+<a name="l-182"></a><span class="tm">19:51:35</span><span class="nk"> &lt;devrandom&gt;</span> group 3 Q 4/?: "The new signature hashing algorithm fixes the verification capabilities of offline signing devices by including amount and scriptPubKey in the digest" - the difference is that segwit commits to input value, but taproot commits to *all* inputs, right?  is the difference mainly for transaction with inputs from different parties?
+<a name="l-183"></a><span class="tm">19:51:41</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">sipa:</span> fair
+<a name="l-184"></a><span class="tm">19:52:11</span><span class="nk"> &lt;waxwing&gt;</span> devrandom, yes i was wondering about that, is it related to the kinds of attacks instagibbs came up with wrt coinjoin and similar?
+<a name="l-185"></a><span class="tm">19:52:24</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">devrandom:</span> no, there is an existing issue where you ask a device to sign a 2-input tx twice, and each time you lie about the other input's value
+<a name="l-186"></a><span class="tm">19:52:41</span><span class="nk"> &lt;sipa&gt;</span> the result is that a malicious online wallet can trick an offline wallet in spending more on fees than it intends to
+<a name="l-187"></a><span class="tm">19:54:25</span><span class="nk"> &lt;waxwing&gt;</span> right so not specifically coinjoin but that's one of the main ways it might come up
+<a name="l-188"></a><span class="tm">19:54:32</span><span class="nk"> &lt;sipa&gt;</span> right
+<a name="l-189"></a><span class="tm">19:54:40</span><span class="nk"> &lt;sipa&gt;</span> it's more general than that, but indeed
+<a name="l-190"></a><span class="tm">19:54:53</span><span class="nk"> &lt;bjarnem&gt;</span> I already asked but cannot find an answer, so in case it was overlooked in the discussion here it comes again :)
+<a name="l-191"></a><span class="tm">19:54:54</span><span class="nk"> &lt;bjarnem&gt;</span> <span class="hi">Q:</span> What is reasoning behind OP_SUCCESSx instead of only using the available versioning fields to soft-fork new Tapscript logic into the system (e.g. using the leaf version)?
+<a name="l-192"></a><span class="tm">19:55:09</span><span class="nk"> &lt;devrandom&gt;</span> <span class="hi">sipa:</span> got it, I assumed that HW wallets signed all inputs at the same time
+<a name="l-193"></a><span class="tm">19:55:11</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">bjarnem:</span> OP_SUCCESSx is the most powerful upgrade mechanism there is
+<a name="l-194"></a><span class="tm">19:55:38</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">bjarnem:</span> if you'd have me pick one of leaf versions, upgradable pubkeys, or op_success, i'd pick the last one
+<a name="l-195"></a><span class="tm">19:56:07</span><span class="nk"> &lt;bjarnem&gt;</span> <span class="hi">sipa:</span> Doesn't leaf versioning have the same power, allowing to change the semantics of the script language like segwit versioning??
+<a name="l-196"></a><span class="tm">19:56:29</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">bjarnem:</span> yes, but you need a new leaf version any time you introduce a new opcode for example
+<a name="l-197"></a><span class="tm">19:56:48</span><span class="nk"> &lt;sipa&gt;</span> with OP_SUCCESSx you just pick a number and define it; it can be done in parallel with other new opcodes even
+<a name="l-198"></a><span class="tm">19:57:13</span><span class="nk"> &lt;devrandom&gt;</span> group 3 Q 5/5: should the BIP have a Requires header referring to schnorr, etc.?
+<a name="l-199"></a><span class="tm">19:57:27</span><span class="nk"> &lt;bjarnem&gt;</span> <span class="hi">sipa:</span> ah, ok I see that
+<a name="l-200"></a><span class="tm">19:57:46</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">bjarnem:</span> OP_SUCCESSx is the most natural choice for new opcodes, i think; leaf versions are the most natural choice for large redefinitions of the language
+<a name="l-201"></a><span class="tm">19:58:02</span><span class="nk"> &lt;sipa&gt;</span> and leaf versions essentially come at zero cost, because we have a few unused bits in the control block anyway
+<a name="l-202"></a><span class="tm">19:58:12</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">devrandom:</span> yeah
+<a name="l-203"></a><span class="tm">19:58:16</span><span class="nk"> &lt;nickler&gt;</span> <span class="hi">devrandom:</span> I think so. there's a PR for that already https://github.com/sipa/bips/pull/135
+<a name="l-204"></a><span class="tm">19:58:17</span><span class="nk"> &lt;bjarnem&gt;</span> <span class="hi">sipa:</span> thanks for the clarifiaction of the reasoning!
+<a name="l-205"></a><span class="tm">19:59:16</span><span class="nk"> &lt;sipa&gt;</span> as time is running out here... i feel there have been a lot of good questions here that got a response consisting of a rationale that isn't actually in the BIPs; i'll do an effort to go through the transcript and addressing the ones asked, but feel free to help with that
+<a name="l-206"></a><span class="tm">20:00:04</span><span class="nk"> &lt;aj&gt;</span> "feel free to help" ~= "please do help" :)
+<a name="l-207"></a><span class="tm">20:00:28</span><span class="nk"> &lt;moneyball&gt;</span> shall we wrap?
+<a name="l-208"></a><span class="tm">20:00:29</span><span class="nk"> &lt;sipa&gt;</span> if you got a satisfactory answer, you're probably in the best position to add to the bip exactly what insight would have made the text more clear to you
+<a name="l-209"></a><span class="tm">20:00:44</span><span class="nk"> &lt;devrandom&gt;</span> will PR for the stuff I asked
+<a name="l-210"></a><span class="tm">20:00:50</span><span class="nk"> &lt;sipa&gt;</span> awesome, thanks
+<a name="l-211"></a><span class="tm">20:00:56</span><span class="nk"> &lt;sipa&gt;</span> i need to run, thanks everyone!
+<a name="l-212"></a><span class="tm">20:00:59</span><span class="nk"> &lt;moneyball&gt;</span> <span class="cmd">#endmeeting</span><span class="cmdline"></span>
+<a name="l-213"></a><span class="tm">20:01:06</span><span class="nk"> &lt;jonatack&gt;</span> thanks!
+<a name="l-214"></a><span class="tm">20:01:11</span><span class="nk"> &lt;b10c&gt;</span> Thanks!
+<a name="l-215"></a><span class="tm">20:01:12</span><span class="nk"> &lt;kabaum&gt;</span> Thanks
+<a name="l-216"></a><span class="tm">20:01:15</span><span class="nk"> &lt;bjarnem&gt;</span> Thanks a lot!!
+<a name="l-217"></a><span class="tm">20:01:23</span><span class="nk"> &lt;cdecker&gt;</span> Thanks ^^
+<a name="l-218"></a><span class="tm">20:01:24</span><span class="nk"> &lt;aj&gt;</span> also, quick tip since a few people haven't had much luck getting groups together -- (a) if no one else has taken the initiative to choose a time, or talk about things, that might just be a cue for you to do it; (b) it might be that everyone else in your group really is too busy, so feel free to contact to join a different group
+<a name="l-219"></a><span class="tm">20:01:28</span><span class="nk"> &lt;aj&gt;</span> <span class="cmd">#endmeeting</span><span class="cmdline"></span></pre>
+</body></html>

@@ -1,0 +1,32 @@
+02:00:55 <aj> #startmeeting
+02:00:55 <lightningbot> Meeting started Thu Nov 14 02:00:55 2019 UTC.  The chair is aj. Information about MeetBot at http://wiki.debian.org/MeetBot.
+02:00:55 <lightningbot> Useful Commands: #action #agreed #help #info #idea #link #topic.
+02:01:38 <aj> hey all, might be an abbreviated session this time
+02:05:45 <instagibbs> hi
+02:06:09 <fanquake> hi
+02:09:12 <instagibbs> did we run out of topics for this week or am i disconnected
+02:09:58 <aj> doesn't seem like anyone's got any questions
+02:10:01 <fanquake> instagibbs I'm not seeing any chatter either
+02:11:03 <instagibbs> were they any lingering disccusions from last QA? I missed t
+02:13:12 <aj> there was a fair bit of discussion about upgrade stuff -- OP_SUCCESS and annex things
+02:16:54 <aj> there's also a few suggestions/PRs along the lines of improving motivation/rationale
+02:17:45 <instagibbs> i found the rationale helped a lot with disambiguating the meaning of the text, especially successx section
+02:17:55 <instagibbs> might mean a slight cleanup warranted
+02:21:17 <aj> yeah, PRs welcome :)
+02:21:38 <instagibbs> the only thing bothering me really is the definition of codeseparator_position, if we get 4GB+ blocks it is undefined what happens when the marked position is beyond 2^32 :P
+02:22:13 <instagibbs> now that scripts are unbounded in size, only implicitly bounded by blockweight
+02:22:22 <aj> we already bumped that from 16 bits when the 10k script length limit got dropped
+02:28:15 <aj> anyway, big blocks would be a hard fork, so if we made it more of a hard fork we could add another spend_type bit to allow for encoding the codesep pos via compactsize (if 64bit numbers are enough for you) or similar
+02:28:42 <aj> or we could reintroduce a script size limit that's more than 4M but less than 4G
+02:31:15 <instagibbs> yes was not a particularly pressing/serious concern
+02:32:48 <aj> any more progress with the multisig tree jupyter notebook?
+02:33:42 <instagibbs> no sorry :) it works, dies a combinatoric death at 21-of-30
+02:34:31 <instagibbs> vast majority of the computation is computing the musig pubkeys, someone noted that the tweak could just be the superset of all n signers, might bring down the computation
+02:38:17 <aj> any thoughts on whether it makes more sense to stay below ~30 signers, or go unaccountable with threshold-musig, or use checksigadd or similar script?
+02:39:57 <aj> ah, i see there's a magazine article where samson mow talks about having "hundreds" of functionaries
+02:41:13 <instagibbs> there's a scheme for quasi-accountability, but I'd have to defer to andytoshi for that
+02:42:31 <aj> i guess if you have that many, one approach might be to group them into sets of 5 and allow unaccountable 4/5 musig between them, and do checksigadd to require 18/20 groups to sign or similar for between 72 and 92 of 100 multisig
+02:43:37 <aj> there's a scheme where the honest participants in the multisig can track who the other co-signers were, so long as you have some honest participants
+02:44:49 <instagibbs> anyways, that's Future Work with threshold
+02:46:25 <aj> okay, about time for me to put the laptop away, so i guess we'll call it
+02:46:29 <aj> #endmeeting

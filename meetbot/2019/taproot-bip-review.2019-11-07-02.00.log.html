@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>##taproot-bip-review log</title>
+<style type="text/css">
+/* For the .log.html */
+pre { /*line-height: 125%;*/
+      white-space: pre-wrap; }
+body { background: #f0f0f0; }
+
+body .tm  { color: #007020 }                      /* time */
+body .nk  { color: #062873; font-weight: bold }   /* nick, regular */
+body .nka { color: #007020; font-weight: bold }  /* action nick */
+body .ac  { color: #00A000 }                      /* action line */
+body .hi  { color: #4070a0 }                 /* hilights */
+/* Things to make particular MeetBot commands stick out */
+body .topic     { color: #007020; font-weight: bold }
+body .topicline { color: #000080; font-weight: bold }
+body .cmd       { color: #007020; font-weight: bold }
+body .cmdline  { font-weight: bold }
+
+</style>
+</head>
+
+<body>
+<pre><a name="l-1"></a><span class="tm">02:00:12</span><span class="nk"> &lt;aj&gt;</span> <span class="cmd">#startmeeting</span><span class="cmdline"></span>
+<a name="l-2"></a><span class="tm">02:00:12</span><span class="nk"> &lt;lightningbot&gt;</span> Meeting started Thu Nov  7 02:00:12 2019 UTC.  The chair is aj. Information about MeetBot at http://wiki.debian.org/MeetBot.
+<a name="l-3"></a><span class="tm">02:00:13</span><span class="nk"> &lt;lightningbot&gt;</span> Useful Commands: #action #agreed #help #info #idea #link #topic.
+<a name="l-4"></a><span class="tm">02:00:53</span><span class="nk"> &lt;aj&gt;</span> hi round 2 folks!
+<a name="l-5"></a><span class="tm">02:00:57</span><span class="nk"> &lt;andytoshi&gt;</span> hiya
+<a name="l-6"></a><span class="tm">02:00:59</span><span class="nk"> &lt;moneyball&gt;</span> hi
+<a name="l-7"></a><span class="tm">02:01:01</span><span class="nk"> &lt;Tibo&gt;</span> hi
+<a name="l-8"></a><span class="tm">02:01:01</span><span class="nk"> &lt;fanquake&gt;</span> hi
+<a name="l-9"></a><span class="tm">02:01:03</span><span class="nk"> &lt;sipa&gt;</span> hi
+<a name="l-10"></a><span class="tm">02:01:04</span><span class="nk"> &lt;soju&gt;</span> hi
+<a name="l-11"></a><span class="tm">02:01:06</span><span class="nk"> &lt;gmaxwell&gt;</span> I was gonna ping everyone in the room but there are a lot of people here.
+<a name="l-12"></a><span class="tm">02:01:37</span><span class="nk"> &lt;sipa&gt;</span> Log from the previous Q&amp;A session: http://www.erisian.com.au/meetbot/taproot-bip-review/2019/taproot-bip-review.2019-11-05-19.00.log.html
+<a name="l-13"></a><span class="tm">02:02:06</span><span class="nk"> &lt;gmaxwell&gt;</span> I move to approve the minutes of the last meeting. All in favor?
+<a name="l-14"></a><span class="tm">02:02:29</span><span class="nk"> &lt;moneyball&gt;</span> aye
+<a name="l-15"></a><span class="tm">02:02:43</span><span class="nk"> &lt;gmaxwell&gt;</span> Motion carries.
+<a name="l-16"></a><span class="tm">02:02:45</span><span class="nk"> &lt;sipa&gt;</span> All 60 minutes?
+<a name="l-17"></a><span class="tm">02:02:51</span><span class="nk"> &lt;moneyball&gt;</span> We have a bunch of experts here on Taproot so please ask any questions you might have
+<a name="l-18"></a><span class="tm">02:04:24</span><span class="nk"> &lt;gmaxwell&gt;</span> Especialy all those questions which you were too embarassed to ask in front of the europeans.
+<a name="l-19"></a><span class="tm">02:04:50</span><span class="nk"> &lt;sipa&gt;</span> I'll be here the whole hour, so if anything comes up, feel free to ask any time.
+<a name="l-20"></a><span class="tm">02:05:02</span><span class="nk"> &lt;Tibo&gt;</span> A small question on requiring to commit to an unspendable script path instead of having no script path. From the doc it is not clear to me if that is a "should" (like it's nice to do it especially in some specific key aggregation scheme) or a "must" (like really do it otherwise you're dead)
+<a name="l-21"></a><span class="tm">02:05:22</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">Tibo:</span> that's a good question
+<a name="l-22"></a><span class="tm">02:05:53</span><span class="nk"> &lt;sipa&gt;</span> there are many situations in which it's perfectly fine to just use a public key directly as an output point.
+<a name="l-23"></a><span class="tm">02:05:56</span><span class="nk"> &lt;andytoshi&gt;</span> my feeling is that it's a "should" ... there are many cases where it's safe not to do this
+<a name="l-24"></a><span class="tm">02:06:11</span><span class="nk"> &lt;andytoshi&gt;</span> in particular if there is only one party
+<a name="l-25"></a><span class="tm">02:06:22</span><span class="nk"> &lt;andytoshi&gt;</span> or if all parties are using musig and checking the derivation
+<a name="l-26"></a><span class="tm">02:06:53</span><span class="nk"> &lt;sipa&gt;</span> But at the same time, not doing it may be dangerous in situations where it isn't all that obvious, so it should be common practice to just do it.
+<a name="l-27"></a><span class="tm">02:06:53</span><span class="nk"> &lt;Tibo&gt;</span> ok thanks for clarifying!
+<a name="l-28"></a><span class="tm">02:07:01</span><span class="nk"> &lt;gmaxwell&gt;</span> If your key is truly random then it is impossible to prove to a third party that there isn't some other script.  Now, in many (most?) cases it's none of anyone elses business-- and especially not the business of a third party to the key creation-- if there is some other script...
+<a name="l-29"></a><span class="tm">02:07:41</span><span class="nk"> &lt;gmaxwell&gt;</span> It's not really that different from the fact that unless your key is in a HSM you cannot prove that you didn't give someone else a copy of the private key.
+<a name="l-30"></a><span class="tm">02:08:21</span><span class="nk"> &lt;andytoshi&gt;</span> i think having the ability to prove this is useful ... i mean, it's harmless to -have- the ability
+<a name="l-31"></a><span class="tm">02:08:21</span><span class="nk"> &lt;aj&gt;</span> if your key was generated by a HSM, you might want the HSM to prove to you there's no hidden script path in there though
+<a name="l-32"></a><span class="tm">02:08:31</span><span class="nk"> &lt;sipa&gt;</span> I think it's fair to say that it's always fine to use a pubkey directly when there is only one signer.
+<a name="l-33"></a><span class="tm">02:08:34</span><span class="nk"> &lt;andytoshi&gt;</span> oh very good point aj
+<a name="l-34"></a><span class="tm">02:08:36</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">aj:</span> right.
+<a name="l-35"></a><span class="tm">02:09:30</span><span class="nk"> &lt;Tibo&gt;</span> I see interesting.
+<a name="l-36"></a><span class="tm">02:09:32</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">aj:</span> my point was just that it's very rare that existing bitcoin users today bother proving to anyone that a key wasn't copied.  "There might be a hidden tapscript" is a similar risk.
+<a name="l-37"></a><span class="tm">02:10:24</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">gmaxwell:</span> yep
+<a name="l-38"></a><span class="tm">02:10:26</span><span class="nk"> &lt;gmaxwell&gt;</span> Sipa's point is that its better to do it by default because its essentially free, and in the rare case you do want that proof you can generate it
+<a name="l-39"></a><span class="tm">02:10:49</span><span class="nk"> &lt;gmaxwell&gt;</span> vs if you thought you wouldn't need to prove it, but then later did, you won't be able to.
+<a name="l-40"></a><span class="tm">02:12:01</span><span class="nk"> &lt;sipa&gt;</span> One specific example where it is actually dangerous, and not just a "you can't prove" is when you're doing naive key aggregation (just summing up pubkeys), even together with certified keys (which without taproot would be secure), there is now a combined taproot+aggregation rogue key attack where one party offset his key by exactly as much as necessary to later steal the funds using a script
+<a name="l-41"></a><span class="tm">02:12:05</span><span class="nk"> &lt;sipa&gt;</span> that just includes the attacker
+<a name="l-42"></a><span class="tm">02:12:36</span><span class="nk"> &lt;sipa&gt;</span> But that still involves multiple parties.
+<a name="l-43"></a><span class="tm">02:13:46</span><span class="nk"> &lt;gmaxwell&gt;</span> oh thats a nice attack-- he could even prove knowledge of the discrete log.
+<a name="l-44"></a><span class="tm">02:16:31</span><span class="nk"> &lt;Tibo&gt;</span> So I think I'm a bit confused with this proof thing. If I understand (and I feel like I don't) the proof would be to show someone that you have P such that Q = P + hash(P) * G. But couldn't P itself be an already tweaked key?
+<a name="l-45"></a><span class="tm">02:16:52</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">Tibo:</span> it certainly could be, but that doesn't matter
+<a name="l-46"></a><span class="tm">02:17:29</span><span class="nk"> &lt;Tibo&gt;</span> Ah yeah because you couldn't spend it anyway?
+<a name="l-47"></a><span class="tm">02:17:36</span><span class="nk"> &lt;sipa&gt;</span> The taproot consensus spending rules do not let you take advantage of P being tweaked somehow (you can only do the "hey! look! Q is not actually a pubkey, but it commits to a script!" thing once)
+<a name="l-48"></a><span class="tm">02:17:38</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">Tibo:</span> that taproot construction itself isn't recursive, there can be exactly one top level tweak.
+<a name="l-49"></a><span class="tm">02:18:00</span><span class="nk"> &lt;Tibo&gt;</span> Yes I see thanks
+<a name="l-50"></a><span class="tm">02:18:35</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">Tibo:</span> also if you have some fancy key generation scheme you should be _always_ able to do that final tweak as essentially a post processing step.
+<a name="l-51"></a><span class="tm">02:19:02</span><span class="nk"> &lt;gmaxwell&gt;</span> Then either have one of your signers increment his private key by hash(P), or add an addition dummy signer with private key hash(P).
+<a name="l-52"></a><span class="tm">02:20:01</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">Tibo:</span> the two-level tweaking thing might be something coloured coins end up using https://github.com/rgb-org/spec/issues/61
+<a name="l-53"></a><span class="tm">02:21:12</span><span class="nk"> &lt;Tibo&gt;</span> gmaxwell thanks
+<a name="l-54"></a><span class="tm">02:21:16</span><span class="nk"> &lt;Tibo&gt;</span> @aj
+<a name="l-55"></a><span class="tm">02:21:27</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">aj:</span> for a number of years Blockstream's liquid has used a tweaked key to commit to the outputs that should get paid on the sidechain. So yeah there are other applications that might be tweaking P for other reasons.
+<a name="l-56"></a><span class="tm">02:21:53</span><span class="nk"> &lt;Tibo&gt;</span> aj thanks for the link will check that (heard about rgb but didn't look into it that much yet)
+<a name="l-57"></a><span class="tm">02:22:06</span><span class="nk"> &lt;arik_&gt;</span> even with a non-recursive construction though, I struggle to see how just for the top-level key it's possible to prove that it is _not_ tweaked. If it is tweaked, I know the resulting private key and can always only disclose that one.
+<a name="l-58"></a><span class="tm">02:22:54</span><span class="nk"> &lt;arik_&gt;</span> but I also agree it shouldn't really be anyone else's business
+<a name="l-59"></a><span class="tm">02:24:06</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">arik_:</span> you can't prove it's not tweaked
+<a name="l-60"></a><span class="tm">02:24:19</span><span class="nk"> &lt;sipa&gt;</span> unless it's generated in some other way that is in conflict with tweaking
+<a name="l-61"></a><span class="tm">02:24:28</span><span class="nk"> &lt;sipa&gt;</span> and the best way to do that... is to tweak it :)
+<a name="l-62"></a><span class="tm">02:24:44</span><span class="nk"> &lt;arik_&gt;</span> I could tweak it by an OP_RETURN and reveal that
+<a name="l-63"></a><span class="tm">02:25:20</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">arik_:</span> Or tweak it with the key itself, then your forgery challenge turns into a loop, and forging it requires finding a collision to the hash function.
+<a name="l-64"></a><span class="tm">02:25:31</span><span class="nk"> &lt;arik_&gt;</span> yes, that's better
+<a name="l-65"></a><span class="tm">02:25:40</span><span class="nk"> &lt;arik_&gt;</span> because I was gonna say that I can always tweak it twice, and choose which tweak to reveal
+<a name="l-66"></a><span class="tm">02:25:57</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">arik_:</span> thats why the 'tweaking' process includes the pubkey in the hash.
+<a name="l-67"></a><span class="tm">02:26:18</span><span class="nk"> &lt;arik_&gt;</span> oops
+<a name="l-68"></a><span class="tm">02:26:20</span><span class="nk"> &lt;gmaxwell&gt;</span> So you can't do something like pick two scripts, add them, and then choose which to reveal.
+<a name="l-69"></a><span class="tm">02:26:42</span><span class="nk"> &lt;gmaxwell&gt;</span> FWIW, the earliest descriptions of 'pay to contract' had that vulnerablity.
+<a name="l-70"></a><span class="tm">02:26:48</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">arik_:</span> (tweaking it twice, and being able to reveal either the left or the right path is kind of what g'root does :)
+<a name="l-71"></a><span class="tm">02:29:26</span><span class="nk"> &lt;sipa&gt;</span> kind of, but let's not go into that
+<a name="l-72"></a><span class="tm">02:31:19</span><span class="nk"> &lt;gmaxwell&gt;</span> It would be useful someplace (probably not in the BIPs) to enumerate out all the effective limits on taproot/tapscript, including ones inherited from other parts of the protocol... and indicate which are standardness vs consensus.
+<a name="l-73"></a><span class="tm">02:31:37</span><span class="nk"> &lt;gmaxwell&gt;</span> As I was ignorantly thinking the maximum stack element limit didn't apply anymore last night.
+<a name="l-74"></a><span class="tm">02:31:53</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">gmaxwell:</span> that one is even explicitly spelled out in the bip, i just forgot about it :)
+<a name="l-75"></a><span class="tm">02:32:02</span><span class="nk"> &lt;gmaxwell&gt;</span> (and a lot of limits don't apply anymore)
+<a name="l-76"></a><span class="tm">02:32:18</span><span class="nk"> &lt;gmaxwell&gt;</span> The reason for that one is stuff like quadratic OP_ROLL cost?
+<a name="l-77"></a><span class="tm">02:33:44</span><span class="nk"> &lt;sipa&gt;</span> yeah
+<a name="l-78"></a><span class="tm">02:34:09</span><span class="nk"> &lt;gmaxwell&gt;</span> Makes sense.
+<a name="l-79"></a><span class="tm">02:34:22</span><span class="nk"> &lt;sipa&gt;</span> and there are certainly ways to avoid the quadratic cost, but they're nontrivial and can have high constant factors
+<a name="l-80"></a><span class="tm">02:36:47</span><span class="nk"> &lt;sipa&gt;</span> (an OP_SUCCESS could lift that limit, btw)
+<a name="l-81"></a><span class="tm">02:38:05</span><span class="nk"> &lt;aj&gt;</span> one thing that was briefly discussed on slack was security proofs for taproot; do we know of flaws in apoelstra's paper, or what other properties might be worth proving?
+<a name="l-82"></a><span class="tm">02:38:57</span><span class="nk"> &lt;andytoshi&gt;</span> i believe my paper is correct but there is disagreement on whether the security model makes sense
+<a name="l-83"></a><span class="tm">02:39:45</span><span class="nk"> &lt;andytoshi&gt;</span> specifically i claim that you can't spend a taproot output without signing with the key, or revealing the originally-embedded script and signing with that
+<a name="l-84"></a><span class="tm">02:40:03</span><span class="nk"> &lt;andytoshi&gt;</span> but real_or_random had some argument that this didn't cover something
+<a name="l-85"></a><span class="tm">02:40:16</span><span class="nk"> &lt;andytoshi&gt;</span> that i didn't fully grok
+<a name="l-86"></a><span class="tm">02:41:26</span><span class="nk"> &lt;sipa&gt;</span> the attacker gets to know the script, right?
+<a name="l-87"></a><span class="tm">02:41:53</span><span class="nk"> &lt;andytoshi&gt;</span> oh, right, in my proof this is the case
+<a name="l-88"></a><span class="tm">02:41:59</span><span class="nk"> &lt;andytoshi&gt;</span> i don't address privacy at all, in any form
+<a name="l-89"></a><span class="tm">02:42:12</span><span class="nk"> &lt;andytoshi&gt;</span> which is one problem with it
+<a name="l-90"></a><span class="tm">02:42:21</span><span class="nk"> &lt;sipa&gt;</span> i think one thing real_or_random pointed out is for example: what if the private key of the internal key is embedded in cleartext in the script?
+<a name="l-91"></a><span class="tm">02:42:59</span><span class="nk"> &lt;andytoshi&gt;</span> oh right! i implicitly assume this is not the case
+<a name="l-92"></a><span class="tm">02:43:00</span><span class="nk"> &lt;sipa&gt;</span> which isn't interesting, but by modelling the script as an abstract thing you can't consider cases like that
+<a name="l-93"></a><span class="tm">02:43:03</span><span class="nk"> &lt;andytoshi&gt;</span> yep
+<a name="l-94"></a><span class="tm">02:43:42</span><span class="nk"> &lt;sipa&gt;</span> a more concrete abstraction that's probably much closer to what we want is something where you model script as a set of conjunctions of public keys
+<a name="l-95"></a><span class="tm">02:44:45</span><span class="nk"> &lt;sipa&gt;</span> and give the attacker an oracle that can sign for whatever (key path, or any of the "scripts" involved), and he wins if he can produce a signature for a key/script he didn't ask the oracle for
+<a name="l-96"></a><span class="tm">02:45:16</span><span class="nk"> &lt;andytoshi&gt;</span> i don't really like this, it fails to capture any nontrivial use of script
+<a name="l-97"></a><span class="tm">02:45:35</span><span class="nk"> &lt;sipa&gt;</span> i agree - it's not complete
+<a name="l-98"></a><span class="tm">02:45:43</span><span class="nk"> &lt;andytoshi&gt;</span> you could extend it to cover hash preimages and timelocks, a la miniscript, then as soon as you use OP_ROLL the security proof doesn't apply
+<a name="l-99"></a><span class="tm">02:46:02</span><span class="nk"> &lt;sipa&gt;</span> but it does capture things like: what if the internal key gets reused inside one of the scripts?
+<a name="l-100"></a><span class="tm">02:46:05</span><span class="nk"> &lt;gmaxwell&gt;</span> this seems way too application specific.
+<a name="l-101"></a><span class="tm">02:46:30</span><span class="nk"> &lt;gmaxwell&gt;</span> It's not like we expect to have a security proof for the hashtree that says it's kosher with timelocks. :P
+<a name="l-102"></a><span class="tm">02:46:57</span><span class="nk"> &lt;andytoshi&gt;</span> well, there's an intuition that you can't reveal the wrong script, or spend without satisfying the script or producing a signature
+<a name="l-103"></a><span class="tm">02:47:00</span><span class="nk"> &lt;aj&gt;</span> 14m left; do feel free to interrupt with questions if you still have them
+<a name="l-104"></a><span class="tm">02:47:01</span><span class="nk"> &lt;andytoshi&gt;</span> that would be worthwhile to capture formally
+<a name="l-105"></a><span class="tm">02:47:44</span><span class="nk"> &lt;gmaxwell&gt;</span> I think a proof should just attack taproot as a computationally sound commitment scheme, like you might prove the security of a pedersen commitment.
+<a name="l-106"></a><span class="tm">02:47:59</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">gmaxwell:</span> andytoshi has that
+<a name="l-107"></a><span class="tm">02:48:02</span><span class="nk"> &lt;andytoshi&gt;</span> for that, my proof is sufficient
+<a name="l-108"></a><span class="tm">02:48:12</span><span class="nk"> &lt;andytoshi&gt;</span> though it's pretty noisy because it tries to do more
+<a name="l-109"></a><span class="tm">02:48:18</span><span class="nk"> &lt;sipa&gt;</span> but i think that's a fairly low-level property
+<a name="l-110"></a><span class="tm">02:48:31</span><span class="nk"> &lt;arik_&gt;</span> Andrew, would you mind sharing a link to your paper in the chat?
+<a name="l-111"></a><span class="tm">02:48:45</span><span class="nk"> &lt;arik_&gt;</span> thanks!
+<a name="l-112"></a><span class="tm">02:48:59</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">arik_:</span> https://github.com/apoelstra/taproot
+<a name="l-113"></a><span class="tm">02:49:01</span><span class="nk"> &lt;gmaxwell&gt;</span> it's unclear to me that you can achieve a higher level without rapidly running into absurdity like "op_roll invalidates the proof".
+<a name="l-114"></a><span class="tm">02:49:08</span><span class="nk"> &lt;arik_&gt;</span> thanks, aj!
+<a name="l-115"></a><span class="tm">02:50:06</span><span class="nk"> &lt;aj&gt;</span> sanket shared a pdf he'd written up of some security properties to prove on slack; but it was a raw pdf not a link
+<a name="l-116"></a><span class="tm">02:50:46</span><span class="nk"> &lt;sipa&gt;</span> another interesting property is showing that if the internal key is random, a taproot output is indistinguishable from any other
+<a name="l-117"></a><span class="tm">02:51:00</span><span class="nk"> &lt;sipa&gt;</span> (i don't think anyone doubts that's the case, but a proof would still be nice)
+<a name="l-118"></a><span class="tm">02:51:46</span><span class="nk"> &lt;gmaxwell&gt;</span> that should be trivial to proof, almost a definition, of H() is a random oracle.
+<a name="l-119"></a><span class="tm">02:51:53</span><span class="nk"> &lt;gmaxwell&gt;</span> s/of/if/
+<a name="l-120"></a><span class="tm">02:51:57</span><span class="nk"> &lt;sipa&gt;</span> yes.
+<a name="l-121"></a><span class="tm">02:54:21</span><span class="nk"> &lt;gmaxwell&gt;</span> like P is a uniform point from group of size N. t=H(P||whatever) is a uniform scalar of size N (by defintion of random oracle). tG is a uniform point (bijection).  Q+tG is a uniform point (addition is complete). or something along those lines.
+<a name="l-122"></a><span class="tm">02:56:08</span><span class="nk"> &lt;arik_&gt;</span> yeah, I imagine as long as the field and group orders are mentioned it's trivial
+<a name="l-123"></a><span class="tm">02:57:19</span><span class="nk"> &lt;arik_&gt;</span> pardon my ignorance, but have we had previous proofs of security for proposals of a similar scope, like for p2sh or segwit?
+<a name="l-124"></a><span class="tm">02:57:26</span><span class="nk"> &lt;sipa&gt;</span> nope.
+<a name="l-125"></a><span class="tm">02:57:33</span><span class="nk"> &lt;sipa&gt;</span> nor script.
+<a name="l-126"></a><span class="tm">02:58:08</span><span class="nk"> &lt;andytoshi&gt;</span> i think with segwit the only property that needed proving was that everything was committed to
+<a name="l-127"></a><span class="tm">02:58:32</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">andytoshi:</span> no, that there weren't 'hash emulation' would have been useful to prove.
+<a name="l-128"></a><span class="tm">02:58:59</span><span class="nk"> &lt;gmaxwell&gt;</span> e.g. that post stripping that two different messages couldnt have the same inputs to the hash, unless the messages differed only in the intended ways.
+<a name="l-129"></a><span class="tm">02:59:20</span><span class="nk"> &lt;andytoshi&gt;</span> ah. yes.
+<a name="l-130"></a><span class="tm">02:59:23</span><span class="nk"> &lt;gmaxwell&gt;</span> hm I guess thats what you meant.
+<a name="l-131"></a><span class="tm">02:59:28</span><span class="nk"> &lt;andytoshi&gt;</span> technically yes
+<a name="l-132"></a><span class="tm">02:59:31</span><span class="nk"> &lt;andytoshi&gt;</span> but morally no
+<a name="l-133"></a><span class="tm">02:59:35</span><span class="nk"> &lt;andytoshi&gt;</span> i meant something dumber :P
+<a name="l-134"></a><span class="tm">03:00:05</span><span class="nk"> &lt;andytoshi&gt;</span> along the lines of "moving data from one part of the tree to another doesn't remove it from the tree"
+<a name="l-135"></a><span class="tm">03:00:50</span><span class="nk"> &lt;aj&gt;</span> okay, that's the hour!
+<a name="l-136"></a><span class="tm">03:00:54</span><span class="nk"> &lt;aj&gt;</span> <span class="cmd">#endmeeting</span><span class="cmdline"></span></pre>
+</body></html>

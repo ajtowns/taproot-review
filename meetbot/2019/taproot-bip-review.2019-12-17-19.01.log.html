@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>##taproot-bip-review log</title>
+<style type="text/css">
+/* For the .log.html */
+pre { /*line-height: 125%;*/
+      white-space: pre-wrap; }
+body { background: #f0f0f0; }
+
+body .tm  { color: #007020 }                      /* time */
+body .nk  { color: #062873; font-weight: bold }   /* nick, regular */
+body .nka { color: #007020; font-weight: bold }  /* action nick */
+body .ac  { color: #00A000 }                      /* action line */
+body .hi  { color: #4070a0 }                 /* hilights */
+/* Things to make particular MeetBot commands stick out */
+body .topic     { color: #007020; font-weight: bold }
+body .topicline { color: #000080; font-weight: bold }
+body .cmd       { color: #007020; font-weight: bold }
+body .cmdline  { font-weight: bold }
+
+</style>
+</head>
+
+<body>
+<pre><a name="l-1"></a><span class="tm">19:01:05</span><span class="nk"> &lt;aj&gt;</span> <span class="cmd">#startmeeting</span><span class="cmdline"></span>
+<a name="l-2"></a><span class="tm">19:01:05</span><span class="nk"> &lt;lightningbot&gt;</span> Meeting started Tue Dec 17 19:01:05 2019 UTC.  The chair is aj. Information about MeetBot at http://wiki.debian.org/MeetBot.
+<a name="l-3"></a><span class="tm">19:01:05</span><span class="nk"> &lt;lightningbot&gt;</span> Useful Commands: #action #agreed #help #info #idea #link #topic.
+<a name="l-4"></a><span class="tm">19:01:13</span><span class="nk"> &lt;aj&gt;</span> hey! last one!
+<a name="l-5"></a><span class="tm">19:01:41</span><span class="nk"> &lt;michaelfolkson&gt;</span> A sequel planned for the new year? ;)
+<a name="l-6"></a><span class="tm">19:02:27</span><span class="nk"> &lt;andytoshi&gt;</span> hiya
+<a name="l-7"></a><span class="tm">19:02:35</span><span class="nk"> &lt;pyskell&gt;</span> hi
+<a name="l-8"></a><span class="tm">19:04:40</span><span class="nk"> &lt;sipa&gt;</span> i have a tiny suggestion: instead of calling the (c[0] &amp; 0xfe) the leaf version, and having weird requirements on its top bits, what baout calling (c[0] &amp; 0x3e)/2 the leaf version, so that it's just a number from 0 through 31
+<a name="l-9"></a><span class="tm">19:09:13</span><span class="nk"> &lt;michaelfolkson&gt;</span> Sounds reasonable. I don't think that change would cause confusion at this stage
+<a name="l-10"></a><span class="tm">19:09:51</span><span class="nk"> &lt;sipa&gt;</span> i had difficulty explaining in my talk yesterday why the version number for tapscript is 0xc0 instead of just 0
+<a name="l-11"></a><span class="tm">19:10:32</span><span class="nk"> &lt;michaelfolkson&gt;</span> Can you share your slides from yesterday? It might take a while for the video to go up
+<a name="l-12"></a><span class="tm">19:10:38</span><span class="nk"> &lt;aj&gt;</span> doesn't that just make it hard to explain why there's a 0x32 and /2 constant instead of &lt;&lt;1 ?
+<a name="l-13"></a><span class="tm">19:11:13</span><span class="nk"> &lt;sipa&gt;</span> maybe
+<a name="l-14"></a><span class="tm">19:12:02</span><span class="nk"> &lt;sipa&gt;</span> just gave the link on twitter: https://prezi.com/view/AlXd19INd3isgt3SvW8g/
+<a name="l-15"></a><span class="tm">19:12:10</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">michaelfolkson:</span> i was thinking that maybe something focussed on adding test cases (and test vectors for bip-taproot/tapscript) could work...
+<a name="l-16"></a><span class="tm">19:12:33</span><span class="nk"> &lt;michaelfolkson&gt;</span> <span class="hi">sipa:</span> Thanks
+<a name="l-17"></a><span class="tm">19:12:35</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">aj:</span> yeah, that'd be a good idea
+<a name="l-18"></a><span class="tm">19:13:27</span><span class="nk"> &lt;sipa&gt;</span> the slides don't contain that much; they're mostly word clouds to remind me of what to mention
+<a name="l-19"></a><span class="tm">19:13:45</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">michaelfolkson:</span> i think gmaxwell's suggested the idea of accompanying test cases with small patches to the code it's testing that would trigger the bug, so you can see why the test case is necessary... not quite sure how it'd work, but seems like it could be interesting
+<a name="l-20"></a><span class="tm">19:15:03</span><span class="nk"> &lt;michaelfolkson&gt;</span> Yeah sounds interesting
+<a name="l-21"></a><span class="tm">19:15:42</span><span class="nk"> &lt;michaelfolkson&gt;</span> Ok cool. So this is the wrap up Q&amp;A. What needs to be covered? I have a couple of questions
+<a name="l-22"></a><span class="tm">19:15:57</span><span class="nk"> &lt;sipa&gt;</span> shoot
+<a name="l-23"></a><span class="tm">19:16:03</span><span class="nk"> &lt;andytoshi&gt;</span> can someone remind me - is this (and tomorrow) the last review session? or is thre one next week/next year
+<a name="l-24"></a><span class="tm">19:16:23</span><span class="nk"> &lt;sipa&gt;</span> this week is the final week
+<a name="l-25"></a><span class="tm">19:17:16</span><span class="nk"> &lt;michaelfolkson&gt;</span> We covered use cases in a previous week. What is the status of those? Does Blockstream have a toy implementation of Schnorr/Taproot in Liquid?
+<a name="l-26"></a><span class="tm">19:18:02</span><span class="nk"> &lt;andytoshi&gt;</span> no, blockstream is waiting on Core so we can steal code :P
+<a name="l-27"></a><span class="tm">19:18:22</span><span class="nk"> &lt;michaelfolkson&gt;</span> I'm assuming lots or people are waiting until there is a "reference implementation" on testnet before expending resources on use cases? People like BitGo, Bitfinex who have large multisig schemes
+<a name="l-28"></a><span class="tm">19:18:31</span><span class="nk"> &lt;sipa&gt;</span> i believe so
+<a name="l-29"></a><span class="tm">19:18:40</span><span class="nk"> &lt;sipa&gt;</span> and it's an unfortunate cyclic dependency
+<a name="l-30"></a><span class="tm">19:19:23</span><span class="nk"> &lt;andytoshi&gt;</span> so, at blockstream our plan is to pull taproot into Elements as soon as there is a "reference implementation", and then we'll be able to spawn testnets for our own usage
+<a name="l-31"></a><span class="tm">19:19:32</span><span class="nk"> &lt;andytoshi&gt;</span> if it would help deployment i think we could prioritize pulling it into liquid production
+<a name="l-32"></a><span class="tm">19:19:44</span><span class="nk"> &lt;sipa&gt;</span> where we really need to focus on hammering out the specification, but most of the interesting applications will probably only be even discovered once there are production ready implementations
+<a name="l-33"></a><span class="tm">19:19:51</span><span class="nk"> &lt;andytoshi&gt;</span> deployment/surrounding tooling development
+<a name="l-34"></a><span class="tm">19:20:22</span><span class="nk"> &lt;michaelfolkson&gt;</span> And you're hoping that people will build new wallets for complex "smart contract" inheritance planning like use cases? No existing wallets are likely to go down this route?
+<a name="l-35"></a><span class="tm">19:20:41</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">michaelfolkson:</span> i don't think so
+<a name="l-36"></a><span class="tm">19:20:56</span><span class="nk"> &lt;michaelfolkson&gt;</span> Excluding Lightning for now because that will definitely take advantage naturally
+<a name="l-37"></a><span class="tm">19:21:06</span><span class="nk"> &lt;sipa&gt;</span> complex use cases will benefit specialized applications that need them
+<a name="l-38"></a><span class="tm">19:21:32</span><span class="nk"> &lt;sipa&gt;</span> i don't expect end-user wallets to expose any "develop your own smart spending policy!" features
+<a name="l-39"></a><span class="tm">19:21:37</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">michaelfolkson:</span> there's been some effort at doing a signet (kallewoof's signed testnet stuff) with taproot enabled but i don't think it's gotten very fair; as far as i know now of the proof-of-concept stuff beyond the optech taproot workshop code made it very far
+<a name="l-40"></a><span class="tm">19:22:29</span><span class="nk"> &lt;andytoshi&gt;</span> <span class="hi">michaelfolkson:</span> so, liquid has support for covenants, and afaik nobody has taken it upon themselves to push this forward and implement this
+<a name="l-41"></a><span class="tm">19:22:52</span><span class="nk"> &lt;andytoshi&gt;</span> part of this is that the entities in liquid are, as a group, less focused on custody and long-term planning than the rest of the ecosystem
+<a name="l-42"></a><span class="tm">19:23:03</span><span class="nk"> &lt;michaelfolkson&gt;</span> I don't know if the inheritance planning use case has legs long term. I'm guessing it will eventually. I know you talked about this use case briefly on Noded podcast I think andytoshi
+<a name="l-43"></a><span class="tm">19:23:19</span><span class="nk"> &lt;andytoshi&gt;</span> yes, but probably in the context of miniscript
+<a name="l-44"></a><span class="tm">19:23:24</span><span class="nk"> &lt;andytoshi&gt;</span> which you can do in bitcoin today
+<a name="l-45"></a><span class="tm">19:24:19</span><span class="nk"> &lt;michaelfolkson&gt;</span> But inheritance planning is one use case that could take advantage of the key aggregation of Schnorr too right
+<a name="l-46"></a><span class="tm">19:24:40</span><span class="nk"> &lt;michaelfolkson&gt;</span> Not too many use cases I can think of that need those large multisig arrangements
+<a name="l-47"></a><span class="tm">19:24:41</span><span class="nk"> &lt;andytoshi&gt;</span> right, yeah, it would make multisigs/threshold sigs more appealing because they would no longer be expensive
+<a name="l-48"></a><span class="tm">19:26:21</span><span class="nk"> &lt;michaelfolkson&gt;</span> OK. So on Lightning. Did you guys look over the post from ZmnSCPxj on Lightning and Taproot?
+<a name="l-49"></a><span class="tm">19:26:35</span><span class="nk"> &lt;michaelfolkson&gt;</span> https://lists.linuxfoundation.org/pipermail/lightning-dev/2019-December/002375.html
+<a name="l-50"></a><span class="tm">19:26:38</span><span class="nk"> &lt;andytoshi&gt;</span> i didn't find time :(
+<a name="l-51"></a><span class="tm">19:27:15</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">andytoshi:</span> if you take a week off over xmas/new year, that's probably long enough for a first read? :)
+<a name="l-52"></a><span class="tm">19:27:55</span><span class="nk"> &lt;andytoshi&gt;</span> yep :) there's maybe a 50% chance that i'll be able to do it then
+<a name="l-53"></a><span class="tm">19:28:08</span><span class="nk"> &lt;andytoshi&gt;</span> but there are lots of things i'd like to use that week for
+<a name="l-54"></a><span class="tm">19:28:26</span><span class="nk"> &lt;michaelfolkson&gt;</span> I didn't absorb all of it but it is great that there is sketched out planning on what to do if things take too long or don't happen at all
+<a name="l-55"></a><span class="tm">19:28:36</span><span class="nk"> &lt;andytoshi&gt;</span> such as fixing my own wallet tooling to use psbt+miniscrip
+<a name="l-56"></a><span class="tm">19:29:31</span><span class="nk"> &lt;kabaum&gt;</span> Are there any ideas on how to deploy taproot/tapscript/schnorr? Is it reasonable to believe that this will be less contentious than segwit? BIP8? BIP9? Something else?
+<a name="l-57"></a><span class="tm">19:31:33</span><span class="nk"> &lt;michaelfolkson&gt;</span> The impression I get is that something like BIP148 is more likely than BIP9 but that discussion will be left to others and not the authors of Schnorr/Taproot in case it becomes controversial. Am I hot or cold? :)
+<a name="l-58"></a><span class="tm">19:32:37</span><span class="nk"> &lt;sipa&gt;</span> i have no opinion on activation
+<a name="l-59"></a><span class="tm">19:32:45</span><span class="nk"> &lt;michaelfolkson&gt;</span> It could get messy because it essentially sets a template for future upgrades too if it goes smoothly. Which is unfortunate and hopefully it doesn't
+<a name="l-60"></a><span class="tm">19:33:23</span><span class="nk"> &lt;aj&gt;</span> the people who thought bip148 was too risky when it happened still think it's risky for the same reasons they did then; something like the mechanism BlueMatt proposed for the great consensus cleanup would be the other approach to bip148 i think. i think picking one or the other of thse is likely to be the most controversial part
+<a name="l-61"></a><span class="tm">19:34:39</span><span class="nk"> &lt;aj&gt;</span> "hopefully it doesn't" -- hope that refers to the "get messy" part not the "goes smoothly" :)
+<a name="l-62"></a><span class="tm">19:34:50</span><span class="nk"> &lt;michaelfolkson&gt;</span> I'm not aware of the mechanism for the great consensus cleanup. Is there a good resource?
+<a name="l-63"></a><span class="tm">19:36:25</span><span class="nk"> &lt;michaelfolkson&gt;</span> Yeah that's what I meant aj :/
+<a name="l-64"></a><span class="tm">19:37:22</span><span class="nk"> &lt;aj&gt;</span> https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2019-March/016714.html -- deployment section and last paragraph of discussion just prior to the reference implementation section
+<a name="l-65"></a><span class="tm">19:37:53</span><span class="nk"> &lt;michaelfolkson&gt;</span> One other question I wanted to ask about was the section in Week 6 where there were questions posed on the upgrade paths and which upgrades would be best for various future possible upgrades
+<a name="l-66"></a><span class="tm">19:38:42</span><span class="nk"> &lt;aj&gt;</span> ( https://github.com/ajtowns/taproot-review/blob/master/week-6.md#upgrade-paths )
+<a name="l-67"></a><span class="tm">19:39:05</span><span class="nk"> &lt;michaelfolkson&gt;</span> Yeah we thought they were interesting questions and we struggled to answer them on the group call
+<a name="l-68"></a><span class="tm">19:39:40</span><span class="nk"> &lt;michaelfolkson&gt;</span> Part of it was just not being familiar with the low level details of things like CHECKTEMPLATEVERIFY
+<a name="l-69"></a><span class="tm">19:40:20</span><span class="nk"> &lt;sipa&gt;</span> i believe CTV wants to be usable in bare outputs for efficiency, which means it needs to use the NOP-redefinition approach
+<a name="l-70"></a><span class="tm">19:41:22</span><span class="nk"> &lt;michaelfolkson&gt;</span> I can post a question on this on StackExchange for a more permanent resource
+<a name="l-71"></a><span class="tm">19:41:31</span><span class="nk"> &lt;michaelfolkson&gt;</span> But I can't answer it
+<a name="l-72"></a><span class="tm">19:41:38</span><span class="nk"> &lt;sipa&gt;</span> what is the question exactly?
+<a name="l-73"></a><span class="tm">19:42:47</span><span class="nk"> &lt;michaelfolkson&gt;</span> Why those upgrade paths are listed in order from worst to best? ie the rationale for that order
+<a name="l-74"></a><span class="tm">19:43:34</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">michaelfolkson:</span> there isn't really a single best answer; i was thinking "of these, just use OP_SUCCESS would work fine". but you could do an unknown pubkey, so "&lt;hash&gt; OP_2 CHECKSIG"; you could have it be PUSHTEMPLATE instead of CHECKTEMPLATE via an OP_SUCCESS, and have to do an EQUALVERIFY or other check, etc
+<a name="l-75"></a><span class="tm">19:43:59</span><span class="nk"> &lt;michaelfolkson&gt;</span> And then which would be best for the various possible future upgrades listed?
+<a name="l-76"></a><span class="tm">19:45:58</span><span class="nk"> &lt;michaelfolkson&gt;</span> It requires an understanding of all those possible future upgrades so maybe too broad for a StackExchange question
+<a name="l-77"></a><span class="tm">19:46:07</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">michaelfolkson:</span> no method is "best" or "worst" they've got different tradeoffs and are appropriate at different times, the order's more least-specific to most-specific
+<a name="l-78"></a><span class="tm">19:46:24</span><span class="nk"> &lt;michaelfolkson&gt;</span> Ah ok cool, thanks for the clarification
+<a name="l-79"></a><span class="tm">19:46:44</span><span class="nk"> &lt;kanzure&gt;</span> will someone be writing a summary of all the review weeks
+<a name="l-80"></a><span class="tm">19:47:47</span><span class="nk"> &lt;michaelfolkson&gt;</span> I was thinking of doing a Bitcoin Magazine article if someone (or multiple people) are willing to review it
+<a name="l-81"></a><span class="tm">19:48:01</span><span class="nk"> &lt;michaelfolkson&gt;</span> Is that what you meant kanzure?
+<a name="l-82"></a><span class="tm">19:48:22</span><span class="nk"> &lt;kanzure&gt;</span> maybe on the level of an optech email (pointing out specific technical details of interest), but sort of yes.
+<a name="l-83"></a><span class="tm">19:48:47</span><span class="nk"> &lt;kanzure&gt;</span> alright, thanks.
+<a name="l-84"></a><span class="tm">19:48:49</span><span class="nk"> &lt;devrandom&gt;</span> question re OP_CODESEPARATOR - it seems like the design of this opcode never supported any actual use cases.  should it be disabled, so we don't carry the baggage forward?  perhaps it could be redesigned and reintroduced in the future.
+<a name="l-85"></a><span class="tm">19:48:55</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">michaelfolkson:</span> ANYPREVOUT - unkonw pubkey; CHECKTEMPLATEVERIFY - op_success but unknown pubkey type /could/ work; extra opcodes - OP_SUCCESS; extend math opcodes - OP_SUCCESS or maybe taproot leaf version; commit to block hash - annex; simplicity - leaf version; graftroot or g'root, cross-input sig agg - want to change key path spends, so new segwit version or maybe key length -- those are my
+<a name="l-86"></a><span class="tm">19:48:56</span><span class="nk"> &lt;aj&gt;</span> current answers anyway
+<a name="l-87"></a><span class="tm">19:50:07</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">devrandom:</span> https://github.com/NTumbleBit/NTumbleBit/blob/master/NTumbleBit/EscrowScriptBuilder.cs -- it's theoretically used in tumblebit, not sure how needed it is
+<a name="l-88"></a><span class="tm">19:51:26</span><span class="nk"> &lt;kanzure&gt;</span> <span class="hi">michaelfolkson:</span> transcript of great consensus cleanup talk https://diyhpl.us/wiki/transcripts/bitcoin-core-dev-tech/2019-06-06-great-consensus-cleanup/
+<a name="l-89"></a><span class="tm">19:52:05</span><span class="nk"> &lt;michaelfolkson&gt;</span> Thanks kanzure
+<a name="l-90"></a><span class="tm">19:53:15</span><span class="nk"> &lt;michaelfolkson&gt;</span> I'm also going to try to organize a Hangout call for people to discuss what happened in the various study groups. A couple of people have expressed interest in such a call
+<a name="l-91"></a><span class="tm">19:53:51</span><span class="nk"> &lt;michaelfolkson&gt;</span> I don't know if all groups made it to the end or not. We had a few drop out in our group
+<a name="l-92"></a><span class="tm">19:54:05</span><span class="nk"> &lt;michaelfolkson&gt;</span> It seems some definitely did
+<a name="l-93"></a><span class="tm">19:57:04</span><span class="nk"> &lt;aj&gt;</span> i think it'd be interesting to know how people went with the irc vs slack vs hangouts/zoom meetings too
+<a name="l-94"></a><span class="tm">19:57:34</span><span class="nk"> &lt;kabaum&gt;</span> <span class="hi">michaelfolkson:</span> Same in our group. It's natural that people drop out. I'm surprised I managed to more or less go through with it, though I had fewer and fewer questions.
+<a name="l-95"></a><span class="tm">19:58:49</span><span class="nk"> &lt;devrandom&gt;</span> I also worry about the interaction of OP_CODESEPARATOR and OP_SUCCESS
+<a name="l-96"></a><span class="tm">19:58:49</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> it's reassuring that the drop in questions is partially because you just had fewer questions (and not purely because people gave up or so)
+<a name="l-97"></a><span class="tm">19:59:23</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">devrandom:</span> if there is an OP_SUCCESSx anywhere, no execution happens, and thus OP_CODESEPARATOR is irrelevant in that cade
+<a name="l-98"></a><span class="tm">19:59:55</span><span class="nk"> &lt;michaelfolkson&gt;</span> Our group just struggled with time commitments rather than any other negative reason for dropping out
+<a name="l-99"></a><span class="tm">20:00:37</span><span class="nk"> &lt;devrandom&gt;</span> the use case I was thinking of: a signature is applied with OP_CODESEPARATOR, with the intent that another party prepends some additional code to the scriptSig at a later date
+<a name="l-100"></a><span class="tm">20:01:09</span><span class="nk"> &lt;devrandom&gt;</span> if the other party prepends an OP_SUCCESS, the script will trivially succeeds, which might not have been the intention of the first party
+<a name="l-101"></a><span class="tm">20:01:19</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">devrandom:</span> those semantics (the delegation one) are gone in the current bip-tapscript draft
+<a name="l-102"></a><span class="tm">20:01:25</span><span class="nk"> &lt;kabaum&gt;</span> <span class="hi">sipa:</span> I can just speak for myself. My questions dropped because 1) the reading got harder and 2) I devoted less time
+<a name="l-103"></a><span class="tm">20:01:43</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">devrandom:</span> all OP_CODESEPARATOR does is make signatures commit to the last executed OP_CODESEPARATOR
+<a name="l-104"></a><span class="tm">20:02:06</span><span class="nk"> &lt;sipa&gt;</span> there is no scriptCode concept anymore (which used to be the OP_CODESEP-modulated executed script)
+<a name="l-105"></a><span class="tm">20:02:34</span><span class="nk"> &lt;devrandom&gt;</span> <span class="hi">sipa:</span> OK.  with the delegation use case gone, is there any utility left?
+<a name="l-106"></a><span class="tm">20:03:30</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">devrandom:</span> yes, making scripts whose signatures commit to the IF/THEN/ELSE branch taken during execution
+<a name="l-107"></a><span class="tm">20:03:56</span><span class="nk"> &lt;devrandom&gt;</span> I see
+<a name="l-108"></a><span class="tm">20:04:09</span><span class="nk"> &lt;sipa&gt;</span> i explained this in my talk yesterday ;)
+<a name="l-109"></a><span class="tm">20:04:41</span><span class="nk"> &lt;michaelfolkson&gt;</span> The video is highly anticipated
+<a name="l-110"></a><span class="tm">20:05:59</span><span class="nk"> &lt;michaelfolkson&gt;</span> Ok. It is 8pm. Anyone who wants to join that cross-group call, message me either here now or on the Slack later
+<a name="l-111"></a><span class="tm">20:06:18</span><span class="nk"> &lt;michaelfolkson&gt;</span> Thanks all
+<a name="l-112"></a><span class="tm">20:07:56</span><span class="nk"> &lt;kabaum&gt;</span> Thanks everyone. It's been a lot of fun and a wonderful learning experience! Special thanks to the organizers (aj, harding et al?)
+<a name="l-113"></a><span class="tm">20:08:34</span><span class="nk"> &lt;michaelfolkson&gt;</span> Indeed. Great initiative, thanks for everyone's efforts. I learnt a lot
+<a name="l-114"></a><span class="tm">20:08:42</span><span class="nk"> &lt;devrandom&gt;</span> <span class="hi">sipa:</span> I guess I missed a couple of crucial sentences ;)
+<a name="l-115"></a><span class="tm">20:08:50</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">devrandom:</span> i know, it was long :)
+<a name="l-116"></a><span class="tm">20:09:08</span><span class="nk"> &lt;sipa&gt;</span> i talked far longer than i had expected
+<a name="l-117"></a><span class="tm">20:10:21</span><span class="nk"> &lt;andytoshi&gt;</span> thanks everyone! this was encouraging and really productive
+<a name="l-118"></a><span class="tm">20:11:05</span><span class="nk"> &lt;aj&gt;</span> <span class="cmd">#endmeeting</span><span class="cmdline"></span></pre>
+</body></html>

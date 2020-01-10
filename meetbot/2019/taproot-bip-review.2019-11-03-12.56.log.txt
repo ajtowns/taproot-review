@@ -1,0 +1,5 @@
+12:56:55 <aj> #startmeeting
+12:56:55 <lightningbot> Meeting started Sun Nov  3 12:56:55 2019 UTC.  The chair is aj. Information about MeetBot at http://wiki.debian.org/MeetBot.
+12:56:55 <lightningbot> Useful Commands: #action #agreed #help #info #idea #link #topic.
+12:57:02 <aj> #topic test
+12:57:08 <aj> #endmeeting
