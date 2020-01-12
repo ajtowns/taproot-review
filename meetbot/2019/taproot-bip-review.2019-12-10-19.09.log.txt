@@ -1,0 +1,12 @@
+19:09:56 <aj> #startmeeting
+19:09:56 <lightningbot> Meeting started Tue Dec 10 19:09:56 2019 UTC.  The chair is aj. Information about MeetBot at http://wiki.debian.org/MeetBot.
+19:09:56 <lightningbot> Useful Commands: #action #agreed #help #info #idea #link #topic.
+19:10:09 <sipa> hi
+19:10:18 <fjahr> hi
+19:24:57 <nothingmuch> hi
+19:25:22 <gmaxwell> Is taproot activated yet?
+19:26:04 <sipa> soon(tm)
+19:33:02 <aj> are we talking about activation methods before it activates? :)
+19:33:48 <sipa> i'm sure some people will
+20:12:40 <instagibbs> i think we honestly covered the extension hooks in the last weeks quite a bit
+20:18:03 <aj> #endmeeting

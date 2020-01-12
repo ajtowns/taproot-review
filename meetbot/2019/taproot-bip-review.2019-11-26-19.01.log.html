@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>##taproot-bip-review log</title>
+<style type="text/css">
+/* For the .log.html */
+pre { /*line-height: 125%;*/
+      white-space: pre-wrap; }
+body { background: #f0f0f0; }
+
+body .tm  { color: #007020 }                      /* time */
+body .nk  { color: #062873; font-weight: bold }   /* nick, regular */
+body .nka { color: #007020; font-weight: bold }  /* action nick */
+body .ac  { color: #00A000 }                      /* action line */
+body .hi  { color: #4070a0 }                 /* hilights */
+/* Things to make particular MeetBot commands stick out */
+body .topic     { color: #007020; font-weight: bold }
+body .topicline { color: #000080; font-weight: bold }
+body .cmd       { color: #007020; font-weight: bold }
+body .cmdline  { font-weight: bold }
+
+</style>
+</head>
+
+<body>
+<pre><a name="l-1"></a><span class="tm">19:01:16</span><span class="nk"> &lt;aj&gt;</span> <span class="cmd">#startmeeting</span><span class="cmdline"></span>
+<a name="l-2"></a><span class="tm">19:01:16</span><span class="nk"> &lt;lightningbot&gt;</span> Meeting started Tue Nov 26 19:01:16 2019 UTC.  The chair is aj. Information about MeetBot at http://wiki.debian.org/MeetBot.
+<a name="l-3"></a><span class="tm">19:01:16</span><span class="nk"> &lt;lightningbot&gt;</span> Useful Commands: #action #agreed #help #info #idea #link #topic.
+<a name="l-4"></a><span class="tm">19:01:21</span><span class="nk"> &lt;pyskell&gt;</span> hi
+<a name="l-5"></a><span class="tm">19:01:23</span><span class="nk"> &lt;nickler&gt;</span> hi
+<a name="l-6"></a><span class="tm">19:01:27</span><span class="nk"> &lt;kabaum&gt;</span> hi
+<a name="l-7"></a><span class="tm">19:01:42</span><span class="nk"> &lt;aj&gt;</span> hi
+<a name="l-8"></a><span class="tm">19:01:44</span><span class="nk"> &lt;fanquake&gt;</span> hi
+<a name="l-9"></a><span class="tm">19:01:48</span><span class="nk"> &lt;sipa&gt;</span> hi
+<a name="l-10"></a><span class="tm">19:01:52</span><span class="nk"> &lt;schmidty&gt;</span> hi
+<a name="l-11"></a><span class="tm">19:03:41</span><span class="nk"> &lt;kabaum&gt;</span> Good to see you all again.
+<a name="l-12"></a><span class="tm">19:03:43</span><span class="nk"> &lt;kabaum&gt;</span> Q1/2 group 5: "Transaction digest": scriptPubKey is listed as 35 bytes. Shouldn't that be 34 bytes? OP_1 OP_20 &lt;32 byte witness program&gt;? Is the extra byte a leading varint as in the output? If so, why don't we remove it since it's always 35, well 34, bytes?
+<a name="l-13"></a><span class="tm">19:04:19</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> partially the result of the fact that this existed before P2SH support was removed
+<a name="l-14"></a><span class="tm">19:04:22</span><span class="nk"> &lt;ariard_&gt;</span> hi
+<a name="l-15"></a><span class="tm">19:04:46</span><span class="nk"> &lt;sipa&gt;</span> because back then, scriptPubKey for a P2SH-taproot spend would actually contain the P2SH scriptPubKey
+<a name="l-16"></a><span class="tm">19:04:54</span><span class="nk"> &lt;sipa&gt;</span> (rather than its redeemscript)
+<a name="l-17"></a><span class="tm">19:06:08</span><span class="nk"> &lt;sipa&gt;</span> The rationale here is that by default really every signature should commit to vout hash/id, and exact scriptPubKey and amount, as it guarantees offline signing devices can verify the entire path between the claimed UTXO being spent and whatever it commits to
+<a name="l-18"></a><span class="tm">19:06:23</span><span class="nk"> &lt;jonatack&gt;</span> hi
+<a name="l-19"></a><span class="tm">19:07:21</span><span class="nk"> &lt;sipa&gt;</span> And the justification is a very minor issue right now where a software wallet could claim to a HW device that it is spending a P2SH-P2WSH output for example, but the real output is a (native) P2WSH one... making the HW device perhaps misrepresent the necessary fees
+<a name="l-20"></a><span class="tm">19:07:50</span><span class="nk"> &lt;sipa&gt;</span> this specific example could have been fixed by just exactly committing to P2SH or not
+<a name="l-21"></a><span class="tm">19:07:57</span><span class="nk"> &lt;sipa&gt;</span> but it is not the only example of such mutations
+<a name="l-22"></a><span class="tm">19:08:08</span><span class="nk"> &lt;sipa&gt;</span> and they're all fixed by just committing to the scriptPubKey
+<a name="l-23"></a><span class="tm">19:08:51</span><span class="nk"> &lt;sipa&gt;</span> so yes, we know it's always 34 bytes, and could thus drop the compactsize length that precedes it
+<a name="l-24"></a><span class="tm">19:09:22</span><span class="nk"> &lt;sipa&gt;</span> but as a general principle i think it's better to just make it generic, using an approach that will keep working for other kinds of scriptPubKeys as well
+<a name="l-25"></a><span class="tm">19:09:30</span><span class="nk"> &lt;sipa&gt;</span> &lt;/monologue&gt;
+<a name="l-26"></a><span class="tm">19:10:51</span><span class="nk"> &lt;kabaum&gt;</span> So maybe it's better to not say "Its size is always 35 bytes" then?
+<a name="l-27"></a><span class="tm">19:11:20</span><span class="nk"> &lt;sipa&gt;</span> well it is in the specific use in bip-taproot
+<a name="l-28"></a><span class="tm">19:11:22</span><span class="nk"> &lt;ariard_&gt;</span> how about future extensions of hash_type ? is epoch the versioning number and if so where would you pass the epoch in future extensions, annex?
+<a name="l-29"></a><span class="tm">19:11:37</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">ariard_:</span> i don't understand
+<a name="l-30"></a><span class="tm">19:11:42</span><span class="nk"> &lt;kabaum&gt;</span> <span class="hi">sipa:</span> sure
+<a name="l-31"></a><span class="tm">19:12:12</span><span class="nk"> &lt;sipa&gt;</span> oh, i see
+<a name="l-32"></a><span class="tm">19:12:13</span><span class="nk"> &lt;ariard_&gt;</span> <span class="hi">sipa:</span> let's say we want to have new hash_types, how would we introduce them?
+<a name="l-33"></a><span class="tm">19:12:21</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">ariard_:</span> anyway you like
+<a name="l-34"></a><span class="tm">19:12:24</span><span class="nk"> &lt;sipa&gt;</span> (if you find consensus)
+<a name="l-35"></a><span class="tm">19:12:44</span><span class="nk"> &lt;ariard_&gt;</span> sure but the epoch would be the most fine-grained one ?
+<a name="l-36"></a><span class="tm">19:13:06</span><span class="nk"> &lt;ariard_&gt;</span> compare to the leaf version
+<a name="l-37"></a><span class="tm">19:13:16</span><span class="nk"> &lt;fjahr&gt;</span> hi
+<a name="l-38"></a><span class="tm">19:13:23</span><span class="nk"> &lt;devrando1&gt;</span> hi
+<a name="l-39"></a><span class="tm">19:13:24</span><span class="nk"> &lt;sipa&gt;</span> the epoch is not encoded anywhere, it's not an extension mechanism
+<a name="l-40"></a><span class="tm">19:14:13</span><span class="nk"> &lt;sipa&gt;</span> it's just so that if something needs to introduce a completely new sighash construction, they don't need a new tag for the tagged hash
+<a name="l-41"></a><span class="tm">19:14:25</span><span class="nk"> &lt;sipa&gt;</span> they can instead just set the epoch to another value, and then do whatever they want
+<a name="l-42"></a><span class="tm">19:14:36</span><span class="nk"> &lt;sipa&gt;</span> without the risk of ever colliding with a bip-taproot sighash
+<a name="l-43"></a><span class="tm">19:14:59</span><span class="nk"> &lt;ariard_&gt;</span> hmmm but at least in demo code epoch is hardcoded to zero?
+<a name="l-44"></a><span class="tm">19:15:12</span><span class="nk"> &lt;sipa&gt;</span> it is not just hardcoded in the demo code to be zero
+<a name="l-45"></a><span class="tm">19:15:18</span><span class="nk"> &lt;sipa&gt;</span> bip-taproot defines it to be zero
+<a name="l-46"></a><span class="tm">19:15:19</span><span class="nk"> &lt;nickler&gt;</span> <span class="hi">ariard_:</span> the sighash_anyprevout hash type is proposed to be introduced with a new pubkey type
+<a name="l-47"></a><span class="tm">19:15:35</span><span class="nk"> &lt;sipa&gt;</span> we could just not give it a name
+<a name="l-48"></a><span class="tm">19:15:37</span><span class="nk"> &lt;sipa&gt;</span> it's just zero
+<a name="l-49"></a><span class="tm">19:16:14</span><span class="nk"> &lt;ariard_&gt;</span> in SignatureHashSchnorr, epoch = 0
+<a name="l-50"></a><span class="tm">19:16:19</span><span class="nk"> &lt;sipa&gt;</span> yes
+<a name="l-51"></a><span class="tm">19:16:36</span><span class="nk"> &lt;sipa&gt;</span> and bip-taproot says:
+<a name="l-52"></a><span class="tm">19:16:37</span><span class="nk"> &lt;sipa&gt;</span> epoch (1): always 0
+<a name="l-53"></a><span class="tm">19:16:53</span><span class="nk"> &lt;ariard_&gt;</span> <span class="hi">nickler:</span> using key_version?
+<a name="l-54"></a><span class="tm">19:17:06</span><span class="nk"> &lt;nickler&gt;</span> yeah
+<a name="l-55"></a><span class="tm">19:17:11</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">nickler:</span> ariard_ is asking about epoch, not key version
+<a name="l-56"></a><span class="tm">19:17:43</span><span class="nk"> &lt;ariard_&gt;</span> <span class="hi">sipa:</span> yes but I thought you could use epoch as a upgrade mechanism like key version, but apparently that's not the case
+<a name="l-57"></a><span class="tm">19:18:11</span><span class="nk"> &lt;devrando1&gt;</span> the epoch is not serialized
+<a name="l-58"></a><span class="tm">19:18:46</span><span class="nk"> &lt;devrando1&gt;</span> so you can't use it to communicate anything
+<a name="l-59"></a><span class="tm">19:19:40</span><span class="nk"> &lt;devrando1&gt;</span> it's only part of the data bytes that are hashed, but it's a non-stored constant
+<a name="l-60"></a><span class="tm">19:20:06</span><span class="nk"> &lt;sipa&gt;</span> i explained it more to ariard_ irl
+<a name="l-61"></a><span class="tm">19:20:22</span><span class="nk"> &lt;sipa&gt;</span> but i think the epoch can use better justification in the text
+<a name="l-62"></a><span class="tm">19:21:17</span><span class="nk"> &lt;sipa&gt;</span> really, its goal is to enable reusing the tag "TapSigHash" even in potential hypothetical future sighashes that completely change the data hashed
+<a name="l-63"></a><span class="tm">19:21:27</span><span class="nk"> &lt;sipa&gt;</span> without risking collisions
+<a name="l-64"></a><span class="tm">19:22:11</span><span class="nk"> &lt;sipa&gt;</span> so really, this sighash scheme just sets the first byte to 0, so that there is a simple guaranteed way for future sighashes that intend to be different: they can set the first byte to not-0
+<a name="l-65"></a><span class="tm">19:22:28</span><span class="nk"> &lt;sipa&gt;</span> but as far as bip-taproot is concerned, it's not an extension mechanism; it's just a 0
+<a name="l-66"></a><span class="tm">19:24:00</span><span class="nk"> &lt;kabaum&gt;</span> <span class="hi">sipa:</span> Now I get epoch. Thanks.
+<a name="l-67"></a><span class="tm">19:24:56</span><span class="nk"> &lt;kabaum&gt;</span> <span class="hi">Q2/2:</span> "Transaction digest": The summary at the end: Isn't another difference that in case ANYONECANPAY is set, we don't commit to 32 zero bytes in place of hashPrevous as we did in BIP143, but to nothing regarding prevouts. Or is that too insignificaant to make the list?
+<a name="l-68"></a><span class="tm">19:25:22</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> you cannot commit to 32 zero bytes
+<a name="l-69"></a><span class="tm">19:25:27</span><span class="nk"> &lt;sipa&gt;</span> there is no information in them
+<a name="l-70"></a><span class="tm">19:25:47</span><span class="nk"> &lt;sipa&gt;</span> it's an implementation detail that the exact data hashed changed
+<a name="l-71"></a><span class="tm">19:26:01</span><span class="nk"> &lt;sipa&gt;</span> but in terms of semantics, hashing 32 zero bytes never did anything
+<a name="l-72"></a><span class="tm">19:26:24</span><span class="nk"> &lt;kabaum&gt;</span> I see.
+<a name="l-73"></a><span class="tm">19:30:33</span><span class="nk"> &lt;gmaxwell&gt;</span> The important thing is that there isn't an 'aliasing' problem, where a commitment to two different things might be confused.
+<a name="l-74"></a><span class="tm">19:31:06</span><span class="nk"> &lt;gmaxwell&gt;</span> But you don't need zero stuffing to prevent that, hashing that flags that are in use is sufficient-- actually not just sufficient, better than stuffing without flags.
+<a name="l-75"></a><span class="tm">19:31:29</span><span class="nk"> &lt;ariard_&gt;</span> Rationale 16: "Despite that, collisions are made impossible by committing to the length of the data before the variable length data", the commitment here is hash_type and spend_type?
+<a name="l-76"></a><span class="tm">19:32:03</span><span class="nk"> &lt;ariard_&gt;</span> but they don't tell you the lenght of the variable length data parts, input outpoints, input amounts, ...?
+<a name="l-77"></a><span class="tm">19:32:04</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">ariard_:</span> hmm, we may need to revise that
+<a name="l-78"></a><span class="tm">19:32:30</span><span class="nk"> &lt;sipa&gt;</span> because scriptPubKey is no longer variable length
+<a name="l-79"></a><span class="tm">19:33:07</span><span class="nk"> &lt;sipa&gt;</span> and all other variable length things have indirect commitments to their lengths using intermediate hashes
+<a name="l-80"></a><span class="tm">19:33:27</span><span class="nk"> &lt;sipa&gt;</span> (e.g. the annex has its length committed to by being prehashed)
+<a name="l-81"></a><span class="tm">19:34:39</span><span class="nk"> &lt;ariard_&gt;</span> okay is collision of final hash by tweaking indirect commitments an issue?
+<a name="l-82"></a><span class="tm">19:35:50</span><span class="nk"> &lt;sipa&gt;</span> we assume we have a collision resistant hash function
+<a name="l-83"></a><span class="tm">19:35:51</span><span class="nk"> &lt;sipa&gt;</span> so no
+<a name="l-84"></a><span class="tm">19:37:29</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">ariard_:</span> collisions through indirect hashes are no more a problem that collisions in the directly hashed data is a problem
+<a name="l-85"></a><span class="tm">19:40:12</span><span class="nk"> &lt;devrando1&gt;</span> none of the hashing in bip-taproot (or existing Bitcoin code) is vulnerable to extension attacks because the hashes are signed, right?
+<a name="l-86"></a><span class="tm">19:40:43</span><span class="nk"> &lt;devrando1&gt;</span> (vs MACs)
+<a name="l-87"></a><span class="tm">19:40:45</span><span class="nk"> &lt;ariard_&gt;</span> <span class="hi">sipa:</span> yes I see, the problem is back to finding a collision in subhashes like you said
+<a name="l-88"></a><span class="tm">19:40:46</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">devrando1:</span> length extension attacks apply to MACs
+<a name="l-89"></a><span class="tm">19:40:59</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">devrando1:</span> we do not use any of our hashes as MACs
+<a name="l-90"></a><span class="tm">19:41:19</span><span class="nk"> &lt;sipa&gt;</span> (specifically, a MAC implies there is a secret; all our data hashed is public)
+<a name="l-91"></a><span class="tm">19:41:46</span><span class="nk"> &lt;devrando1&gt;</span> got it
+<a name="l-92"></a><span class="tm">19:44:17</span><span class="nk"> &lt;sipa&gt;</span> there is a related problem to length extension attacks (and generally apllicable to the same kinds of constructions), namely that IF someone manages to find a collision in a hash function based on Merkle-Damgard, then that can cheaply be extended to be arbitrarily many collisions by suffixing the same data after it
+<a name="l-93"></a><span class="tm">19:44:30</span><span class="nk"> &lt;sipa&gt;</span> that's not called a length extension attack though
+<a name="l-94"></a><span class="tm">19:44:44</span><span class="nk"> &lt;sipa&gt;</span> and SHA256 is indeed susceptible to thay
+<a name="l-95"></a><span class="tm">19:45:09</span><span class="nk"> &lt;sipa&gt;</span> but bitcoin already relies on SHA256 being collision resistant entirely
+<a name="l-96"></a><span class="tm">19:47:13</span><span class="nk"> &lt;ariard_&gt;</span> could you use new public key types to have the public key enforcing hash_types on the signatures, like the "spending transaction must commit to nLockTime"?
+<a name="l-97"></a><span class="tm">19:47:37</span><span class="nk"> &lt;sipa&gt;</span> sure
+<a name="l-98"></a><span class="tm">19:47:56</span><span class="nk"> &lt;sipa&gt;</span> (all sighash currently already commit to nLockTime, though)
+<a name="l-99"></a><span class="tm">19:50:24</span><span class="nk"> &lt;ariard_&gt;</span> yeah but was thinking about more fine-grained hash_types and you would combined them to have a weak covenant
+<a name="l-100"></a><span class="tm">19:54:19</span><span class="nk"> &lt;nothingmuch&gt;</span> in bip-schnorr, scalars k and e and are used mod n, the curve order, whereas in bip-taproot t (tap tweak hash) is constrained to be less than n. why is it curve order and not field size? why do these differ? doesn't bip-schnorr footnote 10 apply to all?
+<a name="l-101"></a><span class="tm">19:55:16</span><span class="nk"> &lt;nothingmuch&gt;</span> "why do these these differ" refers to the difference in handling of k and e vs. t
+<a name="l-102"></a><span class="tm">19:57:12</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">nothingmuch:</span> it's modulo n because they're all integers modulo n
+<a name="l-103"></a><span class="tm">19:57:23</span><span class="nk"> &lt;sipa&gt;</span> forgot that we're using elliptic curves
+<a name="l-104"></a><span class="tm">19:57:36</span><span class="nk"> &lt;sipa&gt;</span> the field size is only relevant to the specific implementation of the elliptic curve we pick
+<a name="l-105"></a><span class="tm">19:58:08</span><span class="nk"> &lt;sipa&gt;</span> but for anything "higher level" construction (including schnorr signatures and the taproot tweak), all that matters is how many elements there are in that group - which is n
+<a name="l-106"></a><span class="tm">20:01:17</span><span class="nk"> &lt;sipa&gt;</span> ok, have to run
+<a name="l-107"></a><span class="tm">20:01:25 </span><span class="nka">* devrando1</span> <span class="ac">waves</span>
+<a name="l-108"></a><span class="tm">20:01:30</span><span class="nk"> &lt;kabaum&gt;</span> Thank you!
+<a name="l-109"></a><span class="tm">20:01:32</span><span class="nk"> &lt;nothingmuch&gt;</span> thanks
+<a name="l-110"></a><span class="tm">20:01:42</span><span class="nk"> &lt;jonatack_&gt;</span> thanks
+<a name="l-111"></a><span class="tm">20:02:00</span><span class="nk"> &lt;aj&gt;</span> <span class="cmd">#endmeeting</span><span class="cmdline"></span></pre>
+</body></html>

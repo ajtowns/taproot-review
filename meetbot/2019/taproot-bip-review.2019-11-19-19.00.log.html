@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>##taproot-bip-review log</title>
+<style type="text/css">
+/* For the .log.html */
+pre { /*line-height: 125%;*/
+      white-space: pre-wrap; }
+body { background: #f0f0f0; }
+
+body .tm  { color: #007020 }                      /* time */
+body .nk  { color: #062873; font-weight: bold }   /* nick, regular */
+body .nka { color: #007020; font-weight: bold }  /* action nick */
+body .ac  { color: #00A000 }                      /* action line */
+body .hi  { color: #4070a0 }                 /* hilights */
+/* Things to make particular MeetBot commands stick out */
+body .topic     { color: #007020; font-weight: bold }
+body .topicline { color: #000080; font-weight: bold }
+body .cmd       { color: #007020; font-weight: bold }
+body .cmdline  { font-weight: bold }
+
+</style>
+</head>
+
+<body>
+<pre><a name="l-1"></a><span class="tm">19:00:22</span><span class="nk"> &lt;aj&gt;</span> <span class="cmd">#startmeeting</span><span class="cmdline"></span>
+<a name="l-2"></a><span class="tm">19:00:22</span><span class="nk"> &lt;lightningbot&gt;</span> Meeting started Tue Nov 19 19:00:22 2019 UTC.  The chair is aj. Information about MeetBot at http://wiki.debian.org/MeetBot.
+<a name="l-3"></a><span class="tm">19:00:22</span><span class="nk"> &lt;lightningbot&gt;</span> Useful Commands: #action #agreed #help #info #idea #link #topic.
+<a name="l-4"></a><span class="tm">19:00:35</span><span class="nk"> &lt;kabaum&gt;</span> Hi
+<a name="l-5"></a><span class="tm">19:00:38</span><span class="nk"> &lt;amiti&gt;</span> hi
+<a name="l-6"></a><span class="tm">19:00:38</span><span class="nk"> &lt;moneyball&gt;</span> hi
+<a name="l-7"></a><span class="tm">19:00:39</span><span class="nk"> &lt;nickler&gt;</span> hi
+<a name="l-8"></a><span class="tm">19:00:48</span><span class="nk"> &lt;nothingmuch&gt;</span> hi
+<a name="l-9"></a><span class="tm">19:00:50</span><span class="nk"> &lt;aj&gt;</span> hi
+<a name="l-10"></a><span class="tm">19:01:37</span><span class="nk"> &lt;kabaum&gt;</span> It's only me from group 5 here today, so my questions are not filtered through our pre-Q&amp;A-meeting.
+<a name="l-11"></a><span class="tm">19:01:43</span><span class="nk"> &lt;fanquake&gt;</span> hi
+<a name="l-12"></a><span class="tm">19:02:03</span><span class="nk"> &lt;kabaum&gt;</span> Q 1/3: Why isn't implicit Y a reduction in security? I don't get the explanation given in last paragraph of "Implicit Y coordinates" or in footnote 6. Is it so that given a privkey q for a pubkey P with explicit Y, one can easily calculate the privkey p' for the pubkey -P?
+<a name="l-13"></a><span class="tm">19:03:33</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kanzure:</span> https://medium.com/blockstream/reducing-bitcoin-transaction-sizes-with-x-only-pubkeys-f86476af05d7
+<a name="l-14"></a><span class="tm">19:03:38</span><span class="nk"> &lt;sipa&gt;</span> eh, kabaum ^
+<a name="l-15"></a><span class="tm">19:03:47</span><span class="nk"> &lt;fjahr&gt;</span> hi
+<a name="l-16"></a><span class="tm">19:04:33</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> also https://bitcoin.stackexchange.com/a/90120/208
+<a name="l-17"></a><span class="tm">19:04:35</span><span class="nk"> &lt;nickler&gt;</span> <span class="hi">kabaum:</span> but basically yes. Inverting the public key is just computing the negation of a 256 bit number (the y coordinate) so that's very easy.
+<a name="l-18"></a><span class="tm">19:04:40</span><span class="nk"> &lt;kanzure&gt;</span> hi
+<a name="l-19"></a><span class="tm">19:05:07</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">nickler:</span> you keep bringing that up as argument, but i don't think that's relevant
+<a name="l-20"></a><span class="tm">19:05:23</span><span class="nk"> &lt;sipa&gt;</span> even if it cost an EC multiplication to do so, x-only would still not be a reduction in security
+<a name="l-21"></a><span class="tm">19:07:08</span><span class="nk"> &lt;nickler&gt;</span> still I want to point out that a third party can easily do that, no access to the secret key is required
+<a name="l-22"></a><span class="tm">19:07:47</span><span class="nk"> &lt;sipa&gt;</span> right
+<a name="l-23"></a><span class="tm">19:08:34</span><span class="nk"> &lt;kabaum&gt;</span> <span class="hi">sipa:</span> Got it. The stackexchange answer helped.
+<a name="l-24"></a><span class="tm">19:08:47</span><span class="nk"> &lt;nothingmuch&gt;</span> <span class="hi">Q:</span> both e and R style signatures seem to be rationalizable appealing to orphan rates, network latency for the former, validation cpu cost for the latter, but it's not clear how to compare these. what is the argument for favoring R and batch verification, especially on a longer time horizon? is it empirical?
+<a name="l-25"></a><span class="tm">19:09:05</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> another way to look at it: the fact that you can negate a public key (which negates the corresponding private key) is indeed going to help an attacker... but it *always* does that, whether public keys are x-only or full x/y
+<a name="l-26"></a><span class="tm">19:09:40</span><span class="nk"> &lt;kabaum&gt;</span> <span class="hi">sipa:</span> thanks.
+<a name="l-27"></a><span class="tm">19:10:17</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> FWIW, secp256k1 has another "efficiently computable endomorphism" (which is what this negation gives you), namely multiplication with a specific constant lambda... which also always helps an attacker
+<a name="l-28"></a><span class="tm">19:10:34</span><span class="nk"> &lt;nickler&gt;</span> <span class="hi">nothingmuch:</span> the argument is that batch verification is a significant speedup. It's empirical in the sense that we've implemented and measured it (that's the graph in the bip)
+<a name="l-29"></a><span class="tm">19:12:45</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> the expected number of EC additions an attacker needs to do with a DLP breaking algorithm is proportional to sqrt(p/m) where p is the largest prime factor of the group order, and m is the number of efficiently computable endomorphism (m=6 for secp256k1, but the efficient negation is part of it)
+<a name="l-30"></a><span class="tm">19:14:21</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">nothingmuch:</span> the "be made as small as 16 bytes" should probably get a qualifier "in some security models"
+<a name="l-31"></a><span class="tm">19:17:38</span><span class="nk"> &lt;kabaum&gt;</span> <span class="hi">nickler:</span> My next Q is related to nickler's answer.
+<a name="l-32"></a><span class="tm">19:17:39</span><span class="nk"> &lt;kabaum&gt;</span> Q 2/3: Is the graph "Batch signature verification in libsecp256k1" made using the bip-schnorr scheme or using some other/generic Schnorr scheme?
+<a name="l-33"></a><span class="tm">19:19:03</span><span class="nk"> &lt;nickler&gt;</span> <span class="hi">kabaum:</span> it's the bip-schnorr implementation in libsecp
+<a name="l-34"></a><span class="tm">19:19:34</span><span class="nk"> &lt;nickler&gt;</span> this one https://github.com/bitcoin-core/secp256k1/pull/558
+<a name="l-35"></a><span class="tm">19:20:05</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">nickler:</span> well, it's from a pre-x-only version of that PR, right?
+<a name="l-36"></a><span class="tm">19:20:18</span><span class="nk"> &lt;sipa&gt;</span> here is a graph that's based on more lowlevel benchmarking: http://bitcoin.sipa.be/speedup-batch.png
+<a name="l-37"></a><span class="tm">19:20:38</span><span class="nk"> &lt;sipa&gt;</span> which only takes the multi-exp into account and not the other overhead of verifying a signature
+<a name="l-38"></a><span class="tm">19:20:41</span><span class="nk"> &lt;nickler&gt;</span> <span class="hi">aj:</span> right, but it shouldn't make a visible difference
+<a name="l-39"></a><span class="tm">19:21:15</span><span class="nk"> &lt;nickler&gt;</span> but I should try to reproduce the numbers just to be sure :)
+<a name="l-40"></a><span class="tm">19:22:11</span><span class="nk"> &lt;nickler&gt;</span> perhaps s/I/someone to reduce systematic bias
+<a name="l-41"></a><span class="tm">19:22:12</span><span class="nk"> &lt;kabaum&gt;</span> <span class="hi">nickler:</span> that'd be interesting.
+<a name="l-42"></a><span class="tm">19:22:30</span><span class="nk"> &lt;kabaum&gt;</span> Q 3/3: Why is batch verification of u signatures more efficient than verifying them separately? I counted the number of point multiplications and additions. For individual verification I get 2u mult and u add. For batch I get 2u mult and 2u-1 add. Also the amount of hashing seems similar in batch and separate verification. What am I missing?
+<a name="l-43"></a><span class="tm">19:22:56</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> Strauss' algorithm
+<a name="l-44"></a><span class="tm">19:23:05</span><span class="nk"> &lt;sipa&gt;</span> (and for larger numbers, Pippenger's algorithm)
+<a name="l-45"></a><span class="tm">19:23:39</span><span class="nk"> &lt;sipa&gt;</span> it turns out that x*A + y*B can actually be computed more efficiently in one go than computing (x*A) and (y*B) separately and adding them up
+<a name="l-46"></a><span class="tm">19:25:34</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> very broadly, the number of EC additions you need to do to implement n EC multiplications grows with n/log(n), rather than n
+<a name="l-47"></a><span class="tm">19:25:44</span><span class="nk"> &lt;sipa&gt;</span> (if you only care about their sum)
+<a name="l-48"></a><span class="tm">19:27:14</span><span class="nk"> &lt;nickler&gt;</span> <span class="hi">kabaum:</span> https://cdn.preterhuman.net/texts/cryptography/Hankerson,%20Menezes,%20Vanstone.%20Guide%20to%20elliptic%20curve%20cryptography%20(Springer,%202004)(ISBN%20038795273X)(332s)_CsCr_.pdf section 3.3.3
+<a name="l-49"></a><span class="tm">19:27:26</span><span class="nk"> &lt;sipa&gt;</span> i can try to give an intuition for that here too, if there are no other questions
+<a name="l-50"></a><span class="tm">19:27:51</span><span class="nk"> &lt;nickler&gt;</span> "Guide to Elliptic Curve Cryptography" by Hankersen, Menezes, Vanstone
+<a name="l-51"></a><span class="tm">19:28:13</span><span class="nk"> &lt;kabaum&gt;</span> <span class="hi">sipe:</span> I'd love that.
+<a name="l-52"></a><span class="tm">19:29:16</span><span class="nk"> &lt;kabaum&gt;</span> <span class="hi">nickler:</span> Strauss isn't mentioned in that document.
+<a name="l-53"></a><span class="tm">19:29:16</span><span class="nk"> &lt;nothingmuch&gt;</span> i jumped the gun with my question, but it's still outstanding, but an intuition for batch verification seems relevant to it anyway
+<a name="l-54"></a><span class="tm">19:29:23</span><span class="nk"> &lt;sipa&gt;</span> imagine you're trying to compute 19*P
+<a name="l-55"></a><span class="tm">19:30:05</span><span class="nk"> &lt;nickler&gt;</span> <span class="hi">kabaum:</span> section 3.3.3
+<a name="l-56"></a><span class="tm">19:30:15</span><span class="nk"> &lt;sipa&gt;</span> one way to do that is to compute 2P = P+P, 4P = 2P+2P, 8P = 4P+4P, 16=8P+8P, and then sum P+2P+16P
+<a name="l-57"></a><span class="tm">19:30:24</span><span class="nk"> &lt;nickler&gt;</span> they don't call it strauss but shamir's trick
+<a name="l-58"></a><span class="tm">19:30:42</span><span class="nk"> &lt;sipa&gt;</span> right?
+<a name="l-59"></a><span class="tm">19:31:00</span><span class="nk"> &lt;kabaum&gt;</span> yes!
+<a name="l-60"></a><span class="tm">19:31:54</span><span class="nk"> &lt;waxwing&gt;</span> key prefixing means we lose the pubkey recovery property, right?
+<a name="l-61"></a><span class="tm">19:32:00</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">waxwing:</span> correct
+<a name="l-62"></a><span class="tm">19:32:14</span><span class="nk"> &lt;waxwing&gt;</span> how do we feel about that.
+<a name="l-63"></a><span class="tm">19:32:37</span><span class="nk"> &lt;sipa&gt;</span> i think key aggregation is more important that pubkey recovery
+<a name="l-64"></a><span class="tm">19:32:38</span><span class="nk"> &lt;waxwing&gt;</span> oh i see it's in footnote 3
+<a name="l-65"></a><span class="tm">19:33:28</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> so you're doing 4 doublings (because the largest power of two is 16P), and then 1 addition for every 1-bit in the binary representation of 16
+<a name="l-66"></a><span class="tm">19:34:24</span><span class="nk"> &lt;sipa&gt;</span> but say you want to compute 19P + 23Q, you're just going to do twice the amount of work now (two times 4 doublings, and an addition for every 1 bit in 19 and 23)
+<a name="l-67"></a><span class="tm">19:34:40</span><span class="nk"> &lt;sipa&gt;</span> agree?
+<a name="l-68"></a><span class="tm">19:34:53</span><span class="nk"> &lt;kabaum&gt;</span> Agree!
+<a name="l-69"></a><span class="tm">19:35:03</span><span class="nk"> &lt;sipa&gt;</span> so that's not a good approach
+<a name="l-70"></a><span class="tm">19:35:09</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">waxwing:</span> you can do pubkey recovery with partial sigs with the same construction though; claim the complete key is P+-P+G, so you're going for sG=R+H(R,G,m)*G and calculate a partial signature s1,R1   s1*G = R + H(R,G,m)*P  and P is recoverable
+<a name="l-71"></a><span class="tm">19:36:15</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> an alternative is working backwards: write 19 as 11001 in binary, and compute it as dbl(dbl(dbl(dbl(P)))+P)+P)
+<a name="l-72"></a><span class="tm">19:36:25</span><span class="nk"> &lt;sipa&gt;</span> this is the exact same number of additions/doublings
+<a name="l-73"></a><span class="tm">19:37:16</span><span class="nk"> &lt;sipa&gt;</span> but instead of precomputing all power-of-two's times P first, and then adding them up, you use an "accumulator" that you add P into every time a "1" bit is encountered, and you double for every bit
+<a name="l-74"></a><span class="tm">19:37:45</span><span class="nk"> &lt;waxwing&gt;</span> aj, hmm interesting, that's confusing, so you're talking about like a multisig scenario? but would that work with musig?
+<a name="l-75"></a><span class="tm">19:37:46</span><span class="nk"> &lt;sipa&gt;</span> this is actually the same algorithm as https://en.wikipedia.org/wiki/Exponentiation_by_squaring, expect addition/doubling instead of multiply/square
+<a name="l-76"></a><span class="tm">19:38:10</span><span class="nk"> &lt;kabaum&gt;</span> <span class="hi">sipa:</span> did you write 19 backwards in binary?
+<a name="l-77"></a><span class="tm">19:38:10</span><span class="nk"> &lt;sipa&gt;</span> kabaum, nothingmuch: does this make sense?
+<a name="l-78"></a><span class="tm">19:38:23</span><span class="nk"> &lt;sipa&gt;</span> no
+<a name="l-79"></a><span class="tm">19:38:25</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">waxwing:</span> just abusing the api needed for partial sigs to allow for a protocol that wants pubkey recovery
+<a name="l-80"></a><span class="tm">19:38:44</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> maybe it's easier to see if i write it as dbl(dbl(dbl(dbl(0+P)))+P)+P)
+<a name="l-81"></a><span class="tm">19:38:47</span><span class="nk"> &lt;waxwing&gt;</span> aj, i guess it depends on what situation you want to do pubkey recovery .. the one i was made aware of was people working in a constrained environment wanting to transfer without being explicit about a key.
+<a name="l-82"></a><span class="tm">19:38:53</span><span class="nk"> &lt;waxwing&gt;</span> constrained as in something like mesh network.
+<a name="l-83"></a><span class="tm">19:39:40</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> oh, i'm confusing myself!
+<a name="l-84"></a><span class="tm">19:40:05</span><span class="nk"> &lt;sipa&gt;</span> it's dbl(dbl(dbl(dbl(0+P)+P)))+P
+<a name="l-85"></a><span class="tm">19:40:17</span><span class="nk"> &lt;sipa&gt;</span> the outer bits (11) become the inner part
+<a name="l-86"></a><span class="tm">19:40:38</span><span class="nk"> &lt;sipa&gt;</span> maybe IRC isn't the best medium for this
+<a name="l-87"></a><span class="tm">19:40:40</span><span class="nk"> &lt;nothingmuch&gt;</span> <span class="hi">sipa:</span> roughly makes sense to me but i doubt i will fully comprehend this here, i'm slow on the uptake and probably need to work it out on paper
+<a name="l-88"></a><span class="tm">19:40:58</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">nothingmuch:</span> i'm just giving background, i haven't explained it yet :)
+<a name="l-89"></a><span class="tm">19:41:10</span><span class="nk"> &lt;waxwing&gt;</span> there is a trailing ) on the last bullet point of "Default Signing"
+<a name="l-90"></a><span class="tm">19:41:10</span><span class="nk"> &lt;kabaum&gt;</span> Oh, it's 0x19, got that. Now I'm way behind you.... Catching up.
+<a name="l-91"></a><span class="tm">19:41:19</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> no, 19 = 16 + 8 + 1
+<a name="l-92"></a><span class="tm">19:41:27</span><span class="nk"> &lt;sipa&gt;</span> eh, 16 + 2 + 1
+<a name="l-93"></a><span class="tm">19:41:46</span><span class="nk"> &lt;sipa&gt;</span> i need a whiteboard :)
+<a name="l-94"></a><span class="tm">19:42:19</span><span class="nk"> &lt;waxwing&gt;</span> cancel that there is not a trailing )  . doh.
+<a name="l-95"></a><span class="tm">19:44:00</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> the number in binary is 10011 * P
+<a name="l-96"></a><span class="tm">19:44:07</span><span class="nk"> &lt;sipa&gt;</span> start with 0P = 0
+<a name="l-97"></a><span class="tm">19:44:25</span><span class="nk"> &lt;sipa&gt;</span> you see a 1 bit (the one in front), so you add P, and get 1P
+<a name="l-98"></a><span class="tm">19:44:38</span><span class="nk"> &lt;sipa&gt;</span> you double, and get 2P
+<a name="l-99"></a><span class="tm">19:44:39</span><span class="nk"> &lt;nickler&gt;</span> <span class="hi">aj:</span> fwiw the libsecp-zkp musig api wouldn't let you do that. Also, not committing to the pubkey allowsa an attacker to tweak the signature to be valid for another bip32 derived key
+<a name="l-100"></a><span class="tm">19:44:43</span><span class="nk"> &lt;sipa&gt;</span> you see a 0 bit, so don't do anything
+<a name="l-101"></a><span class="tm">19:44:51</span><span class="nk"> &lt;sipa&gt;</span> you double, and get 4P
+<a name="l-102"></a><span class="tm">19:44:56</span><span class="nk"> &lt;sipa&gt;</span> you see a 0 bit, so don't do anything
+<a name="l-103"></a><span class="tm">19:44:56</span><span class="nk"> &lt;sipa&gt;</span> you double, and get 8P
+<a name="l-104"></a><span class="tm">19:45:07</span><span class="nk"> &lt;sipa&gt;</span> you see a 1 bit, so you add P, and get 9P
+<a name="l-105"></a><span class="tm">19:45:11</span><span class="nk"> &lt;sipa&gt;</span> you double, and get 18P
+<a name="l-106"></a><span class="tm">19:45:14</span><span class="nk"> &lt;sipa&gt;</span> you see a 1 bit, so you add P, and get 19P
+<a name="l-107"></a><span class="tm">19:45:29</span><span class="nk"> &lt;sipa&gt;</span> done.
+<a name="l-108"></a><span class="tm">19:45:55</span><span class="nk"> &lt;sipa&gt;</span> does this make sense?
+<a name="l-109"></a><span class="tm">19:46:10</span><span class="nk"> &lt;waxwing&gt;</span> nickler, yeah i haven't figured it out, as you have, but makes sense that that is not compatible with musig, as it's kind of a related key attack thing.
+<a name="l-110"></a><span class="tm">19:46:26</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">nickler:</span> that means the api only does musig, not simple pubkey addition (with knowledge of discrete log) right?
+<a name="l-111"></a><span class="tm">19:47:01</span><span class="nk"> &lt;waxwing&gt;</span> aj, so you're basically arguing for people to still use base bip schnorr but have their own protocols (not in bitcoin itself, per se) that could do that kind of stuff?
+<a name="l-112"></a><span class="tm">19:47:30</span><span class="nk"> &lt;nothingmuch&gt;</span> <span class="hi">sipa:</span> so then to do both, it's just adding Q or P based on whether their respective bits are set into the same accumulator, and doubling once?
+<a name="l-113"></a><span class="tm">19:47:31</span><span class="nk"> &lt;nickler&gt;</span> well in our musig api you have the concept of a session which keeps your nonce, others nonces and your secret key. If you call partial sig it will use mostly session information
+<a name="l-114"></a><span class="tm">19:47:40</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">nothingmuch:</span> exactly!
+<a name="l-115"></a><span class="tm">19:47:44</span><span class="nk"> &lt;sipa&gt;</span> and what did you gain?
+<a name="l-116"></a><span class="tm">19:47:49</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">waxwing:</span> that it's conceivable yeah, not necessarily a good idea :)
+<a name="l-117"></a><span class="tm">19:47:54</span><span class="nk"> &lt;waxwing&gt;</span> :)
+<a name="l-118"></a><span class="tm">19:50:01</span><span class="nk"> &lt;kabaum&gt;</span> <span class="hi">sipa:</span> Didn't you just describe normal "adding and doubling" method?
+<a name="l-119"></a><span class="tm">19:50:20</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> yes indeed
+<a name="l-120"></a><span class="tm">19:50:27</span><span class="nk"> &lt;kabaum&gt;</span> ok, then I follow.
+<a name="l-121"></a><span class="tm">19:51:27</span><span class="nk"> &lt;sipa&gt;</span> so the next step is what nothingmuch said: if you want to compute say 19P + 25Q, where 19 is 10011 in binary, and 25 is 11001, you can merge the two computations
+<a name="l-122"></a><span class="tm">19:51:45</span><span class="nk"> &lt;sipa&gt;</span> you start with 0P+0Q = 0
+<a name="l-123"></a><span class="tm">19:51:53</span><span class="nk"> &lt;sipa&gt;</span> you see a 1 bit in both, so you add P and Q, and 1P+1Q
+<a name="l-124"></a><span class="tm">19:52:03</span><span class="nk"> &lt;sipa&gt;</span> you double, and get 2P+2Q
+<a name="l-125"></a><span class="tm">19:52:32</span><span class="nk"> &lt;sipa&gt;</span> you see a 1 bit in 25, so you add Q, and get 2P+3Q
+<a name="l-126"></a><span class="tm">19:52:48</span><span class="nk"> &lt;sipa&gt;</span> you double, and get 4P+6Q
+<a name="l-127"></a><span class="tm">19:52:55</span><span class="nk"> &lt;sipa&gt;</span> you see 0 bits in both and do nothing
+<a name="l-128"></a><span class="tm">19:53:00</span><span class="nk"> &lt;sipa&gt;</span> you double, and get 8P+12Q
+<a name="l-129"></a><span class="tm">19:53:28</span><span class="nk"> &lt;sipa&gt;</span> you see 1 bit in 19, so you add P, and 9P+12Q
+<a name="l-130"></a><span class="tm">19:53:35</span><span class="nk"> &lt;sipa&gt;</span> you double, and get 18P+24Q
+<a name="l-131"></a><span class="tm">19:53:47</span><span class="nk"> &lt;sipa&gt;</span> you see a 1 bit in both, you add P+Q, and get 18P+25Q
+<a name="l-132"></a><span class="tm">19:53:52</span><span class="nk"> &lt;sipa&gt;</span> *19P+25Q
+<a name="l-133"></a><span class="tm">19:54:02</span><span class="nk"> &lt;sipa&gt;</span> and in doing so, you've only doubled 4 times, not 8 times
+<a name="l-134"></a><span class="tm">19:56:53</span><span class="nk"> &lt;waxwing&gt;</span> i see you specify deterministic nonces but a very much simpler form than rfc6979 .. perhaps mention the latter in footnote 10?
+<a name="l-135"></a><span class="tm">19:57:23</span><span class="nk"> &lt;waxwing&gt;</span> debatable since it's not like rfc6979 was actually part of a bitcoin standard/bip before iirc
+<a name="l-136"></a><span class="tm">19:57:54</span><span class="nk"> &lt;sipa&gt;</span> we all like 289264 invocation of the SHA256 compression functions to compute a nonce
+<a name="l-137"></a><span class="tm">19:58:06</span><span class="nk"> &lt;waxwing&gt;</span> also that bias being small is cool but maybe it would be nice to cite something. i remember 1 bit biases in nonces have been enough in theory before (lattice stuff)
+<a name="l-138"></a><span class="tm">19:58:27</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">waxwing:</span> they are
+<a name="l-139"></a><span class="tm">19:58:30</span><span class="nk"> &lt;waxwing&gt;</span> 6979 was kinda hard. but i mean ... Pornin is the man.
+<a name="l-140"></a><span class="tm">19:59:37</span><span class="nk"> &lt;sipa&gt;</span> it's a 0.0000000000000000000000000000000000000058 bit bias here
+<a name="l-141"></a><span class="tm">19:59:49</span><span class="nk"> &lt;waxwing&gt;</span> ah right yeah, thought i might have made that error :)
+<a name="l-142"></a><span class="tm">19:59:54</span><span class="nk"> &lt;sipa&gt;</span> i think we have a comment somewhere that the bias is unobservable
+<a name="l-143"></a><span class="tm">19:59:56</span><span class="nk"> &lt;waxwing&gt;</span> wait was it really 300K? lol
+<a name="l-144"></a><span class="tm">20:00:00</span><span class="nk"> &lt;kabaum&gt;</span> <span class="hi">sipa:</span> I got it! Thanks! You really made it simple.
+<a name="l-145"></a><span class="tm">20:00:08</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">waxwing:</span> no, more like 15
+<a name="l-146"></a><span class="tm">20:00:19</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">waxwing:</span> still, it's actually a nontrivial portion of the signing time
+<a name="l-147"></a><span class="tm">20:00:21</span><span class="nk"> &lt;waxwing&gt;</span> yeah you have that comment in 10 it's fine. and no need to comment rfc6979 i think.
+<a name="l-148"></a><span class="tm">20:00:40</span><span class="nk"> &lt;waxwing&gt;</span> i see. makes sense. i know there are some loops you can end up in but they're vanishingly unlikely.
+<a name="l-149"></a><span class="tm">20:03:03</span><span class="nk"> &lt;nothingmuch&gt;</span> <span class="hi">sipa:</span> i'd like to reiterate my question about e vs. R based signatures, and the rationale for preferring batch verification over compact signatures, and add to it
+<a name="l-150"></a><span class="tm">20:03:24</span><span class="nk"> &lt;waxwing&gt;</span> i think you could argue you don't need either the batch verification nor the optimisation sections in the BIP.
+<a name="l-151"></a><span class="tm">20:03:51</span><span class="nk"> &lt;waxwing&gt;</span> albeit it helps a lot to understand design decisions.
+<a name="l-152"></a><span class="tm">20:03:53</span><span class="nk"> &lt;nothingmuch&gt;</span> namely, is it fair to say that batch verification is necessarily serial?
+<a name="l-153"></a><span class="tm">20:04:01</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">nothingmuch:</span> what does that mean?
+<a name="l-154"></a><span class="tm">20:05:16</span><span class="nk"> &lt;nothingmuch&gt;</span> <span class="hi">sipa:</span> can't be computed in parallel
+<a name="l-155"></a><span class="tm">20:05:25</span><span class="nk"> &lt;sipa&gt;</span> i don't know what that means
+<a name="l-156"></a><span class="tm">20:05:40</span><span class="nk"> &lt;waxwing&gt;</span> i also don't understand, surely the whole point of batching is to do stuff in parallel
+<a name="l-157"></a><span class="tm">20:05:54</span><span class="nk"> &lt;nothingmuch&gt;</span> i mean given a batch, that the algorithm to do the whole batch is not concurrent
+<a name="l-158"></a><span class="tm">20:06:00</span><span class="nk"> &lt;nothingmuch&gt;</span> and can't benefit from multiple cores
+<a name="l-159"></a><span class="tm">20:06:14</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">nothingmuch:</span> ah, in theory it could, but we don't have an implementation for that
+<a name="l-160"></a><span class="tm">20:06:28</span><span class="nk"> &lt;sipa&gt;</span> however, you can split up the batch in 4 batches, and verify each on one core easily
+<a name="l-161"></a><span class="tm">20:06:58</span><span class="nk"> &lt;waxwing&gt;</span> that loses some of the scaling, but then if you had a parallelisable algo, it might too, i guess
+<a name="l-162"></a><span class="tm">20:07:06</span><span class="nk"> &lt;nothingmuch&gt;</span> i'm trying to better understand the compute vs. network latency tradeoff, the benefit from batching is obvious to me, but i'm not sure how it holds up against bandwidth cost, especially since witness data is discounted
+<a name="l-163"></a><span class="tm">20:07:48</span><span class="nk"> &lt;nothingmuch&gt;</span> or is the difference in security model the main rationale for preferring R over e, with batching being an extra benefit?
+<a name="l-164"></a><span class="tm">20:08:30</span><span class="nk"> &lt;nothingmuch&gt;</span> (without witness discount i can see that batch verification should be strictly better for orphan rates, but slightly reduced tx throughput)
+<a name="l-165"></a><span class="tm">20:09:04</span><span class="nk"> &lt;waxwing&gt;</span> pretty sure it's batching, the 'e' version is usually what's proved in security proofs isn't it.
+<a name="l-166"></a><span class="tm">20:09:29</span><span class="nk"> &lt;waxwing&gt;</span> oh but shortened .. ok.
+<a name="l-167"></a><span class="tm">20:11:53</span><span class="nk"> &lt;sipa&gt;</span> so using a 128-bit e value works in some security models for Schnorr, but not all
+<a name="l-168"></a><span class="tm">20:12:03</span><span class="nk"> &lt;sipa&gt;</span> (depending on which other assumptions on the group/hash are made)
+<a name="l-169"></a><span class="tm">20:12:58</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">nothingmuch:</span> as for bandwidth, i think the relevant metrics are (a) worst case bandwidth usage and (b) worst case CPU per byte usage
+<a name="l-170"></a><span class="tm">20:13:24</span><span class="nk"> &lt;sipa&gt;</span> and worst case bandwidth isn't affected by any of these proposals - it's close to 4M of data per block
+<a name="l-171"></a><span class="tm">20:13:42</span><span class="nk"> &lt;sipa&gt;</span> while batch validation significantly improves CPU per vbyte
+<a name="l-172"></a><span class="tm">20:14:47</span><span class="nk"> &lt;nothingmuch&gt;</span> that makes sense
+<a name="l-173"></a><span class="tm">20:14:59</span><span class="nk"> &lt;sipa&gt;</span> specifically, i believe the ROM/DL/forkinglemma proof for Schnorr indeed works with 128-bit hashes... but the generic group + collision resistant hash proof needs 256 bit hashes
+<a name="l-174"></a><span class="tm">20:16:57</span><span class="nk"> &lt;nothingmuch&gt;</span> we had another question in group 16 yesterday, which i attempted to answer but wanted to verify - is the reason for H(tag)||H(tag) being the prefix so that the compression function can already be applied given that the block size is double the image size?
+<a name="l-175"></a><span class="tm">20:17:45</span><span class="nk"> &lt;sipa&gt;</span> yes, that's the reason for having a 64-byte prefix
+<a name="l-176"></a><span class="tm">20:17:57</span><span class="nk"> &lt;sipa&gt;</span> though any other 64-byte prefix could be picked
+<a name="l-177"></a><span class="tm">20:18:06</span><span class="nk"> &lt;sipa&gt;</span> the reason for doubling the hash of the tag is given in bip-taproot i think
+<a name="l-178"></a><span class="tm">20:20:18</span><span class="nk"> &lt;aj&gt;</span> second paragraph of Specification in bip-taproot
+<a name="l-179"></a><span class="tm">20:20:32</span><span class="nk"> &lt;aj&gt;</span> any other questions or shall we call it?
+<a name="l-180"></a><span class="tm">20:20:47</span><span class="nk"> &lt;kabaum&gt;</span> Thank you all so much for your time today! My two suggestions for bip-schnorr are: 1) Specify the specific schnorr scheme used in the graph. 2) Add a footnote mentioning Strauss' algorithm or Shamir's trick as the reason for the efficiency gains of batch verification.
+<a name="l-181"></a><span class="tm">20:21:40</span><span class="nk"> &lt;waxwing&gt;</span> i think all of that including batch algo itself is kinda out of scope. but i'm conflicted because it's actually pretty cool to have it there :)
+<a name="l-182"></a><span class="tm">20:21:52</span><span class="nk"> &lt;waxwing&gt;</span> aj, don't let me stop you :)
+<a name="l-183"></a><span class="tm">20:21:57</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> i guess i should point out that Shamir's trick is only one of the ways in which multi-EC-multiplication is faster than single-EC-multiplication
+<a name="l-184"></a><span class="tm">20:22:58</span><span class="nk"> &lt;kabaum&gt;</span> Oh, shit. There's more. Maybe a followup on next Q&amp;A.
+<a name="l-185"></a><span class="tm">20:23:10</span><span class="nk"> &lt;aj&gt;</span> <span class="cmd">#endmeeting</span><span class="cmdline"></span></pre>
+</body></html>

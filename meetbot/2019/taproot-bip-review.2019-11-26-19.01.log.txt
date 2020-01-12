@@ -1,0 +1,111 @@
+19:01:16 <aj> #startmeeting
+19:01:16 <lightningbot> Meeting started Tue Nov 26 19:01:16 2019 UTC.  The chair is aj. Information about MeetBot at http://wiki.debian.org/MeetBot.
+19:01:16 <lightningbot> Useful Commands: #action #agreed #help #info #idea #link #topic.
+19:01:21 <pyskell> hi
+19:01:23 <nickler> hi
+19:01:27 <kabaum> hi
+19:01:42 <aj> hi
+19:01:44 <fanquake> hi
+19:01:48 <sipa> hi
+19:01:52 <schmidty> hi
+19:03:41 <kabaum> Good to see you all again.
+19:03:43 <kabaum> Q1/2 group 5: "Transaction digest": scriptPubKey is listed as 35 bytes. Shouldn't that be 34 bytes? OP_1 OP_20 <32 byte witness program>? Is the extra byte a leading varint as in the output? If so, why don't we remove it since it's always 35, well 34, bytes?
+19:04:19 <sipa> kabaum: partially the result of the fact that this existed before P2SH support was removed
+19:04:22 <ariard_> hi
+19:04:46 <sipa> because back then, scriptPubKey for a P2SH-taproot spend would actually contain the P2SH scriptPubKey
+19:04:54 <sipa> (rather than its redeemscript)
+19:06:08 <sipa> The rationale here is that by default really every signature should commit to vout hash/id, and exact scriptPubKey and amount, as it guarantees offline signing devices can verify the entire path between the claimed UTXO being spent and whatever it commits to
+19:06:23 <jonatack> hi
+19:07:21 <sipa> And the justification is a very minor issue right now where a software wallet could claim to a HW device that it is spending a P2SH-P2WSH output for example, but the real output is a (native) P2WSH one... making the HW device perhaps misrepresent the necessary fees
+19:07:50 <sipa> this specific example could have been fixed by just exactly committing to P2SH or not
+19:07:57 <sipa> but it is not the only example of such mutations
+19:08:08 <sipa> and they're all fixed by just committing to the scriptPubKey
+19:08:51 <sipa> so yes, we know it's always 34 bytes, and could thus drop the compactsize length that precedes it
+19:09:22 <sipa> but as a general principle i think it's better to just make it generic, using an approach that will keep working for other kinds of scriptPubKeys as well
+19:09:30 <sipa> </monologue>
+19:10:51 <kabaum> So maybe it's better to not say "Its size is always 35 bytes" then?
+19:11:20 <sipa> well it is in the specific use in bip-taproot
+19:11:22 <ariard_> how about future extensions of hash_type ? is epoch the versioning number and if so where would you pass the epoch in future extensions, annex?
+19:11:37 <sipa> ariard_: i don't understand
+19:11:42 <kabaum> sipa: sure
+19:12:12 <sipa> oh, i see
+19:12:13 <ariard_> sipa: let's say we want to have new hash_types, how would we introduce them?
+19:12:21 <sipa> ariard_: anyway you like
+19:12:24 <sipa> (if you find consensus)
+19:12:44 <ariard_> sure but the epoch would be the most fine-grained one ?
+19:13:06 <ariard_> compare to the leaf version
+19:13:16 <fjahr> hi
+19:13:23 <devrando1> hi
+19:13:24 <sipa> the epoch is not encoded anywhere, it's not an extension mechanism
+19:14:13 <sipa> it's just so that if something needs to introduce a completely new sighash construction, they don't need a new tag for the tagged hash
+19:14:25 <sipa> they can instead just set the epoch to another value, and then do whatever they want
+19:14:36 <sipa> without the risk of ever colliding with a bip-taproot sighash
+19:14:59 <ariard_> hmmm but at least in demo code epoch is hardcoded to zero?
+19:15:12 <sipa> it is not just hardcoded in the demo code to be zero
+19:15:18 <sipa> bip-taproot defines it to be zero
+19:15:19 <nickler> ariard_: the sighash_anyprevout hash type is proposed to be introduced with a new pubkey type
+19:15:35 <sipa> we could just not give it a name
+19:15:37 <sipa> it's just zero
+19:16:14 <ariard_> in SignatureHashSchnorr, epoch = 0
+19:16:19 <sipa> yes
+19:16:36 <sipa> and bip-taproot says:
+19:16:37 <sipa> epoch (1): always 0
+19:16:53 <ariard_> nickler: using key_version?
+19:17:06 <nickler> yeah
+19:17:11 <sipa> nickler: ariard_ is asking about epoch, not key version
+19:17:43 <ariard_> sipa: yes but I thought you could use epoch as a upgrade mechanism like key version, but apparently that's not the case
+19:18:11 <devrando1> the epoch is not serialized
+19:18:46 <devrando1> so you can't use it to communicate anything
+19:19:40 <devrando1> it's only part of the data bytes that are hashed, but it's a non-stored constant
+19:20:06 <sipa> i explained it more to ariard_ irl
+19:20:22 <sipa> but i think the epoch can use better justification in the text
+19:21:17 <sipa> really, its goal is to enable reusing the tag "TapSigHash" even in potential hypothetical future sighashes that completely change the data hashed
+19:21:27 <sipa> without risking collisions
+19:22:11 <sipa> so really, this sighash scheme just sets the first byte to 0, so that there is a simple guaranteed way for future sighashes that intend to be different: they can set the first byte to not-0
+19:22:28 <sipa> but as far as bip-taproot is concerned, it's not an extension mechanism; it's just a 0
+19:24:00 <kabaum> sipa: Now I get epoch. Thanks.
+19:24:56 <kabaum> Q2/2: "Transaction digest": The summary at the end: Isn't another difference that in case ANYONECANPAY is set, we don't commit to 32 zero bytes in place of hashPrevous as we did in BIP143, but to nothing regarding prevouts. Or is that too insignificaant to make the list?
+19:25:22 <sipa> kabaum: you cannot commit to 32 zero bytes
+19:25:27 <sipa> there is no information in them
+19:25:47 <sipa> it's an implementation detail that the exact data hashed changed
+19:26:01 <sipa> but in terms of semantics, hashing 32 zero bytes never did anything
+19:26:24 <kabaum> I see.
+19:30:33 <gmaxwell> The important thing is that there isn't an 'aliasing' problem, where a commitment to two different things might be confused.
+19:31:06 <gmaxwell> But you don't need zero stuffing to prevent that, hashing that flags that are in use is sufficient-- actually not just sufficient, better than stuffing without flags.
+19:31:29 <ariard_> Rationale 16: "Despite that, collisions are made impossible by committing to the length of the data before the variable length data", the commitment here is hash_type and spend_type?
+19:32:03 <ariard_> but they don't tell you the lenght of the variable length data parts, input outpoints, input amounts, ...?
+19:32:04 <sipa> ariard_: hmm, we may need to revise that
+19:32:30 <sipa> because scriptPubKey is no longer variable length
+19:33:07 <sipa> and all other variable length things have indirect commitments to their lengths using intermediate hashes
+19:33:27 <sipa> (e.g. the annex has its length committed to by being prehashed)
+19:34:39 <ariard_> okay is collision of final hash by tweaking indirect commitments an issue?
+19:35:50 <sipa> we assume we have a collision resistant hash function
+19:35:51 <sipa> so no
+19:37:29 <sipa> ariard_: collisions through indirect hashes are no more a problem that collisions in the directly hashed data is a problem
+19:40:12 <devrando1> none of the hashing in bip-taproot (or existing Bitcoin code) is vulnerable to extension attacks because the hashes are signed, right?
+19:40:43 <devrando1> (vs MACs)
+19:40:45 <ariard_> sipa: yes I see, the problem is back to finding a collision in subhashes like you said
+19:40:46 <sipa> devrando1: length extension attacks apply to MACs
+19:40:59 <sipa> devrando1: we do not use any of our hashes as MACs
+19:41:19 <sipa> (specifically, a MAC implies there is a secret; all our data hashed is public)
+19:41:46 <devrando1> got it
+19:44:17 <sipa> there is a related problem to length extension attacks (and generally apllicable to the same kinds of constructions), namely that IF someone manages to find a collision in a hash function based on Merkle-Damgard, then that can cheaply be extended to be arbitrarily many collisions by suffixing the same data after it
+19:44:30 <sipa> that's not called a length extension attack though
+19:44:44 <sipa> and SHA256 is indeed susceptible to thay
+19:45:09 <sipa> but bitcoin already relies on SHA256 being collision resistant entirely
+19:47:13 <ariard_> could you use new public key types to have the public key enforcing hash_types on the signatures, like the "spending transaction must commit to nLockTime"?
+19:47:37 <sipa> sure
+19:47:56 <sipa> (all sighash currently already commit to nLockTime, though)
+19:50:24 <ariard_> yeah but was thinking about more fine-grained hash_types and you would combined them to have a weak covenant
+19:54:19 <nothingmuch> in bip-schnorr, scalars k and e and are used mod n, the curve order, whereas in bip-taproot t (tap tweak hash) is constrained to be less than n. why is it curve order and not field size? why do these differ? doesn't bip-schnorr footnote 10 apply to all?
+19:55:16 <nothingmuch> "why do these these differ" refers to the difference in handling of k and e vs. t
+19:57:12 <sipa> nothingmuch: it's modulo n because they're all integers modulo n
+19:57:23 <sipa> forgot that we're using elliptic curves
+19:57:36 <sipa> the field size is only relevant to the specific implementation of the elliptic curve we pick
+19:58:08 <sipa> but for anything "higher level" construction (including schnorr signatures and the taproot tweak), all that matters is how many elements there are in that group - which is n
+20:01:17 <sipa> ok, have to run
+20:01:25 * devrando1 waves
+20:01:30 <kabaum> Thank you!
+20:01:32 <nothingmuch> thanks
+20:01:42 <jonatack_> thanks
+20:02:00 <aj> #endmeeting

@@ -1,0 +1,304 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>##taproot-bip-review log</title>
+<style type="text/css">
+/* For the .log.html */
+pre { /*line-height: 125%;*/
+      white-space: pre-wrap; }
+body { background: #f0f0f0; }
+
+body .tm  { color: #007020 }                      /* time */
+body .nk  { color: #062873; font-weight: bold }   /* nick, regular */
+body .nka { color: #007020; font-weight: bold }  /* action nick */
+body .ac  { color: #00A000 }                      /* action line */
+body .hi  { color: #4070a0 }                 /* hilights */
+/* Things to make particular MeetBot commands stick out */
+body .topic     { color: #007020; font-weight: bold }
+body .topicline { color: #000080; font-weight: bold }
+body .cmd       { color: #007020; font-weight: bold }
+body .cmdline  { font-weight: bold }
+
+</style>
+</head>
+
+<body>
+<pre><a name="l-1"></a><span class="tm">19:00:42</span><span class="nk"> &lt;aj&gt;</span> <span class="cmd">#startmeeting</span><span class="cmdline"></span>
+<a name="l-2"></a><span class="tm">19:00:42</span><span class="nk"> &lt;lightningbot&gt;</span> Meeting started Tue Nov  5 19:00:42 2019 UTC.  The chair is aj. Information about MeetBot at http://wiki.debian.org/MeetBot.
+<a name="l-3"></a><span class="tm">19:00:42</span><span class="nk"> &lt;lightningbot&gt;</span> Useful Commands: #action #agreed #help #info #idea #link #topic.
+<a name="l-4"></a><span class="tm">19:00:46</span><span class="nk"> &lt;moneyball&gt;</span> hi
+<a name="l-5"></a><span class="tm">19:00:51</span><span class="nk"> &lt;sipa&gt;</span> hi
+<a name="l-6"></a><span class="tm">19:01:04</span><span class="nk"> &lt;hebasto&gt;</span> hi
+<a name="l-7"></a><span class="tm">19:01:08</span><span class="nk"> &lt;gmaxwell&gt;</span> hi
+<a name="l-8"></a><span class="tm">19:01:08</span><span class="nk"> &lt;schmidty&gt;</span> hi
+<a name="l-9"></a><span class="tm">19:01:12</span><span class="nk"> &lt;andytoshi&gt;</span> hi
+<a name="l-10"></a><span class="tm">19:01:13</span><span class="nk"> &lt;aj&gt;</span> hi!
+<a name="l-11"></a><span class="tm">19:01:13</span><span class="nk"> &lt;pyskell&gt;</span> hi
+<a name="l-12"></a><span class="tm">19:01:16</span><span class="nk"> &lt;jonatack&gt;</span> hi
+<a name="l-13"></a><span class="tm">19:01:17</span><span class="nk"> &lt;kabaum&gt;</span> hi
+<a name="l-14"></a><span class="tm">19:01:19</span><span class="nk"> &lt;afk11&gt;</span> hi all
+<a name="l-15"></a><span class="tm">19:01:21</span><span class="nk"> &lt;pglazman&gt;</span> hi
+<a name="l-16"></a><span class="tm">19:01:23</span><span class="nk"> &lt;ariard&gt;</span> hi
+<a name="l-17"></a><span class="tm">19:01:29</span><span class="nk"> &lt;fjahr&gt;</span> hi
+<a name="l-18"></a><span class="tm">19:01:33</span><span class="nk"> &lt;bjarnem&gt;</span> hi
+<a name="l-19"></a><span class="tm">19:01:34</span><span class="nk"> &lt;amiti&gt;</span> hi
+<a name="l-20"></a><span class="tm">19:01:39</span><span class="nk"> &lt;cdecker&gt;</span> Hi
+<a name="l-21"></a><span class="tm">19:02:13</span><span class="nk"> &lt;moneyball&gt;</span> good turnout! ok we have several experts here. so, ask away!
+<a name="l-22"></a><span class="tm">19:02:43</span><span class="nk"> &lt;nickler&gt;</span> when will we get schnorr in bitcoin?
+<a name="l-23"></a><span class="tm">19:02:47</span><span class="nk"> &lt;pyskell&gt;</span> So, question, I know the expected use of the public key in a taproot script is to allow for a happy path cooperative close but is this something that you think will be misused such that most taproot contracts end up with a defacto single owner?
+<a name="l-24"></a><span class="tm">19:02:52</span><span class="nk"> &lt;jnewbery&gt;</span> hi
+<a name="l-25"></a><span class="tm">19:02:55</span><span class="nk"> &lt;jonatack&gt;</span> Group 5 just met for the first time this past hour... constructive.
+<a name="l-26"></a><span class="tm">19:03:01</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">nickler:</span> #twoweeks, aiui
+<a name="l-27"></a><span class="tm">19:03:24</span><span class="nk"> &lt;b10c&gt;</span> hi
+<a name="l-28"></a><span class="tm">19:03:25</span><span class="nk"> &lt;jb55&gt;</span> hi
+<a name="l-29"></a><span class="tm">19:03:32</span><span class="nk"> &lt;jkczyz&gt;</span> hi
+<a name="l-30"></a><span class="tm">19:03:47</span><span class="nk"> &lt;hebasto&gt;</span> <span class="hi">kabaum:</span> please bring Group 5 questions
+<a name="l-31"></a><span class="tm">19:03:48</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">pyskell:</span> i don't think so, or at least not anymore than the fact that P2(W)PKH is easier to deal with than P2(W)SH encourages people to pick a single-key policy
+<a name="l-32"></a><span class="tm">19:03:56</span><span class="nk"> &lt;bjarnem&gt;</span> <span class="hi">Q:</span> I am not sure I understand the purpose of annex? Segwit supports versioning, where Taproot makes use of v1. Does using annex allow for something like subversioning to extend taproot without using up Segwit versions? Do we know of any examples for what this could be used for?
+<a name="l-33"></a><span class="tm">19:04:08</span><span class="nk"> &lt;andytoshi&gt;</span> <span class="hi">pyskell:</span> it's not "misuse" if there really is a single owner :)
+<a name="l-34"></a><span class="tm">19:04:16</span><span class="nk"> &lt;kabaum&gt;</span> Q from group 5 (1/8): We were wondering if there should be a rule in "Script validation rules" that the scriptSig must be empty?
+<a name="l-35"></a><span class="tm">19:04:24</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">bjarnem:</span> rather the opposite, because even more complex things do become relatively cheaper
+<a name="l-36"></a><span class="tm">19:04:35</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> there is, see BIp141
+<a name="l-37"></a><span class="tm">19:04:39</span><span class="nk"> &lt;andytoshi&gt;</span> my guess would be that few people are trying to handroll their own multiparty protocols and screw it up in a way that one party controls all the funds. that would be a serious bug in their protocol.
+<a name="l-38"></a><span class="tm">19:04:51</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">bjarnem:</span> annex lets us commit to extra information in the signatures, so is an upgrade method. should become clearer when we look into the signature details more in depth, and the upgrade methods in particular afterwards
+<a name="l-39"></a><span class="tm">19:05:00</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> BIP141 requires an empty scriptSig when using non-P2SH-segwit
+<a name="l-40"></a><span class="tm">19:05:15</span><span class="nk"> &lt;kabaum&gt;</span> <span class="hi">sipa:</span> that only applies to v0 native segwit, right?
+<a name="l-41"></a><span class="tm">19:05:15</span><span class="nk"> &lt;sipa&gt;</span> taproot cannot change that
+<a name="l-42"></a><span class="tm">19:05:23</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> no, it applies to all segwit
+<a name="l-43"></a><span class="tm">19:05:49</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">sipa:</span> the redeemscript is still there for p2sh compatible witness.
+<a name="l-44"></a><span class="tm">19:06:26</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">gmaxwell:</span> indeed; but since the current taproot draft requires non-p2sh that isn't relevant
+<a name="l-45"></a><span class="tm">19:06:58</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> reading BIP141, this is actually not clear
+<a name="l-46"></a><span class="tm">19:07:18</span><span class="nk"> &lt;hebasto&gt;</span> ^
+<a name="l-47"></a><span class="tm">19:07:22</span><span class="nk"> &lt;jonatack&gt;</span> ^\
+<a name="l-48"></a><span class="tm">19:08:07</span><span class="nk"> &lt;ariard&gt;</span> why taproot first and not grafroot, apart of signing keys required to be online, grafroot benefits seem to encompass all taproot ones ?
+<a name="l-49"></a><span class="tm">19:08:31</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">ariard:</span> "apart of" seems like an enormous disadvantage
+<a name="l-50"></a><span class="tm">19:08:35</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">sipa:</span> "Witness Program" section "Triggered by a scriptPubKey .." item says " The scriptSig must be exactly empty or validation fails." ?
+<a name="l-51"></a><span class="tm">19:08:54</span><span class="nk"> &lt;pyskell&gt;</span> sipa, Gotcha, so there are already existing multisigs that can allow a single specific key to spend but not the other keys?
+<a name="l-52"></a><span class="tm">19:09:07</span><span class="nk"> &lt;andytoshi&gt;</span> <span class="hi">ariard:</span> graftroot requires interaction and involves non-reproducible (by individual parties) data that must be storied
+<a name="l-53"></a><span class="tm">19:09:44</span><span class="nk"> &lt;felixweis&gt;</span> what happens if there is an annex and key path spending?
+<a name="l-54"></a><span class="tm">19:09:57</span><span class="nk"> &lt;andytoshi&gt;</span> you also can't prove, with graftroot, the total set of spending conditions that exist (which you can be revealing all leaves of a taproot tree)
+<a name="l-55"></a><span class="tm">19:10:03</span><span class="nk"> &lt;nickler&gt;</span> <span class="hi">ariard:</span> also graftroot spend is larger (one sig vs one point). Can be made the same with "half aggregation".
+<a name="l-56"></a><span class="tm">19:10:22</span><span class="nk"> &lt;hebasto&gt;</span> <span class="hi">felixweis:</span> annex discards, no?
+<a name="l-57"></a><span class="tm">19:10:23</span><span class="nk"> &lt;aj&gt;</span> andytoshi, ariard: also graftroot is more efficient if we have signature half-aggregation, which wasn't worked out
+<a name="l-58"></a><span class="tm">19:10:29</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">ariard:</span> i think graftroot is great and i have some ideas on how to integrate it, but it's not applicable in all cases where taproot/schnorr/musig are useful (which don't have any interactive setup before the address can be constructed, don't need private keys online, can be computed from just xpubs, ...)
+<a name="l-59"></a><span class="tm">19:10:31</span><span class="nk"> &lt;ariard&gt;</span> <span class="hi">sipa:</span> ok and with taproot I can create a taptree using bip32 derivation to include some of your keys without interactivity
+<a name="l-60"></a><span class="tm">19:10:41</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">ariard:</span> exactly
+<a name="l-61"></a><span class="tm">19:10:55</span><span class="nk"> &lt;sipa&gt;</span> without taking your paper wallets out of your safe
+<a name="l-62"></a><span class="tm">19:10:58</span><span class="nk"> &lt;gmaxwell&gt;</span> and having to securely store and backup that data is seen to be a big issue.  (consider how often people want metal etched key backups and such). And half aggregation makes it efficient, HOWEVER, halfagg has the same sorts of challenges proving its security.
+<a name="l-63"></a><span class="tm">19:11:00</span><span class="nk"> &lt;sipa&gt;</span> without needing to talk to your GSM
+<a name="l-64"></a><span class="tm">19:11:02</span><span class="nk"> &lt;sipa&gt;</span> *HSM
+<a name="l-65"></a><span class="tm">19:11:04</span><span class="nk"> &lt;ariard&gt;</span> <span class="hi">andytoshi:</span> can't you be ambiguous on this, find some script collusiojn ?
+<a name="l-66"></a><span class="tm">19:11:10</span><span class="nk"> &lt;afk11&gt;</span> <span class="hi">felixweis:</span> key-path spend is only possible when there is exactly 1 value on the stack.
+<a name="l-67"></a><span class="tm">19:11:40</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">afk11:</span> *after* the annex is dropped; an annex is allowed with key path spending
+<a name="l-68"></a><span class="tm">19:11:42</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">felixweis:</span> an annex with key path spending just has the annex contents committed to as part of the signature, which is the same as script path spending; as well as whatever constraints are imposed by later soft-forks by having info in the annex
+<a name="l-69"></a><span class="tm">19:11:43</span><span class="nk"> &lt;felixweis&gt;</span> <span class="hi">afk11:</span> the way i read it, there can be an annex and then there is only a sig left
+<a name="l-70"></a><span class="tm">19:11:52</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">felixweis:</span> correct
+<a name="l-71"></a><span class="tm">19:12:20</span><span class="nk"> &lt;andytoshi&gt;</span> <span class="hi">ariard:</span> i don't think you can find a script collision with 256-bit hashes. if i understand what you mean
+<a name="l-72"></a><span class="tm">19:12:20</span><span class="nk"> &lt;felixweis&gt;</span> can this be (ab)used for a cheaper per input op_return commitment?
+<a name="l-73"></a><span class="tm">19:12:29</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">pyskell:</span> i don't see your question is related to anything else said here
+<a name="l-74"></a><span class="tm">19:12:36</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">felixweis:</span> annexes are nonstandard
+<a name="l-75"></a><span class="tm">19:12:52</span><span class="nk"> &lt;ariard&gt;</span> <span class="hi">sipa:</span> okay maybe underline somewhere in the BIP the non-interactivty advantage like in taptree construction
+<a name="l-76"></a><span class="tm">19:13:01</span><span class="nk"> &lt;ariard&gt;</span> or in a footnote
+<a name="l-77"></a><span class="tm">19:13:23</span><span class="nk"> &lt;kabaum&gt;</span> Q from group 5 (2/8): Could we use the term p2tpk for taproot outputs? Or is there a common term for it already? p2tpk, p2tr, p2tap, etc?
+<a name="l-78"></a><span class="tm">19:13:39</span><span class="nk"> &lt;sipa&gt;</span> i've been using P2TR; i have no opinion beyond that
+<a name="l-79"></a><span class="tm">19:13:47</span><span class="nk"> &lt;pyskell&gt;</span> <span class="hi">sipa:</span> re: "pyskell: i don't think so, or at least not anymore than the fact that P2(W)PKH is easier to deal with than P2(W)SH encourages people to pick a single-key policy"
+<a name="l-80"></a><span class="tm">19:14:04</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">pyskell:</span> yes, i don't see how your question is related to that; i may have understood your question
+<a name="l-81"></a><span class="tm">19:14:17</span><span class="nk"> &lt;gmaxwell&gt;</span> will there have to be a new name for every output type in the future perhaps just start calling them P2WvN ? :P
+<a name="l-82"></a><span class="tm">19:14:27</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">pyskell:</span> let me restate how i interpreted your initial question
+<a name="l-83"></a><span class="tm">19:14:50</span><span class="nk"> &lt;hebasto&gt;</span> <span class="hi">gmaxwell:</span> great!
+<a name="l-84"></a><span class="tm">19:15:19</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">pyskell:</span> "is there a risk that people will be incentivized to use just single-key spending in taproot, as it's simpler than dealing with scripts?"
+<a name="l-85"></a><span class="tm">19:15:42</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">pyskell:</span> my answer to that is no, because that risk inevitably exists, but it's significantly reduced with taproot
+<a name="l-86"></a><span class="tm">19:15:50</span><span class="nk"> &lt;sipa&gt;</span> (due to lower costs of complex policies)
+<a name="l-87"></a><span class="tm">19:16:11</span><span class="nk"> &lt;sipa&gt;</span> but none of that has anything to do with complex policies involving a specific signer, so i don't know what you mean :)
+<a name="l-88"></a><span class="tm">19:16:31</span><span class="nk"> &lt;kabaum&gt;</span> Q from group 5 (3/8): Why allow other witness program lengths than 32 in taproot bip when disallowed in BIP141?
+<a name="l-89"></a><span class="tm">19:16:42</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> this was a stupid oversight in BIP141
+<a name="l-90"></a><span class="tm">19:16:45</span><span class="nk"> &lt;pyskell&gt;</span> Ahh, that's not what I meant, let me try to restate
+<a name="l-91"></a><span class="tm">19:16:50</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">pyskell:</span> one of the ideas is that you can do multisig via a single key and single signature using muSig and similar constructions
+<a name="l-92"></a><span class="tm">19:17:02</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> it needlessly removed an upgrade potential
+<a name="l-93"></a><span class="tm">19:17:17</span><span class="nk"> &lt;kabaum&gt;</span> <span class="hi">sipa:</span> got it.
+<a name="l-94"></a><span class="tm">19:18:03</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> cool.
+<a name="l-95"></a><span class="tm">19:18:08</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">sipa:</span> Clarification requested, uh, will the address encoding for P2TR (whatever you want to call it) still be able to fix the length?  If it cannot there is a reduction in address corruption robustness.
+<a name="l-96"></a><span class="tm">19:19:07</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">gmaxwell:</span> not sure what you mean
+<a name="l-97"></a><span class="tm">19:19:30</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">gmaxwell:</span> are you referring to the insert/delete of q's in the 2nd to last position issue?
+<a name="l-98"></a><span class="tm">19:20:03</span><span class="nk"> &lt;andytoshi&gt;</span> that is my read of gmax's question, yes
+<a name="l-99"></a><span class="tm">19:20:23</span><span class="nk"> &lt;andytoshi&gt;</span> if i slip up and add a q to my address, will that result in miner-stealable coins?
+<a name="l-100"></a><span class="tm">19:20:32</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">sipa:</span> BECH32 doesn't itself provide strong guarentees that an address where the user has deleted or inserted characters will be detected (bad addresses are not detected with 1:2^30 ish chance), but since there are only a few acceptable lengths for v0 this doesn't apply there.
+<a name="l-101"></a><span class="tm">19:20:59</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">andytoshi:</span> the checksum still makes it unlikely.
+<a name="l-102"></a><span class="tm">19:21:21</span><span class="nk"> &lt;gmaxwell&gt;</span> (it's offset so adding q's shouldn't work)
+<a name="l-103"></a><span class="tm">19:21:37</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">gmaxwell:</span> inserting a q in the second to last position works
+<a name="l-104"></a><span class="tm">19:21:45</span><span class="nk"> &lt;gmaxwell&gt;</span> thats unfortunate.
+<a name="l-105"></a><span class="tm">19:21:54</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">gmaxwell:</span> yeah, this is an argument to maybe outlaw 31/33 byte v1 witness programs
+<a name="l-106"></a><span class="tm">19:22:21</span><span class="nk"> &lt;xoyi-&gt;</span> <span class="hi">Q:</span> If I understand correctly, Taproot is most beneficial when the key spending path is used. Do we have any statistics on how often such a cooperative branch is present in past contracts, and how often it's in fact used when spending?
+<a name="l-107"></a><span class="tm">19:22:32</span><span class="nk"> &lt;jb55&gt;</span> you can insert multiple q's no?
+<a name="l-108"></a><span class="tm">19:22:38</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">jb55:</span> yes
+<a name="l-109"></a><span class="tm">19:23:03</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">sipa:</span> okay, we can discuss another time, I think it can be fixed without removing the ability e.g. to deploy a larger key in the future.
+<a name="l-110"></a><span class="tm">19:23:20</span><span class="nk"> &lt;pyskell&gt;</span> Are there risks that people choose to construct Taproot scripts such that the key-based spending path (P2PK) is a single key and the P2SH MuSigs are several m-of-ms that represent the intended say 2-of-3 multisig. You may (or may not) end up with a situation where participants are unaware that the key-based spending path has this property.
+<a name="l-111"></a><span class="tm">19:23:42</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">jb55:</span> though inserting 2 q's will actually be invalid bech32, due to the 8-to-5 bit conversion resulting in an invalid length
+<a name="l-112"></a><span class="tm">19:23:49</span><span class="nk"> &lt;andytoshi&gt;</span> my suggestion would be to add a rule to bech32 saying "if the hrp is bc1, or whatever the taproot hrp is, then the length is fixed" ... so on the consensus layer there's still upgrade potential but you have to change the hrp to access it
+<a name="l-113"></a><span class="tm">19:24:07</span><span class="nk"> &lt;andytoshi&gt;</span> simply banning 31/33-byte scripts in consensus changes "miner-stealable coins" to "burned coins"
+<a name="l-114"></a><span class="tm">19:24:12</span><span class="nk"> &lt;andytoshi&gt;</span> anyway. probably not the right venue for this
+<a name="l-115"></a><span class="tm">19:24:20</span><span class="nk"> &lt;pyskell&gt;</span> Follow-up question then, is it possible for any individual participant to know that they are included in the key-based spending path?
+<a name="l-116"></a><span class="tm">19:24:29</span><span class="nk"> &lt;andytoshi&gt;</span> <span class="hi">pyskell:</span> yep, with musig :)
+<a name="l-117"></a><span class="tm">19:24:32</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">andytoshi:</span> a ban of 31/33 would come with a tightening of bech32 rules.
+<a name="l-118"></a><span class="tm">19:24:45</span><span class="nk"> &lt;pyskell&gt;</span> andytoshi, lol I need to read more on MuSig then
+<a name="l-119"></a><span class="tm">19:24:53</span><span class="nk"> &lt;kabaum&gt;</span> Q from group 5 (4/8): Is collision security the main, or only, rationale for not supporting p2sh-wrapping, and if not, maybe we should discuss the other ones in rationale too?
+<a name="l-120"></a><span class="tm">19:25:01</span><span class="nk"> &lt;andytoshi&gt;</span> <span class="hi">pyskell:</span> if the individual participants' keys are combined using MuSig, it is trivial to verify this and impossible to demonstrate that any other set of keys was used
+<a name="l-121"></a><span class="tm">19:25:07</span><span class="nk"> &lt;andytoshi&gt;</span> so you get a proof of the full set of participants
+<a name="l-122"></a><span class="tm">19:25:16</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">pyskell:</span> yes, they'll know as part of the process of constructing that key.  like how do you know you're included in a p2sh address?
+<a name="l-123"></a><span class="tm">19:25:49</span><span class="nk"> &lt;andytoshi&gt;</span> <span class="hi">kabaum:</span> well, from a wallet implementors' perspective, p2sh sucks and i wish i could forget it exists. but i don't know that that should appear in the official rationale
+<a name="l-124"></a><span class="tm">19:26:04</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">pyskell:</span> or in general: you can show anyone how the key was constructed from inner key and scripts (where the latter may involve keys again)... since the p2c construction is preimage resistant, if you know how a way how it was constructed, you know it is *the* way it was constructed
+<a name="l-125"></a><span class="tm">19:26:31</span><span class="nk"> &lt;kabaum&gt;</span> <span class="hi">andytoshi:</span> lol
+<a name="l-126"></a><span class="tm">19:26:38</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">kabaum:</span> The p2sh wrapping has a number of points against it-- more cases to deal with and test, less efficient when spent on the network...  Basically p2sh wrapping never would have existed except for backwards compatiblity, but I think people feel now that native support is widespread enough that this is no longer a huge concern justifying p2sh wrapping's cost.
+<a name="l-127"></a><span class="tm">19:26:42</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> another reason in fungiblity; the taproot advantage of "all outputs and cooperative spends look indistinguishable" is simply much stronger if there are not two distinguishable versions!
+<a name="l-128"></a><span class="tm">19:26:47</span><span class="nk"> &lt;felixweis&gt;</span> the wallet implementors were encouraged currently to warn but not forbid the user when entereing a currently anyone-can-spend future segwit upgrade no?
+<a name="l-129"></a><span class="tm">19:27:26</span><span class="nk"> &lt;gmaxwell&gt;</span> good point from sipa there.
+<a name="l-130"></a><span class="tm">19:27:39</span><span class="nk"> &lt;sipa&gt;</span> i think it's reasonable to add a short rationale for why no p2sh support in bip-taproot
+<a name="l-131"></a><span class="tm">19:27:50</span><span class="nk"> &lt;jb55&gt;</span> kabaum sipa: yeah perhaps these could be added to the bip, only the collision rationale is in there
+<a name="l-132"></a><span class="tm">19:27:57</span><span class="nk"> &lt;felixweis&gt;</span> actually reducing tech debt?
+<a name="l-133"></a><span class="tm">19:28:04</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">kabaum:</span> for extra context, there were several discussions about leaving out p2sh wrappin in segwit itself back when it was done.  Or at least I know I certantly felt like I had to fight to keep it in! :)
+<a name="l-134"></a><span class="tm">19:28:36</span><span class="nk"> &lt;pyskell&gt;</span> gmaxwell, I construct the script, and now I see what you all mean, thanks
+<a name="l-135"></a><span class="tm">19:29:37</span><span class="nk"> &lt;kabaum&gt;</span> Q from group 5 (6/8): In "Security": All content in this section seems to be more related to privacy than security. Should the header possibly be Privacy instead?
+<a name="l-136"></a><span class="tm">19:30:30</span><span class="nk"> &lt;nickler&gt;</span> fine with me, hopefully we get a real security section at some point :)
+<a name="l-137"></a><span class="tm">19:30:43</span><span class="nk"> &lt;gmaxwell&gt;</span> perhaps instead terms like soundness, completeness, and confidentiality should be used in BIPs instead of "security".
+<a name="l-138"></a><span class="tm">19:30:47</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> i think we have a todo to add links to security proofs we have (including andytoshi's writeup), so it should be added there too
+<a name="l-139"></a><span class="tm">19:31:12</span><span class="nk"> &lt;gmaxwell&gt;</span> Privacy is a security property, but it seems some people expect security to refer only to soundness.
+<a name="l-140"></a><span class="tm">19:32:24</span><span class="nk"> &lt;jonatack&gt;</span> <span class="hi">kabaum:</span> (i think you skipped Q 5/8)
+<a name="l-141"></a><span class="tm">19:32:34</span><span class="nk"> &lt;sipa&gt;</span> and then the section can still be called security, but have subsections for the various specific properties
+<a name="l-142"></a><span class="tm">19:33:05</span><span class="nk"> &lt;kabaum&gt;</span> <span class="hi">jonatack:</span> Yep!
+<a name="l-143"></a><span class="tm">19:33:10</span><span class="nk"> &lt;kabaum&gt;</span> Q from group 5 (5/8): In "Security": “Therefore, the privacy of key spends can be improved by deviating from the optimal tree determined by the probability distribution over the leaves.” We found this confusing, should it be script spends and not key spends?
+<a name="l-144"></a><span class="tm">19:33:32</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> that sounds like a mistake indeed
+<a name="l-145"></a><span class="tm">19:33:35</span><span class="nk"> &lt;nickler&gt;</span> yes
+<a name="l-146"></a><span class="tm">19:34:31</span><span class="nk"> &lt;kabaum&gt;</span> thank you all for putting up with all questions.
+<a name="l-147"></a><span class="tm">19:34:32</span><span class="nk"> &lt;kabaum&gt;</span> Q from group 5 (7/8): "Design": "strong security assumptions" - Is that currently just DLP?
+<a name="l-148"></a><span class="tm">19:34:46</span><span class="nk"> &lt;jnewbery&gt;</span> I think that whole sentence could be removed. There are a whole list of things that wallet implementations can do to damage their privacy. It shouldn't be the BIPs job to try to list them all.
+<a name="l-149"></a><span class="tm">19:35:15</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">jnewbery:</span> no, it's listing a technique that can optionally be used to improve privacy
+<a name="l-150"></a><span class="tm">19:36:37</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> the most common one being ECDLP in the random oracle model
+<a name="l-151"></a><span class="tm">19:36:39</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">jnewbery:</span> also it's good if specifications call out the known specific privacy considerations (positive or negative) of the specification.
+<a name="l-152"></a><span class="tm">19:37:00</span><span class="nk"> &lt;nickler&gt;</span> <span class="hi">kabaum:</span> also collision resistance of sha256
+<a name="l-153"></a><span class="tm">19:37:26</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">kabaum:</span> but there are multiple only partially overlapping sets of assumptions that are sufficient to prove security of schnorr (and presumably taproot in general)
+<a name="l-154"></a><span class="tm">19:37:43</span><span class="nk"> &lt;gmaxwell&gt;</span> Does there even exist a security proof that only assumes DLP and hash collision resistance?
+<a name="l-155"></a><span class="tm">19:37:53</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">gmaxwell:</span> i believe not
+<a name="l-156"></a><span class="tm">19:38:02</span><span class="nk"> &lt;gmaxwell&gt;</span> K. didn't think so.
+<a name="l-157"></a><span class="tm">19:38:11</span><span class="nk"> &lt;sipa&gt;</span> there is one that uses the generic group model on the curve + collision resistance on the hash function
+<a name="l-158"></a><span class="tm">19:38:21</span><span class="nk"> &lt;sipa&gt;</span> and one that uses DLP on the curve + ROM on the hash function
+<a name="l-159"></a><span class="tm">19:38:28</span><span class="nk"> &lt;sanket1729&gt;</span> I think the question might be better phrased as "What additional assumptions do we have that we did not have in bitcoin previously?"
+<a name="l-160"></a><span class="tm">19:38:36</span><span class="nk"> &lt;sipa&gt;</span> but not one with just DLP on the curve + collision resistance on the hash function
+<a name="l-161"></a><span class="tm">19:38:59</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">sanket1729:</span> that is of course a hard question, as we don't actually know all the assumptions that bitcoin needs for security
+<a name="l-162"></a><span class="tm">19:39:48</span><span class="nk"> &lt;kabaum&gt;</span> Q from group 5 (8/8): "Design": I'm not sure what strong security assumption actually means? Are there "weak" security assumptions?
+<a name="l-163"></a><span class="tm">19:40:09</span><span class="nk"> &lt;jnewbery&gt;</span> I think it's quite a vague sentence "can be improved by deviating from the optimal tree". I think wallet implementers could as easily fingerprint themselves by trying to do something clever that deviates from the optimal tree.
+<a name="l-164"></a><span class="tm">19:40:22</span><span class="nk"> &lt;sipa&gt;</span> maybe it should just say "specific security assumptions" ?
+<a name="l-165"></a><span class="tm">19:40:34</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">sipa:</span> I do believe that bip-taproot isn't intended to add any additional strong assumptions that we don't already have.
+<a name="l-166"></a><span class="tm">19:40:35</span><span class="nk"> &lt;andytoshi&gt;</span> <span class="hi">jnewbery:</span> if the full tree is never revealed that's not obvious to me
+<a name="l-167"></a><span class="tm">19:40:44</span><span class="nk"> &lt;andytoshi&gt;</span> you may even get better fingerprint resistance by using non-optimal trees
+<a name="l-168"></a><span class="tm">19:40:47</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">gmaxwell:</span> right, i agree! but being specific about is hard
+<a name="l-169"></a><span class="tm">19:41:07</span><span class="nk"> &lt;andytoshi&gt;</span> (if your usual spending cases only use low-depth paths it may look like you have fewer paths than you do)
+<a name="l-170"></a><span class="tm">19:41:21</span><span class="nk"> &lt;instagibbs&gt;</span> kabaum, assumptions can be considered stronger and weaker yes, but it might be a judgment call
+<a name="l-171"></a><span class="tm">19:41:43</span><span class="nk"> &lt;andytoshi&gt;</span> well there are things like "P ≠ NP" that you could consider to be a "weak" security assumption
+<a name="l-172"></a><span class="tm">19:41:57</span><span class="nk"> &lt;sipa&gt;</span> but we're not adding any of those
+<a name="l-173"></a><span class="tm">19:41:58</span><span class="nk"> &lt;jnewbery&gt;</span> <span class="hi">andytoshi:</span> I think that's what the BIP says: use a suboptimal tree to get petter fingerprint resistence. It's just not obvious to me how useful that advice is.
+<a name="l-174"></a><span class="tm">19:42:22</span><span class="nk"> &lt;sipa&gt;</span> if your point is we should avoid non-actionable advice, i agree
+<a name="l-175"></a><span class="tm">19:42:22</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">jnewbery:</span> I think it is extremely useful advice but it could be stated better.
+<a name="l-176"></a><span class="tm">19:42:43</span><span class="nk"> &lt;sipa&gt;</span> but if it's too vague to be non-actionable, maybe it should just be made more specific
+<a name="l-177"></a><span class="tm">19:43:00</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">jnewbery:</span> in particular, if you can adjust your tree so that common cases look just like common thresholds (like 2 of 3) then you probably get a large increase in indistinguishablity.
+<a name="l-178"></a><span class="tm">19:43:16</span><span class="nk"> &lt;hebasto&gt;</span> <span class="hi">sipa:</span> bip draft states: Not adding any new strong security assumptions. maybe remove "strong"?
+<a name="l-179"></a><span class="tm">19:43:21</span><span class="nk"> &lt;gmaxwell&gt;</span> I think the text is vague in its advice in part because it doesn't know in advance what forms will be common.
+<a name="l-180"></a><span class="tm">19:44:11</span><span class="nk"> &lt;andytoshi&gt;</span> <span class="hi">hebasto:</span> i agree with that
+<a name="l-181"></a><span class="tm">19:44:29</span><span class="nk"> &lt;sipa&gt;</span> so devil's advocate... there is probably a set of weird assumptions under which bitcoin currently can be proven secure, and which are not sufficient to prove schnorr/taproot secure
+<a name="l-182"></a><span class="tm">19:44:41</span><span class="nk"> &lt;gmaxwell&gt;</span> Maybe it should instead explain the procedure someone should use to be more indistinguishable?  (making your common spend paths look exactly like other common spend paths on the network, by arranging them to be at the same depths)
+<a name="l-183"></a><span class="tm">19:44:49</span><span class="nk"> &lt;jnewbery&gt;</span> Other good privacy advice would be make a 2-of-3 threshold the internal pubkey, rather than 3-of-3, if you think that 2-of-3 is more likely. But again, I don't think it's the BIP's place to enumerate all the ways to optimize privacy
+<a name="l-184"></a><span class="tm">19:44:54</span><span class="nk"> &lt;andytoshi&gt;</span> well you could enumerate all the parts of bitcoin, observe that "taproot is secure" is not listed
+<a name="l-185"></a><span class="tm">19:45:25</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">andytoshi:</span> sure, you can come up with obvious models that are stupid but for which this is true
+<a name="l-186"></a><span class="tm">19:45:43</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">sipa:</span> Strong assumption "Bitcoin is secure",   clearly bip-taproot is not secure under that assumption. :P
+<a name="l-187"></a><span class="tm">19:45:48</span><span class="nk"> &lt;andytoshi&gt;</span> <span class="hi">jnewbery:</span> that advice comes with pretty tough tradeoffs (extra protocol complexity, data that needs to be stored offline and can't be recreated)
+<a name="l-188"></a><span class="tm">19:45:54</span><span class="nk"> &lt;andytoshi&gt;</span> lack of accountability
+<a name="l-189"></a><span class="tm">19:46:01</span><span class="nk"> &lt;sipa&gt;</span> my point is that if we want to state something about a comparison with existing assumptions, we should state those assumptions
+<a name="l-190"></a><span class="tm">19:46:27</span><span class="nk"> &lt;andytoshi&gt;</span> "taproot requires only that DL is hard in secp256k1 and that sha256 is a RO"
+<a name="l-191"></a><span class="tm">19:46:34</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">jnewbery:</span> actually for many users the top key should probably be a 2 of 2. :P
+<a name="l-192"></a><span class="tm">19:46:43</span><span class="nk"> &lt;jnewbery&gt;</span> <span class="hi">andytoshi:</span> sorry - I meant implemented as a 2-of-2 for the internal pubkey. But perhaps we're getting too into the weeds
+<a name="l-193"></a><span class="tm">19:46:46</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">jnewbery:</span> (in the case of a 2 of 3 policy)
+<a name="l-194"></a><span class="tm">19:46:54</span><span class="nk"> &lt;andytoshi&gt;</span> <span class="hi">jnewbery:</span> ah! yep i see
+<a name="l-195"></a><span class="tm">19:47:13</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">jnewbery:</span> I think that is, in fact good advice. It should probably never be a 3 of 3 for a 3 of 3 policy.
+<a name="l-196"></a><span class="tm">19:48:03</span><span class="nk"> &lt;gmaxwell&gt;</span> sipa and I were having a more abstract discussion about that recently, that almost always you should bubble up a more restrictive policy higher in your tree.
+<a name="l-197"></a><span class="tm">19:48:04</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">andytoshi:</span> with tagged hashes it's probably possible to make it slightly weaker (like DL hard secp256k1 and the SHA256 *transform* is RO)
+<a name="l-198"></a><span class="tm">19:48:14</span><span class="nk"> &lt;andytoshi&gt;</span> ah good point. bitcoin has no tagged hashes today.
+<a name="l-199"></a><span class="tm">19:48:30</span><span class="nk"> &lt;andytoshi&gt;</span> (though it should :P)
+<a name="l-200"></a><span class="tm">19:48:54</span><span class="nk"> &lt;jnewbery&gt;</span> I have a more general question: what kind of input are you looking for on the bips right now? I have some minor style nits. Would they be welcome as PRs or would they be a distraction?
+<a name="l-201"></a><span class="tm">19:48:58</span><span class="nk"> &lt;hebasto&gt;</span> <span class="hi">sipa:</span> what is diff?
+<a name="l-202"></a><span class="tm">19:49:10</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">hebasto:</span> ?
+<a name="l-203"></a><span class="tm">19:49:26</span><span class="nk"> &lt;hebasto&gt;</span> sha256 is a RO vs SHA256 *transform* is R
+<a name="l-204"></a><span class="tm">19:49:30</span><span class="nk"> &lt;hebasto&gt;</span> *RO
+<a name="l-205"></a><span class="tm">19:49:30</span><span class="nk"> &lt;jonatack&gt;</span> Is someone compiling a todo action list from these sessions, or should we submit proposals in the Google forms? Assuming a bunch of issues/PRs may not be best here.
+<a name="l-206"></a><span class="tm">19:49:40</span><span class="nk"> &lt;andytoshi&gt;</span> <span class="hi">jnewbery:</span> if they're PRs rather than issues i think that'd be welcome. though it'd be good to consolidate them if they're small
+<a name="l-207"></a><span class="tm">19:49:45</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">jnewbery:</span> if you look at recent changes to the bips, quite a few of them have been basically minor style nits. I'd say you should make them, just don't feel bad if you need to redo them again later after some other substantial changes were made.
+<a name="l-208"></a><span class="tm">19:50:11</span><span class="nk"> &lt;aj&gt;</span> 10 minutes left, if anyone's been sitting on questions
+<a name="l-209"></a><span class="tm">19:50:14</span><span class="nk"> &lt;sipa&gt;</span> if there are suggestions you have that you think need more discussion, open an issue (or if it's a big design question, even an ML thread)
+<a name="l-210"></a><span class="tm">19:50:23</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">hebasto:</span> let me explain that after the meeting
+<a name="l-211"></a><span class="tm">19:50:32</span><span class="nk"> &lt;hebasto&gt;</span> <span class="hi">sipa:</span> ok
+<a name="l-212"></a><span class="tm">19:50:54</span><span class="nk"> &lt;sipa&gt;</span> at this point i'd like to avoid nits on the reference code
+<a name="l-213"></a><span class="tm">19:50:55</span><span class="nk"> &lt;ariard&gt;</span> about comparison with bip116 and bip114, it's next week?
+<a name="l-214"></a><span class="tm">19:51:19</span><span class="nk"> &lt;sipa&gt;</span> as i think getting the design fleshed out has priority, and at this point my reference branch should only function as clarification for the proposal itself
+<a name="l-215"></a><span class="tm">19:51:39</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">ariard:</span> yeah, the MAST stuff is script path spends, so that sounds right
+<a name="l-216"></a><span class="tm">19:52:11</span><span class="nk"> &lt;ariard&gt;</span> <span class="hi">aj:</span> thnks holding mine then
+<a name="l-217"></a><span class="tm">19:52:11</span><span class="nk"> &lt;sipa&gt;</span> are there any other questions/topics?
+<a name="l-218"></a><span class="tm">19:52:21</span><span class="nk"> &lt;digi_james&gt;</span> I find MAST confusing as its not really an abstract syntax tree, but that's fine :)
+<a name="l-219"></a><span class="tm">19:52:37</span><span class="nk"> &lt;jnewbery&gt;</span> Merklized alternative script tree, you mean?
+<a name="l-220"></a><span class="tm">19:52:39</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">digi_james:</span> "merklized alternative script tree" :)
+<a name="l-221"></a><span class="tm">19:52:46</span><span class="nk"> &lt;andytoshi&gt;</span> lol
+<a name="l-222"></a><span class="tm">19:52:55</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">digi_james:</span> note that bip-taproot never uses the name MAST (except when referring to an older proposal with that name)
+<a name="l-223"></a><span class="tm">19:53:10</span><span class="nk"> &lt;andytoshi&gt;</span> <span class="hi">digi_james:</span> you're welcome to use simplicity if you want an abstract syntax tree. it is not deployed anywhere but that's fine, it will take you years to get up to speed enoguh to use it anyway ;)
+<a name="l-224"></a><span class="tm">19:53:14</span><span class="nk"> &lt;digi_james&gt;</span> ha, sorry I thought it was abstract syntax tree all along
+<a name="l-225"></a><span class="tm">19:53:33</span><span class="nk"> &lt;andytoshi&gt;</span> i think it was, historically
+<a name="l-226"></a><span class="tm">19:53:39</span><span class="nk"> &lt;digi_james&gt;</span> right?
+<a name="l-227"></a><span class="tm">19:53:42</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">digi_james:</span> the name MAST comes from roconnor, and referred to what has now become simplicity
+<a name="l-228"></a><span class="tm">19:53:52</span><span class="nk"> &lt;aj&gt;</span> yeah, it was IF &lt;hash&gt; ELSE &lt;other hash&gt; ENDIF sort of
+<a name="l-229"></a><span class="tm">19:54:02</span><span class="nk"> &lt;sipa&gt;</span> what merkle branched script proposals used from that was not the abstract syntax tree part at all, just the merkle :)
+<a name="l-230"></a><span class="tm">19:54:10</span><span class="nk"> &lt;luke-jr&gt;</span> I thought it was jl
+<a name="l-231"></a><span class="tm">19:54:30</span><span class="nk"> &lt;sipa&gt;</span> oh, this was years earlier
+<a name="l-232"></a><span class="tm">19:54:32</span><span class="nk"> &lt;digi_james&gt;</span> Ok, so in that case the tree did encode syntax ...
+<a name="l-233"></a><span class="tm">19:54:44</span><span class="nk"> &lt;digi_james&gt;</span> Sorry - thanks for the history lesson :)
+<a name="l-234"></a><span class="tm">19:54:46</span><span class="nk"> &lt;instagibbs&gt;</span> russel -&gt; jeremyrubin -&gt; jl/maaku -&gt; etc
+<a name="l-235"></a><span class="tm">19:54:56</span><span class="nk"> &lt;instagibbs&gt;</span> anyways not important...
+<a name="l-236"></a><span class="tm">19:55:09</span><span class="nk"> &lt;sipa&gt;</span> but in any case, i think the name MAST is wrong for what is included in bip-taproot, and it also doesn't use that name :)
+<a name="l-237"></a><span class="tm">19:56:01</span><span class="nk"> &lt;gmaxwell&gt;</span> just retcon the term to be a "merkelized arbritary script tree"
+<a name="l-238"></a><span class="tm">19:56:24</span><span class="nk"> &lt;sipa&gt;</span> 11:52:40 &lt;@aj&gt; digi_james: "merklized alternative script tree" :)
+<a name="l-239"></a><span class="tm">19:56:29</span><span class="nk"> &lt;andytoshi&gt;</span> merkleized arbitrary structure of things ;)
+<a name="l-240"></a><span class="tm">19:56:40</span><span class="nk"> &lt;ariard&gt;</span> but what bip-taproot doesn't hold as features compare to previous MAST proposals?
+<a name="l-241"></a><span class="tm">19:57:03</span><span class="nk"> &lt;ariard&gt;</span> on the high-level without getting into details
+<a name="l-242"></a><span class="tm">19:57:03</span><span class="nk"> &lt;andytoshi&gt;</span> <span class="hi">ariard:</span> ability to access the root (or other hashes) from within script is one
+<a name="l-243"></a><span class="tm">19:57:11</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">ariard:</span> there was an earlier proposal that supported multiple tree leaves simultaneously
+<a name="l-244"></a><span class="tm">19:57:13</span><span class="nk"> &lt;luke-jr&gt;</span> <span class="hi">ariard:</span> it's a merkle tree, but not of AST components
+<a name="l-245"></a><span class="tm">19:57:43</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">ariard:</span> but there has never really been a concrete proposal that was called MAST that actually was a merkleized abstract syntax tree, apart from simplicity
+<a name="l-246"></a><span class="tm">19:57:51</span><span class="nk"> &lt;ariard&gt;</span> <span class="hi">andtyoshi:</span> recursively executing another tree committed in one of the key included in a script?
+<a name="l-247"></a><span class="tm">19:57:53</span><span class="nk"> &lt;sipa&gt;</span> (to the best of my knowledge)
+<a name="l-248"></a><span class="tm">19:58:05</span><span class="nk"> &lt;andytoshi&gt;</span> <span class="hi">ariard:</span> yeah
+<a name="l-249"></a><span class="tm">19:58:21</span><span class="nk"> &lt;andytoshi&gt;</span> so like, you can't (efficiently) use taproot to implement keytrees in some cases
+<a name="l-250"></a><span class="tm">19:58:30</span><span class="nk"> &lt;andytoshi&gt;</span> like if you want to check 3 keytrees in a row or something
+<a name="l-251"></a><span class="tm">19:58:38</span><span class="nk"> &lt;ariard&gt;</span> <span class="hi">sipa:</span> could we execute multiple tapscript with a future taproot upgrade ?
+<a name="l-252"></a><span class="tm">19:58:40</span><span class="nk"> &lt;digi_james&gt;</span> <span class="hi">ariard:</span> Thinking of it, that seems pretty cool.
+<a name="l-253"></a><span class="tm">19:58:43</span><span class="nk"> &lt;andytoshi&gt;</span> you can't just do &lt;root&gt; OP_CHECKSIG &lt;root 2&gt; OP_CHECKSIG etc
+<a name="l-254"></a><span class="tm">19:58:55</span><span class="nk"> &lt;ariard&gt;</span> like leaf A || leaf B || leaf D
+<a name="l-255"></a><span class="tm">19:59:00</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">ariard:</span> not in the same way; it can always be done using script instructions that add that functionality inside script
+<a name="l-256"></a><span class="tm">19:59:16</span><span class="nk"> &lt;andytoshi&gt;</span> well, the choice that taproot makes has the nice property that it minimizes design surface
+<a name="l-257"></a><span class="tm">19:59:21</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">andytoshi:</span> or if you have a bag of keys and want to yank out multiple leaves.
+<a name="l-258"></a><span class="tm">19:59:22</span><span class="nk"> &lt;andytoshi&gt;</span> which makes consensus easier to get :)
+<a name="l-259"></a><span class="tm">19:59:32</span><span class="nk"> &lt;andytoshi&gt;</span> <span class="hi">gmaxwell:</span> ah yeah!
+<a name="l-260"></a><span class="tm">19:59:37</span><span class="nk"> &lt;ariard&gt;</span> <span class="hi">sipa:</span> not with some kind of tail-call semantic or weird pubkey type?
+<a name="l-261"></a><span class="tm">19:59:48</span><span class="nk"> &lt;sipa&gt;</span> so maybe this is the time to ask this: do people agree that the only semantical change discussed/considered in this meeting is the question of non-32-byte v1 segwit outlawed or not?
+<a name="l-262"></a><span class="tm">19:59:49</span><span class="nk"> &lt;ariard&gt;</span> a bit hacky
+<a name="l-263"></a><span class="tm">19:59:50</span><span class="nk"> &lt;digi_james&gt;</span> Hm, are there any advantages having multiple "roots" in a tapscript to vs just separate leafs?
+<a name="l-264"></a><span class="tm">20:00:16</span><span class="nk"> &lt;instagibbs&gt;</span> another question if time: what was the consideration for putting the leaf version in the control block vs allowing different leaves to be different versions?
+<a name="l-265"></a><span class="tm">20:00:21</span><span class="nk"> &lt;digi_james&gt;</span> In and AND construct, they have to be revealed anyhow, and with OR, may as well ad a tapleaf
+<a name="l-266"></a><span class="tm">20:00:31</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">instagibbs:</span> because it has literally zero downsides :)
+<a name="l-267"></a><span class="tm">20:00:52</span><span class="nk"> &lt;instagibbs&gt;</span> sipa, well, I can make some painfully obtuse design decisions otherwise ;)
+<a name="l-268"></a><span class="tm">20:01:18</span><span class="nk"> &lt;instagibbs&gt;</span> fair enough
+<a name="l-269"></a><span class="tm">20:01:18</span><span class="nk"> &lt;sipa&gt;</span> so specifically something that is not possible to do in the taproot structure is something like (1 of 2) AND (1 of 2) AND ... (repeats 64 times) ... (1 of 2)
+<a name="l-270"></a><span class="tm">20:01:29</span><span class="nk"> &lt;sipa&gt;</span> it is easily possible as a script
+<a name="l-271"></a><span class="tm">20:01:31</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">sipa:</span> outlawed and or how it interacts with bech32.
+<a name="l-272"></a><span class="tm">20:01:47</span><span class="nk"> &lt;sipa&gt;</span> <span class="hi">gmaxwell:</span> yeah
+<a name="l-273"></a><span class="tm">20:01:54</span><span class="nk"> &lt;sipa&gt;</span> oh, bad example
+<a name="l-274"></a><span class="tm">20:01:58</span><span class="nk"> &lt;gmaxwell&gt;</span> <span class="hi">digi_james:</span> I might not have understood your question, but with AND's of policies the cost of putting them in the tree directly is a combinitoric blowup.
+<a name="l-275"></a><span class="tm">20:02:18</span><span class="nk"> &lt;aj&gt;</span> <span class="hi">sipa:</span> officially overtime now, shall we stop meetbot logging and leave it for regular chatting?
+<a name="l-276"></a><span class="tm">20:02:23</span><span class="nk"> &lt;sipa&gt;</span> yeah
+<a name="l-277"></a><span class="tm">20:02:26</span><span class="nk"> &lt;aj&gt;</span> <span class="cmd">#endmeeting</span><span class="cmdline"></span></pre>
+</body></html>

@@ -1,0 +1,219 @@
+19:00:15 <aj> #startmeeting
+19:00:15 <lightningbot> Meeting started Tue Nov 12 19:00:15 2019 UTC.  The chair is aj. Information about MeetBot at http://wiki.debian.org/MeetBot.
+19:00:15 <lightningbot> Useful Commands: #action #agreed #help #info #idea #link #topic.
+19:00:17 <jnewbery> hi
+19:00:20 <sipa> hi
+19:00:20 <bjarnem> hi
+19:00:40 <schmidty> Hi
+19:00:43 <moneyball> hi
+19:00:44 <r251d> hi
+19:00:49 <ariard> hi
+19:00:54 <jonatack> hi
+19:01:00 <devrandom> hi
+19:01:31 <kabaum> hi
+19:01:31 <aj> hi
+19:01:31 <hebasto> hi
+19:02:15 <cdecker> Hi
+19:02:19 <hebasto> Q from group 5 (1/2): 1. What happens when using other leaf versions now before they are defined?
+19:02:48 <fjahr> hi
+19:03:22 <sipa> hebasto: they're spendable by anyone (who can give the internal key and merkle path)
+19:03:51 <bjarnem> I was having the same question and I don't think this is specified in the BIP.
+19:04:05 <sipa> bjarnem: it is, i think, though not explicitly
+19:04:19 <hebasto> yes, it is not obvious from bip...
+19:04:27 <sipa> bip-taproot just states that any relevant scripts are executed
+19:04:43 <jnewbery> would those spends be non-standard initially?
+19:04:48 <sipa> jnewbery: of course
+19:04:49 <kabaum> I think taproot rationale [10] is what we're looking for,
+19:04:58 <pyskell> hi
+19:05:07 <sipa> bip-tapscript defines one for one particular leaf version
+19:05:21 <aj> sipa: "of course" -- should it be written down somewhere which bits should be treated as non-standard?
+19:05:42 <jnewbery> I think standardness falls outside the BIPs, which only deal with consensus, no?
+19:05:42 <sipa> perhaps we can add that if no script semantics are defined for a particular leaf version, the spend is unconditionally valid
+19:05:52 <sipa> jnewbery: yeah, that's my thinking
+19:05:53 <Moller40> Hi
+19:06:23 <cdecker> That'd be a nice addition
+19:06:45 <sipa> aj: it feels strange to specify standardness rules in these bips, as they're far less "everyoneust agree on this" than the consensus parts
+19:06:52 <aj> treating things as non-standard is important for future soft-forks to be safe (so that nodes that don't validate the new rules dont relay new tx's that might violate them) though?
+19:07:04 <sipa> but i also see that it'd be nice to have it written up somewhere
+19:07:18 <aj> sipa: yeah, agree on both points :)
+19:08:04 <hebasto> Q from group 5 (2/2). Disabled script opcodes."unexecuted branch" means unexecuted branch in the revealed script?
+19:08:18 <sipa> hebasto: correct
+19:08:26 <hebasto> sipa; ty
+19:08:27 <sipa> i see how branch can be confusing here
+19:08:45 <hebasto> a bit ;)
+19:08:49 <sipa> it means execution branch of the script, not merkle branch
+19:09:08 <cdecker> Related: aborting when decoding the script instead of executing is merely a performance improvement, or am I missing something?
+19:09:33 <hebasto> maybe "execution branch" and "merkle branch" are good wording for bip?
+19:10:09 <sipa> cdecker: it also implies that any later success isn't apllicable
+19:10:17 <sipa> hebasto: sure
+19:10:23 <bjarnem> Q: Regarding the tweak value `t` must be less than the SECP256K1_ORDER: What to do if the calculated value is greater/equal?
+19:10:33 <sipa> bjarnem: it won't be
+19:10:44 <jnewbery> bjarnem: buy a lottery ticket
+19:10:47 <cdecker> Right, but it allows statically discarding things early on, without having to execute
+19:11:25 <sipa> cdecker: if your question is whether you can write an alternative way to interpreting that does not actually return false immediately upon abort, of course
+19:12:05 <sipa> but abort in this context is more than giving a suggested optimization for implementers; it's stating that if that condition is reached, the script must fail
+19:12:44 <pyskell> The Taproot BIP says:  "To the best of the authors' knowledge, no existing use of SHA256 in Bitcoin feeds it a message that starts with two single SHA256 outputs, making collisions between hashtag with other hashes extremely unlikely." What is meant by it and what would happen if it's true? Mostly interested because it's stated in somewhat uncertain terms.
+19:12:44 <cdecker> Yep, just felt strange to abort on a script branch that isn't even executed :-)
+19:13:11 <sipa> cdecker: i see
+19:13:28 <bjarnem> Q: Regarding the squareness of `Q`: (Disclaimer: I am not a cryptographer, so I hope this question is not naive)
+19:13:28 <bjarnem> I am unsure regarding the necesity of using a bit to indicate the `has_square_y(Q)` in the control block (Ad7 and Ad6 explain that the squareness of y cannot be guaranteed for `Q`).
+19:13:28 <bjarnem> The `Q` value (tweaked pubkey) is commited as scriptPubKey. It can hence also be spend using the key path with a Schnorr signature. But BIP-Schnorr then requires the (tweaked) pubkey `Q` to pass `has_square_y(Q)`. Shouldn't it therefore be guaranteed that for `Q` such a y-coord exists? Or am I misunderstanding something completely?
+19:14:17 <sipa> cdecker: not sure how to formulate more clearly... you can see it as a preprocessing step of executing the script (in which case it's just a failure rather than aborting during execution itself
+19:15:16 <cdecker> The formulation is clear, I was just wondering about the rationale. All good, don't want to hold up the QA ^^
+19:15:23 <nickler> bjarnem: for key spending Q doesn't have a y coordinate. So the verifier will choose the y coordinate that is square (there's only two options).
+19:15:27 <sipa> bjarnem: when spending using the key path, you interpret Q as a has_square point, regardlesz of how it was constructed, and sign possibly with its negation
+19:15:34 <pyskell> Is it referring to the SHA256 opcode or something else?
+19:15:59 <sipa> bjarnem: when signing using the script path, you have to actually know the squaredness of Y, otherwise the commitment equation won't hold
+19:16:20 <jnewbery> One thing that we spent a bit of time talking about in our group session was the annex. Both the format (ie starting with 0x50) and the purpose.
+19:16:30 <jnewbery> For the format, I think we explicitly want a leading byte that can't be interpreted as a pubkey (so it can't be confused for P2WPKH) or a opcode (so it can't be confused for P2WSH). 0x50 fits the bill because it can't be a pubkey leading byte (which must be 0x02 or 0x03) and it's an invalid opcode (defined as OP_RESERVED internally, but with unconditional fail semantics).
+19:16:45 <aj> sipa, bjarnem: and you can't just try both options if we want to batch verify to make it more efficient
+19:17:26 <sipa> jnewbery: it's stronger than that! you can recognize an annex in an input without knowing which output is being spent
+19:17:27 <jnewbery> citation 3: https://github.com/sipa/bips/blob/bip-schnorr/bip-taproot.mediawiki#cite_note-3 explains that briefly, but I think it could be expanded a bit (I had to dig around to find 0x50 in script/interpreter.cpp
+19:17:39 <sipa> jnewbery: which is by design
+19:17:40 <bjarnem> sipa: ok, I see, so for the script path it is important to show exactly which point, and the x-coord is not enough. I will try to read up on that to understand it a little better :)
+19:18:13 <jnewbery> right. What are the benefits of being able to recognise a P2TR spend without having the UTXO being spent?
+19:18:14 <sipa> bjarnem: feel free to PR a clarification if you find text that would make it easier to understand for you
+19:18:46 <sipa> jnewbery: did you get the idea of using an annex to artifically increase an input's weight?
+19:19:10 <jnewbery> I understood the purpose, but wondered why you couldn't just do that in the tapscript
+19:19:21 <sipa> ?
+19:19:51 <sipa> oh you mean by putting a big push + OP_DROP in the script?
+19:20:24 <jnewbery> I think the idea is that if we redefine an OP_SUCCESS to be something like OP_VERIFYSNARK, then we want to increase the weight becuase of the increased validation cost
+19:20:42 <jnewbery> yes, why not just add that weight to the script
+19:20:57 <sipa> jnewbery: that seems.like highly inefficient use of the chain
+19:21:17 <sipa> if you need to pad it with garbage
+19:21:28 <jnewbery> isn't that what the annex is doing?
+19:21:31 <bjarnem> Q: What is reasoning behind OP_SUCCESSx instead of only using the available versioning fields to soft-fork new Tapscript logic into the system (e.g. using the leaf version)?
+19:21:32 <ariard> can't it be used also for a per-input locktime IIRC ?
+19:21:35 <sipa> jnewbery: no!
+19:21:46 <jnewbery> oh, then I misunderstand!
+19:22:28 <sipa> jnewbery: the idea would be for example that an annex whose first byte (after the 0x50, using some encoding) is 0x37, a 2-byte field follows
+19:22:47 <sipa> and the value of that two byte field is added to the weight of the tx
+19:23:15 <sipa> while simultaneously equivalently increasing the budget for expensivw opcodes in tbe script
+19:23:36 <sipa> ariard: for examlle
+19:23:49 <sipa> ariard: or a block height hash requirement
+19:23:55 <ariard> sipa: yes but the value of that two byte can be choosed by the spender how would you make it mandatory ?
+19:24:21 <sipa> ariard: if they set it tol high, they'll pay extra fees
+19:24:22 <jnewbery> after this imaginary future OP_VERIFYSNARK softfork, are unupgraded miners still able to mine? How do they account block weight?
+19:24:29 <ariard> don't you need to combine with some sighash flags to force annex value being covered by transaction digest
+19:24:35 <sipa> of they set it too low, the script will fail
+19:24:37 <aj> ariard: if you spend more computation than the budget, your tx is invalid; so to increase the budget, you put the smallest value you can into the annex
+19:24:54 <sipa> ariard: annexes are always covered by signatures
+19:24:58 <hebasto> sipa: annex could increase weight without bloating chain, right?
+19:25:04 <sipa> hebasto: right
+19:25:17 <sipa> jnewbery: increasing the weight for a transaction is a softfork
+19:25:32 <sipa> and using an unknown annex is nonstandard
+19:25:41 <sipa> so i think this is perfectly possible to deploy
+19:25:59 <sipa> (that doesn't mean we need to; there may never be a reason to)
+19:26:11 <ariard> aj: okay so it means we track budget during script evaluation and if committed budget in annex doesn't match it's a failure ?
+19:26:13 <jnewbery> unupgraded miners just don't include anything with an annex because it's non-standard?
+19:26:18 <sipa> right
+19:26:45 <sipa> ariard: the budget is the size of the input, which if amended by an annex, includes that amount
+19:27:07 <waxwing> wait surely we expect miners to upgrade in SF scenarios to avoid mis-mining?
+19:27:27 <nickler> sipa: with op_zkverify would the limit be something like #(OP_CHECKSIG)*50 + #(OP_ZKVERIFY)*X <= weight?
+19:27:35 <sipa> nickler: exactly
+19:27:36 <ariard> sipa: and you check the budget against which reference value ? that's where I choke
+19:27:49 <sipa> ariard: the weight of the input
+19:28:04 <sipa> right now that is literally the number of bytes of the witness
+19:28:24 <sipa> if an annex is defined that increments the weight, that counts too
+19:28:40 <elichai2> nickler: op_zkverify?
+19:28:56 <moneyball> elichai2: a hypothetical example
+19:29:34 <jnewbery> What are the benefits of being able to recognise a P2TR spend without having the UTXO being spent?
+19:29:57 <sipa> jnewbery: for this annex weight increase example it's useful
+19:30:17 <sipa> as otherwise you wouldn't be able to compute a tx's weight without access to the output being spent
+19:30:53 <devrandom> group 3 Q 1/?: "The total number of bytes hashed is at most 211" - this doesn't include the sub-hashes, like computing sha_prevouts, etc., right?  the reason sub-hashes are not included in the 211 bytes is because they can be cached across sigs for the same tx?
+19:31:09 <sipa> devrandom: exactly
+19:31:19 <elichai2> moneyball: :) I thought we're already planning tapscript V2 :P
+19:31:45 <devrandom> maybe that sentence can be expanded to mention the sub-hashes?  I can PR?  or do you think it's clear enough as is?
+19:32:20 <sipa> devrandom: feel free
+19:32:28 <devrandom> OK
+19:32:57 <devrandom> group 3 Q/?: "Just like other existing output types, taproot outputs should never reuse keys" - this is for the standard privacy reason, as in "don't reuse addresses"?
+19:32:59 <jnewbery> would there ever be a reason to need more than one annex?
+19:33:19 <sipa> jnewbery: possibly
+19:33:50 <aj> jnewbery: if you need a per input timelock and are using OP_ZKVERIFY, you'd use two annex entries maybe
+19:34:26 <cdecker> Couldn't they be serialized back to back then?
+19:34:28 <jnewbery> so should we change the definition to be that any n trailing witness elements starting 0x50 are annexes?
+19:34:58 <sipa> jnewbery: yes, that's possible, but concatenating them is more efficient i think
+19:35:04 <aj> 0x50 { <len> <tag> <values> } seems a fine encoding to only use a single witness element
+19:35:14 <jnewbery> got it
+19:35:34 <aj> (makes lightning people twitch since they like tag/length/value though)
+19:35:53 <sipa> it's also a tradeoff between taking a complexity hit now, and wondering whether we'll ever even need it
+19:36:05 <cdecker> aj: just thought the same :-)
+19:36:13 <nickler> devrandom: agree that this is confusing. Made more sense when the section was called Privacy.
+19:36:24 <sipa> by saying some annex but not specifying any of its semantics we maximally defer the complexity to when it's needed
+19:36:46 <jnewbery> sipa: makes sense. Thanks
+19:39:00 <sipa> pyskell: the comment on the tagged hashes use refers to all sha256 anywhere in any protocol related to bitcoin
+19:39:05 <sipa> not just inside script
+19:39:20 <sipa> and the effect of being wrong about it is very likely nothing
+19:40:08 <sipa> in most cases tagged hashing is not needed
+19:40:19 <jnewbery> The control block can just be (one leading byte plus) the tapleaf hash in the case where only one script is committed. I thought it was slightly interesting that this is the only case where you can know for sure that no other spending conditions were committed to (with keypath spend you don't know whether there was a tweak and with a taptree spend you don't know the other branches)
+19:40:52 <sipa> jnewbery: good point
+19:41:07 <devrandom> group 3 Q 3/?: there was some group discussion about the fact that specifying the pubkey in the output saves bytes in the blockchain overall, but it's actually heavier in *vbytes*.  The discussion then got into whether the weight calculation should be different for taproot (I assume so as to encourage use by not penalizing with higher fees).  what do you think?
+19:41:35 <pyskell> sipa: Gotcha, thanks for clarifying
+19:41:54 <waxwing> devrandom, i think i remember coming up with 1.5 vbytes heavier for p2tr vs p2wpkh when discussing it with aj last week
+19:41:55 <sipa> devrandom: for starters, i don't think this matters, because the output cost is paid by the sender
+19:41:59 <waxwing> i mean average of course, not exact
+19:42:28 <sipa> and the sender is already willing to pay fot 32-byte witness programs, or he'd not have implemented bip173
+19:43:00 <waxwing> that's an argument on segwit v1 vs v0 uptake, but not legacy to v1 uptake right
+19:43:06 <sipa> right
+19:43:35 <bjarnem> Q: Regarding wording for signature hash:
+19:43:35 <bjarnem> Under "Constructing and spending Taproot outputs" -> "Spending using the key path":
+19:43:35 <bjarnem> "[...] To do so, a witness stack consists of a single element: a bip-schnorr signature on the signature hash as defined above, [...]" <- Is the "transaction digest" defined above the same as what is called "signature hash" here?
+19:43:37 <nickler> waxwing: I came up with 1.25 :) https://medium.com/blockstream/reducing-bitcoin-transaction-sizes-with-x-only-pubkeys-f86476af05d7
+19:44:25 <waxwing> nickler, lol i'll take it.
+19:44:33 <sipa> bjarnem: yep
+19:45:10 <devrandom> the difference in vbytes for the sender is (32 - 20) * 4 = 48 if I'm not mistaken.  that said I don't have an opinion about this personally, if anybody from group 3 does they can say something ;)
+19:45:26 <moneyball> sipa: thoughts on adjusting the weight calculation to make spending PT2R slightly more favorable? advantage being increased adoption of it + improved privacy/fungibility
+19:45:45 <sipa> moneyball: that would be a hard fork. good luck.
+19:45:52 <moneyball> oh...
+19:46:09 <waxwing> a much less technical point, but our group (6) felt that the Motivation section of BIP-taproot does not actually address the motivation, at least to a reader who doesn't know all historical context. it seems like the motivation is in the "Design" section that immediately follows.
+19:47:34 <waxwing> sipa, or maybe swipe a byte or two off the witness program? :)
+19:47:51 <bjarnem> sipa: I feel that those terms could be defined as being the same under "Transaction digest", or maybe just use one term. Becuase it also happens in BIP-Taproot that sometimes it refers to the "transaction digest" and other times to the "signature hash". But if they are the same maybe just use one term?
+19:48:13 <aj> devrandom: (32-20)*4 gives difference in weight units, vbytes is just (32-20) (and if you were counting witness data, you'd divide that part by 4)
+19:48:14 <nickler> bjarnem: agreed
+19:48:38 <bjarnem> (edit: I meant also in BIP-TapSCRIPT)
+19:48:44 <devrandom> aj: got it
+19:49:14 <sipa> waxwing: can you open an issue in my bips repo for that? i think that perhaps needs some more discussion than just a PR
+19:49:48 <waxwing> sipa, the motivation? sure yeah that makes sense. i'll copy in the notes i made about it earlier.
+19:50:04 <sipa> bjarnem: good point, let's use signature hash everywhere (transaction digest is confusing, as it contains some data that's not actually in the transaction)
+19:50:07 <sipa> waxwing: yeah
+19:50:35 <aj> sipa: maybe "signature digest" for the stuff you feed into the hash function and "signature hash" for the result?
+19:50:55 <aj> sipa: it keeps annoying me there's no term to use for the stuff you feed into the hash
+19:51:16 <sipa> aj: "message digest" is a historical name for cryptographic hash function, so i wouldn't use digest to refer to its preimage
+19:51:35 <devrandom> group 3 Q 4/?: "The new signature hashing algorithm fixes the verification capabilities of offline signing devices by including amount and scriptPubKey in the digest" - the difference is that segwit commits to input value, but taproot commits to *all* inputs, right?  is the difference mainly for transaction with inputs from different parties?
+19:51:41 <aj> sipa: fair
+19:52:11 <waxwing> devrandom, yes i was wondering about that, is it related to the kinds of attacks instagibbs came up with wrt coinjoin and similar?
+19:52:24 <sipa> devrandom: no, there is an existing issue where you ask a device to sign a 2-input tx twice, and each time you lie about the other input's value
+19:52:41 <sipa> the result is that a malicious online wallet can trick an offline wallet in spending more on fees than it intends to
+19:54:25 <waxwing> right so not specifically coinjoin but that's one of the main ways it might come up
+19:54:32 <sipa> right
+19:54:40 <sipa> it's more general than that, but indeed
+19:54:53 <bjarnem> I already asked but cannot find an answer, so in case it was overlooked in the discussion here it comes again :)
+19:54:54 <bjarnem> Q: What is reasoning behind OP_SUCCESSx instead of only using the available versioning fields to soft-fork new Tapscript logic into the system (e.g. using the leaf version)?
+19:55:09 <devrandom> sipa: got it, I assumed that HW wallets signed all inputs at the same time
+19:55:11 <sipa> bjarnem: OP_SUCCESSx is the most powerful upgrade mechanism there is
+19:55:38 <sipa> bjarnem: if you'd have me pick one of leaf versions, upgradable pubkeys, or op_success, i'd pick the last one
+19:56:07 <bjarnem> sipa: Doesn't leaf versioning have the same power, allowing to change the semantics of the script language like segwit versioning??
+19:56:29 <sipa> bjarnem: yes, but you need a new leaf version any time you introduce a new opcode for example
+19:56:48 <sipa> with OP_SUCCESSx you just pick a number and define it; it can be done in parallel with other new opcodes even
+19:57:13 <devrandom> group 3 Q 5/5: should the BIP have a Requires header referring to schnorr, etc.?
+19:57:27 <bjarnem> sipa: ah, ok I see that
+19:57:46 <sipa> bjarnem: OP_SUCCESSx is the most natural choice for new opcodes, i think; leaf versions are the most natural choice for large redefinitions of the language
+19:58:02 <sipa> and leaf versions essentially come at zero cost, because we have a few unused bits in the control block anyway
+19:58:12 <sipa> devrandom: yeah
+19:58:16 <nickler> devrandom: I think so. there's a PR for that already https://github.com/sipa/bips/pull/135
+19:58:17 <bjarnem> sipa: thanks for the clarifiaction of the reasoning!
+19:59:16 <sipa> as time is running out here... i feel there have been a lot of good questions here that got a response consisting of a rationale that isn't actually in the BIPs; i'll do an effort to go through the transcript and addressing the ones asked, but feel free to help with that
+20:00:04 <aj> "feel free to help" ~= "please do help" :)
+20:00:28 <moneyball> shall we wrap?
+20:00:29 <sipa> if you got a satisfactory answer, you're probably in the best position to add to the bip exactly what insight would have made the text more clear to you
+20:00:44 <devrandom> will PR for the stuff I asked
+20:00:50 <sipa> awesome, thanks
+20:00:56 <sipa> i need to run, thanks everyone!
+20:00:59 <moneyball> #endmeeting
+20:01:06 <jonatack> thanks!
+20:01:11 <b10c> Thanks!
+20:01:12 <kabaum> Thanks
+20:01:15 <bjarnem> Thanks a lot!!
+20:01:23 <cdecker> Thanks ^^
+20:01:24 <aj> also, quick tip since a few people haven't had much luck getting groups together -- (a) if no one else has taken the initiative to choose a time, or talk about things, that might just be a cue for you to do it; (b) it might be that everyone else in your group really is too busy, so feel free to contact to join a different group
+20:01:28 <aj> #endmeeting

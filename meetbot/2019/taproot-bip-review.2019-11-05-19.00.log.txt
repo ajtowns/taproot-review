@@ -1,0 +1,277 @@
+19:00:42 <aj> #startmeeting
+19:00:42 <lightningbot> Meeting started Tue Nov  5 19:00:42 2019 UTC.  The chair is aj. Information about MeetBot at http://wiki.debian.org/MeetBot.
+19:00:42 <lightningbot> Useful Commands: #action #agreed #help #info #idea #link #topic.
+19:00:46 <moneyball> hi
+19:00:51 <sipa> hi
+19:01:04 <hebasto> hi
+19:01:08 <gmaxwell> hi
+19:01:08 <schmidty> hi
+19:01:12 <andytoshi> hi
+19:01:13 <aj> hi!
+19:01:13 <pyskell> hi
+19:01:16 <jonatack> hi
+19:01:17 <kabaum> hi
+19:01:19 <afk11> hi all
+19:01:21 <pglazman> hi
+19:01:23 <ariard> hi
+19:01:29 <fjahr> hi
+19:01:33 <bjarnem> hi
+19:01:34 <amiti> hi
+19:01:39 <cdecker> Hi
+19:02:13 <moneyball> good turnout! ok we have several experts here. so, ask away!
+19:02:43 <nickler> when will we get schnorr in bitcoin?
+19:02:47 <pyskell> So, question, I know the expected use of the public key in a taproot script is to allow for a happy path cooperative close but is this something that you think will be misused such that most taproot contracts end up with a defacto single owner?
+19:02:52 <jnewbery> hi
+19:02:55 <jonatack> Group 5 just met for the first time this past hour... constructive.
+19:03:01 <aj> nickler: #twoweeks, aiui
+19:03:24 <b10c> hi
+19:03:25 <jb55> hi
+19:03:32 <jkczyz> hi
+19:03:47 <hebasto> kabaum: please bring Group 5 questions
+19:03:48 <sipa> pyskell: i don't think so, or at least not anymore than the fact that P2(W)PKH is easier to deal with than P2(W)SH encourages people to pick a single-key policy
+19:03:56 <bjarnem> Q: I am not sure I understand the purpose of annex? Segwit supports versioning, where Taproot makes use of v1. Does using annex allow for something like subversioning to extend taproot without using up Segwit versions? Do we know of any examples for what this could be used for?
+19:04:08 <andytoshi> pyskell: it's not "misuse" if there really is a single owner :)
+19:04:16 <kabaum> Q from group 5 (1/8): We were wondering if there should be a rule in "Script validation rules" that the scriptSig must be empty?
+19:04:24 <sipa> bjarnem: rather the opposite, because even more complex things do become relatively cheaper
+19:04:35 <sipa> kabaum: there is, see BIp141
+19:04:39 <andytoshi> my guess would be that few people are trying to handroll their own multiparty protocols and screw it up in a way that one party controls all the funds. that would be a serious bug in their protocol.
+19:04:51 <aj> bjarnem: annex lets us commit to extra information in the signatures, so is an upgrade method. should become clearer when we look into the signature details more in depth, and the upgrade methods in particular afterwards
+19:05:00 <sipa> kabaum: BIP141 requires an empty scriptSig when using non-P2SH-segwit
+19:05:15 <kabaum> sipa: that only applies to v0 native segwit, right?
+19:05:15 <sipa> taproot cannot change that
+19:05:23 <sipa> kabaum: no, it applies to all segwit
+19:05:49 <gmaxwell> sipa: the redeemscript is still there for p2sh compatible witness.
+19:06:26 <sipa> gmaxwell: indeed; but since the current taproot draft requires non-p2sh that isn't relevant
+19:06:58 <sipa> kabaum: reading BIP141, this is actually not clear
+19:07:18 <hebasto> ^
+19:07:22 <jonatack> ^\
+19:08:07 <ariard> why taproot first and not grafroot, apart of signing keys required to be online, grafroot benefits seem to encompass all taproot ones ?
+19:08:31 <sipa> ariard: "apart of" seems like an enormous disadvantage
+19:08:35 <aj> sipa: "Witness Program" section "Triggered by a scriptPubKey .." item says " The scriptSig must be exactly empty or validation fails." ?
+19:08:54 <pyskell> sipa, Gotcha, so there are already existing multisigs that can allow a single specific key to spend but not the other keys?
+19:09:07 <andytoshi> ariard: graftroot requires interaction and involves non-reproducible (by individual parties) data that must be storied
+19:09:44 <felixweis> what happens if there is an annex and key path spending?
+19:09:57 <andytoshi> you also can't prove, with graftroot, the total set of spending conditions that exist (which you can be revealing all leaves of a taproot tree)
+19:10:03 <nickler> ariard: also graftroot spend is larger (one sig vs one point). Can be made the same with "half aggregation".
+19:10:22 <hebasto> felixweis: annex discards, no?
+19:10:23 <aj> andytoshi, ariard: also graftroot is more efficient if we have signature half-aggregation, which wasn't worked out
+19:10:29 <sipa> ariard: i think graftroot is great and i have some ideas on how to integrate it, but it's not applicable in all cases where taproot/schnorr/musig are useful (which don't have any interactive setup before the address can be constructed, don't need private keys online, can be computed from just xpubs, ...)
+19:10:31 <ariard> sipa: ok and with taproot I can create a taptree using bip32 derivation to include some of your keys without interactivity
+19:10:41 <sipa> ariard: exactly
+19:10:55 <sipa> without taking your paper wallets out of your safe
+19:10:58 <gmaxwell> and having to securely store and backup that data is seen to be a big issue.  (consider how often people want metal etched key backups and such). And half aggregation makes it efficient, HOWEVER, halfagg has the same sorts of challenges proving its security.
+19:11:00 <sipa> without needing to talk to your GSM
+19:11:02 <sipa> *HSM
+19:11:04 <ariard> andytoshi: can't you be ambiguous on this, find some script collusiojn ?
+19:11:10 <afk11> felixweis: key-path spend is only possible when there is exactly 1 value on the stack.
+19:11:40 <sipa> afk11: *after* the annex is dropped; an annex is allowed with key path spending
+19:11:42 <aj> felixweis: an annex with key path spending just has the annex contents committed to as part of the signature, which is the same as script path spending; as well as whatever constraints are imposed by later soft-forks by having info in the annex
+19:11:43 <felixweis> afk11: the way i read it, there can be an annex and then there is only a sig left
+19:11:52 <sipa> felixweis: correct
+19:12:20 <andytoshi> ariard: i don't think you can find a script collision with 256-bit hashes. if i understand what you mean
+19:12:20 <felixweis> can this be (ab)used for a cheaper per input op_return commitment?
+19:12:29 <sipa> pyskell: i don't see your question is related to anything else said here
+19:12:36 <sipa> felixweis: annexes are nonstandard
+19:12:52 <ariard> sipa: okay maybe underline somewhere in the BIP the non-interactivty advantage like in taptree construction
+19:13:01 <ariard> or in a footnote
+19:13:23 <kabaum> Q from group 5 (2/8): Could we use the term p2tpk for taproot outputs? Or is there a common term for it already? p2tpk, p2tr, p2tap, etc?
+19:13:39 <sipa> i've been using P2TR; i have no opinion beyond that
+19:13:47 <pyskell> sipa: re: "pyskell: i don't think so, or at least not anymore than the fact that P2(W)PKH is easier to deal with than P2(W)SH encourages people to pick a single-key policy"
+19:14:04 <sipa> pyskell: yes, i don't see how your question is related to that; i may have understood your question
+19:14:17 <gmaxwell> will there have to be a new name for every output type in the future perhaps just start calling them P2WvN ? :P
+19:14:27 <sipa> pyskell: let me restate how i interpreted your initial question
+19:14:50 <hebasto> gmaxwell: great!
+19:15:19 <sipa> pyskell: "is there a risk that people will be incentivized to use just single-key spending in taproot, as it's simpler than dealing with scripts?"
+19:15:42 <sipa> pyskell: my answer to that is no, because that risk inevitably exists, but it's significantly reduced with taproot
+19:15:50 <sipa> (due to lower costs of complex policies)
+19:16:11 <sipa> but none of that has anything to do with complex policies involving a specific signer, so i don't know what you mean :)
+19:16:31 <kabaum> Q from group 5 (3/8): Why allow other witness program lengths than 32 in taproot bip when disallowed in BIP141?
+19:16:42 <sipa> kabaum: this was a stupid oversight in BIP141
+19:16:45 <pyskell> Ahh, that's not what I meant, let me try to restate
+19:16:50 <aj> pyskell: one of the ideas is that you can do multisig via a single key and single signature using muSig and similar constructions
+19:17:02 <sipa> kabaum: it needlessly removed an upgrade potential
+19:17:17 <kabaum> sipa: got it.
+19:18:03 <sipa> kabaum: cool.
+19:18:08 <gmaxwell> sipa: Clarification requested, uh, will the address encoding for P2TR (whatever you want to call it) still be able to fix the length?  If it cannot there is a reduction in address corruption robustness.
+19:19:07 <sipa> gmaxwell: not sure what you mean
+19:19:30 <sipa> gmaxwell: are you referring to the insert/delete of q's in the 2nd to last position issue?
+19:20:03 <andytoshi> that is my read of gmax's question, yes
+19:20:23 <andytoshi> if i slip up and add a q to my address, will that result in miner-stealable coins?
+19:20:32 <gmaxwell> sipa: BECH32 doesn't itself provide strong guarentees that an address where the user has deleted or inserted characters will be detected (bad addresses are not detected with 1:2^30 ish chance), but since there are only a few acceptable lengths for v0 this doesn't apply there.
+19:20:59 <gmaxwell> andytoshi: the checksum still makes it unlikely.
+19:21:21 <gmaxwell> (it's offset so adding q's shouldn't work)
+19:21:37 <sipa> gmaxwell: inserting a q in the second to last position works
+19:21:45 <gmaxwell> thats unfortunate.
+19:21:54 <sipa> gmaxwell: yeah, this is an argument to maybe outlaw 31/33 byte v1 witness programs
+19:22:21 <xoyi-> Q: If I understand correctly, Taproot is most beneficial when the key spending path is used. Do we have any statistics on how often such a cooperative branch is present in past contracts, and how often it's in fact used when spending?
+19:22:32 <jb55> you can insert multiple q's no?
+19:22:38 <sipa> jb55: yes
+19:23:03 <gmaxwell> sipa: okay, we can discuss another time, I think it can be fixed without removing the ability e.g. to deploy a larger key in the future.
+19:23:20 <pyskell> Are there risks that people choose to construct Taproot scripts such that the key-based spending path (P2PK) is a single key and the P2SH MuSigs are several m-of-ms that represent the intended say 2-of-3 multisig. You may (or may not) end up with a situation where participants are unaware that the key-based spending path has this property.
+19:23:42 <sipa> jb55: though inserting 2 q's will actually be invalid bech32, due to the 8-to-5 bit conversion resulting in an invalid length
+19:23:49 <andytoshi> my suggestion would be to add a rule to bech32 saying "if the hrp is bc1, or whatever the taproot hrp is, then the length is fixed" ... so on the consensus layer there's still upgrade potential but you have to change the hrp to access it
+19:24:07 <andytoshi> simply banning 31/33-byte scripts in consensus changes "miner-stealable coins" to "burned coins"
+19:24:12 <andytoshi> anyway. probably not the right venue for this
+19:24:20 <pyskell> Follow-up question then, is it possible for any individual participant to know that they are included in the key-based spending path?
+19:24:29 <andytoshi> pyskell: yep, with musig :)
+19:24:32 <gmaxwell> andytoshi: a ban of 31/33 would come with a tightening of bech32 rules.
+19:24:45 <pyskell> andytoshi, lol I need to read more on MuSig then
+19:24:53 <kabaum> Q from group 5 (4/8): Is collision security the main, or only, rationale for not supporting p2sh-wrapping, and if not, maybe we should discuss the other ones in rationale too?
+19:25:01 <andytoshi> pyskell: if the individual participants' keys are combined using MuSig, it is trivial to verify this and impossible to demonstrate that any other set of keys was used
+19:25:07 <andytoshi> so you get a proof of the full set of participants
+19:25:16 <gmaxwell> pyskell: yes, they'll know as part of the process of constructing that key.  like how do you know you're included in a p2sh address?
+19:25:49 <andytoshi> kabaum: well, from a wallet implementors' perspective, p2sh sucks and i wish i could forget it exists. but i don't know that that should appear in the official rationale
+19:26:04 <sipa> pyskell: or in general: you can show anyone how the key was constructed from inner key and scripts (where the latter may involve keys again)... since the p2c construction is preimage resistant, if you know how a way how it was constructed, you know it is *the* way it was constructed
+19:26:31 <kabaum> andytoshi: lol
+19:26:38 <gmaxwell> kabaum: The p2sh wrapping has a number of points against it-- more cases to deal with and test, less efficient when spent on the network...  Basically p2sh wrapping never would have existed except for backwards compatiblity, but I think people feel now that native support is widespread enough that this is no longer a huge concern justifying p2sh wrapping's cost.
+19:26:42 <sipa> kabaum: another reason in fungiblity; the taproot advantage of "all outputs and cooperative spends look indistinguishable" is simply much stronger if there are not two distinguishable versions!
+19:26:47 <felixweis> the wallet implementors were encouraged currently to warn but not forbid the user when entereing a currently anyone-can-spend future segwit upgrade no?
+19:27:26 <gmaxwell> good point from sipa there.
+19:27:39 <sipa> i think it's reasonable to add a short rationale for why no p2sh support in bip-taproot
+19:27:50 <jb55> kabaum sipa: yeah perhaps these could be added to the bip, only the collision rationale is in there
+19:27:57 <felixweis> actually reducing tech debt?
+19:28:04 <gmaxwell> kabaum: for extra context, there were several discussions about leaving out p2sh wrappin in segwit itself back when it was done.  Or at least I know I certantly felt like I had to fight to keep it in! :)
+19:28:36 <pyskell> gmaxwell, I construct the script, and now I see what you all mean, thanks
+19:29:37 <kabaum> Q from group 5 (6/8): In "Security": All content in this section seems to be more related to privacy than security. Should the header possibly be Privacy instead?
+19:30:30 <nickler> fine with me, hopefully we get a real security section at some point :)
+19:30:43 <gmaxwell> perhaps instead terms like soundness, completeness, and confidentiality should be used in BIPs instead of "security".
+19:30:47 <sipa> kabaum: i think we have a todo to add links to security proofs we have (including andytoshi's writeup), so it should be added there too
+19:31:12 <gmaxwell> Privacy is a security property, but it seems some people expect security to refer only to soundness.
+19:32:24 <jonatack> kabaum: (i think you skipped Q 5/8)
+19:32:34 <sipa> and then the section can still be called security, but have subsections for the various specific properties
+19:33:05 <kabaum> jonatack: Yep!
+19:33:10 <kabaum> Q from group 5 (5/8): In "Security": “Therefore, the privacy of key spends can be improved by deviating from the optimal tree determined by the probability distribution over the leaves.” We found this confusing, should it be script spends and not key spends?
+19:33:32 <sipa> kabaum: that sounds like a mistake indeed
+19:33:35 <nickler> yes
+19:34:31 <kabaum> thank you all for putting up with all questions.
+19:34:32 <kabaum> Q from group 5 (7/8): "Design": "strong security assumptions" - Is that currently just DLP?
+19:34:46 <jnewbery> I think that whole sentence could be removed. There are a whole list of things that wallet implementations can do to damage their privacy. It shouldn't be the BIPs job to try to list them all.
+19:35:15 <sipa> jnewbery: no, it's listing a technique that can optionally be used to improve privacy
+19:36:37 <sipa> kabaum: the most common one being ECDLP in the random oracle model
+19:36:39 <gmaxwell> jnewbery: also it's good if specifications call out the known specific privacy considerations (positive or negative) of the specification.
+19:37:00 <nickler> kabaum: also collision resistance of sha256
+19:37:26 <sipa> kabaum: but there are multiple only partially overlapping sets of assumptions that are sufficient to prove security of schnorr (and presumably taproot in general)
+19:37:43 <gmaxwell> Does there even exist a security proof that only assumes DLP and hash collision resistance?
+19:37:53 <sipa> gmaxwell: i believe not
+19:38:02 <gmaxwell> K. didn't think so.
+19:38:11 <sipa> there is one that uses the generic group model on the curve + collision resistance on the hash function
+19:38:21 <sipa> and one that uses DLP on the curve + ROM on the hash function
+19:38:28 <sanket1729> I think the question might be better phrased as "What additional assumptions do we have that we did not have in bitcoin previously?"
+19:38:36 <sipa> but not one with just DLP on the curve + collision resistance on the hash function
+19:38:59 <sipa> sanket1729: that is of course a hard question, as we don't actually know all the assumptions that bitcoin needs for security
+19:39:48 <kabaum> Q from group 5 (8/8): "Design": I'm not sure what strong security assumption actually means? Are there "weak" security assumptions?
+19:40:09 <jnewbery> I think it's quite a vague sentence "can be improved by deviating from the optimal tree". I think wallet implementers could as easily fingerprint themselves by trying to do something clever that deviates from the optimal tree.
+19:40:22 <sipa> maybe it should just say "specific security assumptions" ?
+19:40:34 <gmaxwell> sipa: I do believe that bip-taproot isn't intended to add any additional strong assumptions that we don't already have.
+19:40:35 <andytoshi> jnewbery: if the full tree is never revealed that's not obvious to me
+19:40:44 <andytoshi> you may even get better fingerprint resistance by using non-optimal trees
+19:40:47 <sipa> gmaxwell: right, i agree! but being specific about is hard
+19:41:07 <andytoshi> (if your usual spending cases only use low-depth paths it may look like you have fewer paths than you do)
+19:41:21 <instagibbs> kabaum, assumptions can be considered stronger and weaker yes, but it might be a judgment call
+19:41:43 <andytoshi> well there are things like "P ≠ NP" that you could consider to be a "weak" security assumption
+19:41:57 <sipa> but we're not adding any of those
+19:41:58 <jnewbery> andytoshi: I think that's what the BIP says: use a suboptimal tree to get petter fingerprint resistence. It's just not obvious to me how useful that advice is.
+19:42:22 <sipa> if your point is we should avoid non-actionable advice, i agree
+19:42:22 <gmaxwell> jnewbery: I think it is extremely useful advice but it could be stated better.
+19:42:43 <sipa> but if it's too vague to be non-actionable, maybe it should just be made more specific
+19:43:00 <gmaxwell> jnewbery: in particular, if you can adjust your tree so that common cases look just like common thresholds (like 2 of 3) then you probably get a large increase in indistinguishablity.
+19:43:16 <hebasto> sipa: bip draft states: Not adding any new strong security assumptions. maybe remove "strong"?
+19:43:21 <gmaxwell> I think the text is vague in its advice in part because it doesn't know in advance what forms will be common.
+19:44:11 <andytoshi> hebasto: i agree with that
+19:44:29 <sipa> so devil's advocate... there is probably a set of weird assumptions under which bitcoin currently can be proven secure, and which are not sufficient to prove schnorr/taproot secure
+19:44:41 <gmaxwell> Maybe it should instead explain the procedure someone should use to be more indistinguishable?  (making your common spend paths look exactly like other common spend paths on the network, by arranging them to be at the same depths)
+19:44:49 <jnewbery> Other good privacy advice would be make a 2-of-3 threshold the internal pubkey, rather than 3-of-3, if you think that 2-of-3 is more likely. But again, I don't think it's the BIP's place to enumerate all the ways to optimize privacy
+19:44:54 <andytoshi> well you could enumerate all the parts of bitcoin, observe that "taproot is secure" is not listed
+19:45:25 <sipa> andytoshi: sure, you can come up with obvious models that are stupid but for which this is true
+19:45:43 <gmaxwell> sipa: Strong assumption "Bitcoin is secure",   clearly bip-taproot is not secure under that assumption. :P
+19:45:48 <andytoshi> jnewbery: that advice comes with pretty tough tradeoffs (extra protocol complexity, data that needs to be stored offline and can't be recreated)
+19:45:54 <andytoshi> lack of accountability
+19:46:01 <sipa> my point is that if we want to state something about a comparison with existing assumptions, we should state those assumptions
+19:46:27 <andytoshi> "taproot requires only that DL is hard in secp256k1 and that sha256 is a RO"
+19:46:34 <gmaxwell> jnewbery: actually for many users the top key should probably be a 2 of 2. :P
+19:46:43 <jnewbery> andytoshi: sorry - I meant implemented as a 2-of-2 for the internal pubkey. But perhaps we're getting too into the weeds
+19:46:46 <gmaxwell> jnewbery: (in the case of a 2 of 3 policy)
+19:46:54 <andytoshi> jnewbery: ah! yep i see
+19:47:13 <gmaxwell> jnewbery: I think that is, in fact good advice. It should probably never be a 3 of 3 for a 3 of 3 policy.
+19:48:03 <gmaxwell> sipa and I were having a more abstract discussion about that recently, that almost always you should bubble up a more restrictive policy higher in your tree.
+19:48:04 <sipa> andytoshi: with tagged hashes it's probably possible to make it slightly weaker (like DL hard secp256k1 and the SHA256 *transform* is RO)
+19:48:14 <andytoshi> ah good point. bitcoin has no tagged hashes today.
+19:48:30 <andytoshi> (though it should :P)
+19:48:54 <jnewbery> I have a more general question: what kind of input are you looking for on the bips right now? I have some minor style nits. Would they be welcome as PRs or would they be a distraction?
+19:48:58 <hebasto> sipa: what is diff?
+19:49:10 <sipa> hebasto: ?
+19:49:26 <hebasto> sha256 is a RO vs SHA256 *transform* is R
+19:49:30 <hebasto> *RO
+19:49:30 <jonatack> Is someone compiling a todo action list from these sessions, or should we submit proposals in the Google forms? Assuming a bunch of issues/PRs may not be best here.
+19:49:40 <andytoshi> jnewbery: if they're PRs rather than issues i think that'd be welcome. though it'd be good to consolidate them if they're small
+19:49:45 <gmaxwell> jnewbery: if you look at recent changes to the bips, quite a few of them have been basically minor style nits. I'd say you should make them, just don't feel bad if you need to redo them again later after some other substantial changes were made.
+19:50:11 <aj> 10 minutes left, if anyone's been sitting on questions
+19:50:14 <sipa> if there are suggestions you have that you think need more discussion, open an issue (or if it's a big design question, even an ML thread)
+19:50:23 <sipa> hebasto: let me explain that after the meeting
+19:50:32 <hebasto> sipa: ok
+19:50:54 <sipa> at this point i'd like to avoid nits on the reference code
+19:50:55 <ariard> about comparison with bip116 and bip114, it's next week?
+19:51:19 <sipa> as i think getting the design fleshed out has priority, and at this point my reference branch should only function as clarification for the proposal itself
+19:51:39 <aj> ariard: yeah, the MAST stuff is script path spends, so that sounds right
+19:52:11 <ariard> aj: thnks holding mine then
+19:52:11 <sipa> are there any other questions/topics?
+19:52:21 <digi_james> I find MAST confusing as its not really an abstract syntax tree, but that's fine :)
+19:52:37 <jnewbery> Merklized alternative script tree, you mean?
+19:52:39 <aj> digi_james: "merklized alternative script tree" :)
+19:52:46 <andytoshi> lol
+19:52:55 <sipa> digi_james: note that bip-taproot never uses the name MAST (except when referring to an older proposal with that name)
+19:53:10 <andytoshi> digi_james: you're welcome to use simplicity if you want an abstract syntax tree. it is not deployed anywhere but that's fine, it will take you years to get up to speed enoguh to use it anyway ;)
+19:53:14 <digi_james> ha, sorry I thought it was abstract syntax tree all along
+19:53:33 <andytoshi> i think it was, historically
+19:53:39 <digi_james> right?
+19:53:42 <sipa> digi_james: the name MAST comes from roconnor, and referred to what has now become simplicity
+19:53:52 <aj> yeah, it was IF <hash> ELSE <other hash> ENDIF sort of
+19:54:02 <sipa> what merkle branched script proposals used from that was not the abstract syntax tree part at all, just the merkle :)
+19:54:10 <luke-jr> I thought it was jl
+19:54:30 <sipa> oh, this was years earlier
+19:54:32 <digi_james> Ok, so in that case the tree did encode syntax ...
+19:54:44 <digi_james> Sorry - thanks for the history lesson :)
+19:54:46 <instagibbs> russel -> jeremyrubin -> jl/maaku -> etc
+19:54:56 <instagibbs> anyways not important...
+19:55:09 <sipa> but in any case, i think the name MAST is wrong for what is included in bip-taproot, and it also doesn't use that name :)
+19:56:01 <gmaxwell> just retcon the term to be a "merkelized arbritary script tree"
+19:56:24 <sipa> 11:52:40 <@aj> digi_james: "merklized alternative script tree" :)
+19:56:29 <andytoshi> merkleized arbitrary structure of things ;)
+19:56:40 <ariard> but what bip-taproot doesn't hold as features compare to previous MAST proposals?
+19:57:03 <ariard> on the high-level without getting into details
+19:57:03 <andytoshi> ariard: ability to access the root (or other hashes) from within script is one
+19:57:11 <sipa> ariard: there was an earlier proposal that supported multiple tree leaves simultaneously
+19:57:13 <luke-jr> ariard: it's a merkle tree, but not of AST components
+19:57:43 <sipa> ariard: but there has never really been a concrete proposal that was called MAST that actually was a merkleized abstract syntax tree, apart from simplicity
+19:57:51 <ariard> andtyoshi: recursively executing another tree committed in one of the key included in a script?
+19:57:53 <sipa> (to the best of my knowledge)
+19:58:05 <andytoshi> ariard: yeah
+19:58:21 <andytoshi> so like, you can't (efficiently) use taproot to implement keytrees in some cases
+19:58:30 <andytoshi> like if you want to check 3 keytrees in a row or something
+19:58:38 <ariard> sipa: could we execute multiple tapscript with a future taproot upgrade ?
+19:58:40 <digi_james> ariard: Thinking of it, that seems pretty cool.
+19:58:43 <andytoshi> you can't just do <root> OP_CHECKSIG <root 2> OP_CHECKSIG etc
+19:58:55 <ariard> like leaf A || leaf B || leaf D
+19:59:00 <sipa> ariard: not in the same way; it can always be done using script instructions that add that functionality inside script
+19:59:16 <andytoshi> well, the choice that taproot makes has the nice property that it minimizes design surface
+19:59:21 <gmaxwell> andytoshi: or if you have a bag of keys and want to yank out multiple leaves.
+19:59:22 <andytoshi> which makes consensus easier to get :)
+19:59:32 <andytoshi> gmaxwell: ah yeah!
+19:59:37 <ariard> sipa: not with some kind of tail-call semantic or weird pubkey type?
+19:59:48 <sipa> so maybe this is the time to ask this: do people agree that the only semantical change discussed/considered in this meeting is the question of non-32-byte v1 segwit outlawed or not?
+19:59:49 <ariard> a bit hacky
+19:59:50 <digi_james> Hm, are there any advantages having multiple "roots" in a tapscript to vs just separate leafs?
+20:00:16 <instagibbs> another question if time: what was the consideration for putting the leaf version in the control block vs allowing different leaves to be different versions?
+20:00:21 <digi_james> In and AND construct, they have to be revealed anyhow, and with OR, may as well ad a tapleaf
+20:00:31 <sipa> instagibbs: because it has literally zero downsides :)
+20:00:52 <instagibbs> sipa, well, I can make some painfully obtuse design decisions otherwise ;)
+20:01:18 <instagibbs> fair enough
+20:01:18 <sipa> so specifically something that is not possible to do in the taproot structure is something like (1 of 2) AND (1 of 2) AND ... (repeats 64 times) ... (1 of 2)
+20:01:29 <sipa> it is easily possible as a script
+20:01:31 <gmaxwell> sipa: outlawed and or how it interacts with bech32.
+20:01:47 <sipa> gmaxwell: yeah
+20:01:54 <sipa> oh, bad example
+20:01:58 <gmaxwell> digi_james: I might not have understood your question, but with AND's of policies the cost of putting them in the tree directly is a combinitoric blowup.
+20:02:18 <aj> sipa: officially overtime now, shall we stop meetbot logging and leave it for regular chatting?
+20:02:23 <sipa> yeah
+20:02:26 <aj> #endmeeting

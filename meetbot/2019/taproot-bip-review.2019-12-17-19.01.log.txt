@@ -1,0 +1,118 @@
+19:01:05 <aj> #startmeeting
+19:01:05 <lightningbot> Meeting started Tue Dec 17 19:01:05 2019 UTC.  The chair is aj. Information about MeetBot at http://wiki.debian.org/MeetBot.
+19:01:05 <lightningbot> Useful Commands: #action #agreed #help #info #idea #link #topic.
+19:01:13 <aj> hey! last one!
+19:01:41 <michaelfolkson> A sequel planned for the new year? ;)
+19:02:27 <andytoshi> hiya
+19:02:35 <pyskell> hi
+19:04:40 <sipa> i have a tiny suggestion: instead of calling the (c[0] & 0xfe) the leaf version, and having weird requirements on its top bits, what baout calling (c[0] & 0x3e)/2 the leaf version, so that it's just a number from 0 through 31
+19:09:13 <michaelfolkson> Sounds reasonable. I don't think that change would cause confusion at this stage
+19:09:51 <sipa> i had difficulty explaining in my talk yesterday why the version number for tapscript is 0xc0 instead of just 0
+19:10:32 <michaelfolkson> Can you share your slides from yesterday? It might take a while for the video to go up
+19:10:38 <aj> doesn't that just make it hard to explain why there's a 0x32 and /2 constant instead of <<1 ?
+19:11:13 <sipa> maybe
+19:12:02 <sipa> just gave the link on twitter: https://prezi.com/view/AlXd19INd3isgt3SvW8g/
+19:12:10 <aj> michaelfolkson: i was thinking that maybe something focussed on adding test cases (and test vectors for bip-taproot/tapscript) could work...
+19:12:33 <michaelfolkson> sipa: Thanks
+19:12:35 <sipa> aj: yeah, that'd be a good idea
+19:13:27 <sipa> the slides don't contain that much; they're mostly word clouds to remind me of what to mention
+19:13:45 <aj> michaelfolkson: i think gmaxwell's suggested the idea of accompanying test cases with small patches to the code it's testing that would trigger the bug, so you can see why the test case is necessary... not quite sure how it'd work, but seems like it could be interesting
+19:15:03 <michaelfolkson> Yeah sounds interesting
+19:15:42 <michaelfolkson> Ok cool. So this is the wrap up Q&A. What needs to be covered? I have a couple of questions
+19:15:57 <sipa> shoot
+19:16:03 <andytoshi> can someone remind me - is this (and tomorrow) the last review session? or is thre one next week/next year
+19:16:23 <sipa> this week is the final week
+19:17:16 <michaelfolkson> We covered use cases in a previous week. What is the status of those? Does Blockstream have a toy implementation of Schnorr/Taproot in Liquid?
+19:18:02 <andytoshi> no, blockstream is waiting on Core so we can steal code :P
+19:18:22 <michaelfolkson> I'm assuming lots or people are waiting until there is a "reference implementation" on testnet before expending resources on use cases? People like BitGo, Bitfinex who have large multisig schemes
+19:18:31 <sipa> i believe so
+19:18:40 <sipa> and it's an unfortunate cyclic dependency
+19:19:23 <andytoshi> so, at blockstream our plan is to pull taproot into Elements as soon as there is a "reference implementation", and then we'll be able to spawn testnets for our own usage
+19:19:32 <andytoshi> if it would help deployment i think we could prioritize pulling it into liquid production
+19:19:44 <sipa> where we really need to focus on hammering out the specification, but most of the interesting applications will probably only be even discovered once there are production ready implementations
+19:19:51 <andytoshi> deployment/surrounding tooling development
+19:20:22 <michaelfolkson> And you're hoping that people will build new wallets for complex "smart contract" inheritance planning like use cases? No existing wallets are likely to go down this route?
+19:20:41 <sipa> michaelfolkson: i don't think so
+19:20:56 <michaelfolkson> Excluding Lightning for now because that will definitely take advantage naturally
+19:21:06 <sipa> complex use cases will benefit specialized applications that need them
+19:21:32 <sipa> i don't expect end-user wallets to expose any "develop your own smart spending policy!" features
+19:21:37 <aj> michaelfolkson: there's been some effort at doing a signet (kallewoof's signed testnet stuff) with taproot enabled but i don't think it's gotten very fair; as far as i know now of the proof-of-concept stuff beyond the optech taproot workshop code made it very far
+19:22:29 <andytoshi> michaelfolkson: so, liquid has support for covenants, and afaik nobody has taken it upon themselves to push this forward and implement this
+19:22:52 <andytoshi> part of this is that the entities in liquid are, as a group, less focused on custody and long-term planning than the rest of the ecosystem
+19:23:03 <michaelfolkson> I don't know if the inheritance planning use case has legs long term. I'm guessing it will eventually. I know you talked about this use case briefly on Noded podcast I think andytoshi
+19:23:19 <andytoshi> yes, but probably in the context of miniscript
+19:23:24 <andytoshi> which you can do in bitcoin today
+19:24:19 <michaelfolkson> But inheritance planning is one use case that could take advantage of the key aggregation of Schnorr too right
+19:24:40 <michaelfolkson> Not too many use cases I can think of that need those large multisig arrangements
+19:24:41 <andytoshi> right, yeah, it would make multisigs/threshold sigs more appealing because they would no longer be expensive
+19:26:21 <michaelfolkson> OK. So on Lightning. Did you guys look over the post from ZmnSCPxj on Lightning and Taproot?
+19:26:35 <michaelfolkson> https://lists.linuxfoundation.org/pipermail/lightning-dev/2019-December/002375.html
+19:26:38 <andytoshi> i didn't find time :(
+19:27:15 <aj> andytoshi: if you take a week off over xmas/new year, that's probably long enough for a first read? :)
+19:27:55 <andytoshi> yep :) there's maybe a 50% chance that i'll be able to do it then
+19:28:08 <andytoshi> but there are lots of things i'd like to use that week for
+19:28:26 <michaelfolkson> I didn't absorb all of it but it is great that there is sketched out planning on what to do if things take too long or don't happen at all
+19:28:36 <andytoshi> such as fixing my own wallet tooling to use psbt+miniscrip
+19:29:31 <kabaum> Are there any ideas on how to deploy taproot/tapscript/schnorr? Is it reasonable to believe that this will be less contentious than segwit? BIP8? BIP9? Something else?
+19:31:33 <michaelfolkson> The impression I get is that something like BIP148 is more likely than BIP9 but that discussion will be left to others and not the authors of Schnorr/Taproot in case it becomes controversial. Am I hot or cold? :)
+19:32:37 <sipa> i have no opinion on activation
+19:32:45 <michaelfolkson> It could get messy because it essentially sets a template for future upgrades too if it goes smoothly. Which is unfortunate and hopefully it doesn't
+19:33:23 <aj> the people who thought bip148 was too risky when it happened still think it's risky for the same reasons they did then; something like the mechanism BlueMatt proposed for the great consensus cleanup would be the other approach to bip148 i think. i think picking one or the other of thse is likely to be the most controversial part
+19:34:39 <aj> "hopefully it doesn't" -- hope that refers to the "get messy" part not the "goes smoothly" :)
+19:34:50 <michaelfolkson> I'm not aware of the mechanism for the great consensus cleanup. Is there a good resource?
+19:36:25 <michaelfolkson> Yeah that's what I meant aj :/
+19:37:22 <aj> https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2019-March/016714.html -- deployment section and last paragraph of discussion just prior to the reference implementation section
+19:37:53 <michaelfolkson> One other question I wanted to ask about was the section in Week 6 where there were questions posed on the upgrade paths and which upgrades would be best for various future possible upgrades
+19:38:42 <aj> ( https://github.com/ajtowns/taproot-review/blob/master/week-6.md#upgrade-paths )
+19:39:05 <michaelfolkson> Yeah we thought they were interesting questions and we struggled to answer them on the group call
+19:39:40 <michaelfolkson> Part of it was just not being familiar with the low level details of things like CHECKTEMPLATEVERIFY
+19:40:20 <sipa> i believe CTV wants to be usable in bare outputs for efficiency, which means it needs to use the NOP-redefinition approach
+19:41:22 <michaelfolkson> I can post a question on this on StackExchange for a more permanent resource
+19:41:31 <michaelfolkson> But I can't answer it
+19:41:38 <sipa> what is the question exactly?
+19:42:47 <michaelfolkson> Why those upgrade paths are listed in order from worst to best? ie the rationale for that order
+19:43:34 <aj> michaelfolkson: there isn't really a single best answer; i was thinking "of these, just use OP_SUCCESS would work fine". but you could do an unknown pubkey, so "<hash> OP_2 CHECKSIG"; you could have it be PUSHTEMPLATE instead of CHECKTEMPLATE via an OP_SUCCESS, and have to do an EQUALVERIFY or other check, etc
+19:43:59 <michaelfolkson> And then which would be best for the various possible future upgrades listed?
+19:45:58 <michaelfolkson> It requires an understanding of all those possible future upgrades so maybe too broad for a StackExchange question
+19:46:07 <aj> michaelfolkson: no method is "best" or "worst" they've got different tradeoffs and are appropriate at different times, the order's more least-specific to most-specific
+19:46:24 <michaelfolkson> Ah ok cool, thanks for the clarification
+19:46:44 <kanzure> will someone be writing a summary of all the review weeks
+19:47:47 <michaelfolkson> I was thinking of doing a Bitcoin Magazine article if someone (or multiple people) are willing to review it
+19:48:01 <michaelfolkson> Is that what you meant kanzure?
+19:48:22 <kanzure> maybe on the level of an optech email (pointing out specific technical details of interest), but sort of yes.
+19:48:47 <kanzure> alright, thanks.
+19:48:49 <devrandom> question re OP_CODESEPARATOR - it seems like the design of this opcode never supported any actual use cases.  should it be disabled, so we don't carry the baggage forward?  perhaps it could be redesigned and reintroduced in the future.
+19:48:55 <aj> michaelfolkson: ANYPREVOUT - unkonw pubkey; CHECKTEMPLATEVERIFY - op_success but unknown pubkey type /could/ work; extra opcodes - OP_SUCCESS; extend math opcodes - OP_SUCCESS or maybe taproot leaf version; commit to block hash - annex; simplicity - leaf version; graftroot or g'root, cross-input sig agg - want to change key path spends, so new segwit version or maybe key length -- those are my
+19:48:56 <aj> current answers anyway
+19:50:07 <aj> devrandom: https://github.com/NTumbleBit/NTumbleBit/blob/master/NTumbleBit/EscrowScriptBuilder.cs -- it's theoretically used in tumblebit, not sure how needed it is
+19:51:26 <kanzure> michaelfolkson: transcript of great consensus cleanup talk https://diyhpl.us/wiki/transcripts/bitcoin-core-dev-tech/2019-06-06-great-consensus-cleanup/
+19:52:05 <michaelfolkson> Thanks kanzure
+19:53:15 <michaelfolkson> I'm also going to try to organize a Hangout call for people to discuss what happened in the various study groups. A couple of people have expressed interest in such a call
+19:53:51 <michaelfolkson> I don't know if all groups made it to the end or not. We had a few drop out in our group
+19:54:05 <michaelfolkson> It seems some definitely did
+19:57:04 <aj> i think it'd be interesting to know how people went with the irc vs slack vs hangouts/zoom meetings too
+19:57:34 <kabaum> michaelfolkson: Same in our group. It's natural that people drop out. I'm surprised I managed to more or less go through with it, though I had fewer and fewer questions.
+19:58:49 <devrandom> I also worry about the interaction of OP_CODESEPARATOR and OP_SUCCESS
+19:58:49 <sipa> kabaum: it's reassuring that the drop in questions is partially because you just had fewer questions (and not purely because people gave up or so)
+19:59:23 <sipa> devrandom: if there is an OP_SUCCESSx anywhere, no execution happens, and thus OP_CODESEPARATOR is irrelevant in that cade
+19:59:55 <michaelfolkson> Our group just struggled with time commitments rather than any other negative reason for dropping out
+20:00:37 <devrandom> the use case I was thinking of: a signature is applied with OP_CODESEPARATOR, with the intent that another party prepends some additional code to the scriptSig at a later date
+20:01:09 <devrandom> if the other party prepends an OP_SUCCESS, the script will trivially succeeds, which might not have been the intention of the first party
+20:01:19 <sipa> devrandom: those semantics (the delegation one) are gone in the current bip-tapscript draft
+20:01:25 <kabaum> sipa: I can just speak for myself. My questions dropped because 1) the reading got harder and 2) I devoted less time
+20:01:43 <sipa> devrandom: all OP_CODESEPARATOR does is make signatures commit to the last executed OP_CODESEPARATOR
+20:02:06 <sipa> there is no scriptCode concept anymore (which used to be the OP_CODESEP-modulated executed script)
+20:02:34 <devrandom> sipa: OK.  with the delegation use case gone, is there any utility left?
+20:03:30 <sipa> devrandom: yes, making scripts whose signatures commit to the IF/THEN/ELSE branch taken during execution
+20:03:56 <devrandom> I see
+20:04:09 <sipa> i explained this in my talk yesterday ;)
+20:04:41 <michaelfolkson> The video is highly anticipated
+20:05:59 <michaelfolkson> Ok. It is 8pm. Anyone who wants to join that cross-group call, message me either here now or on the Slack later
+20:06:18 <michaelfolkson> Thanks all
+20:07:56 <kabaum> Thanks everyone. It's been a lot of fun and a wonderful learning experience! Special thanks to the organizers (aj, harding et al?)
+20:08:34 <michaelfolkson> Indeed. Great initiative, thanks for everyone's efforts. I learnt a lot
+20:08:42 <devrandom> sipa: I guess I missed a couple of crucial sentences ;)
+20:08:50 <sipa> devrandom: i know, it was long :)
+20:09:08 <sipa> i talked far longer than i had expected
+20:10:21 <andytoshi> thanks everyone! this was encouraging and really productive
+20:11:05 <aj> #endmeeting

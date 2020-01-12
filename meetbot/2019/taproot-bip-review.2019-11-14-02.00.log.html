@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>##taproot-bip-review log</title>
+<style type="text/css">
+/* For the .log.html */
+pre { /*line-height: 125%;*/
+      white-space: pre-wrap; }
+body { background: #f0f0f0; }
+
+body .tm  { color: #007020 }                      /* time */
+body .nk  { color: #062873; font-weight: bold }   /* nick, regular */
+body .nka { color: #007020; font-weight: bold }  /* action nick */
+body .ac  { color: #00A000 }                      /* action line */
+body .hi  { color: #4070a0 }                 /* hilights */
+/* Things to make particular MeetBot commands stick out */
+body .topic     { color: #007020; font-weight: bold }
+body .topicline { color: #000080; font-weight: bold }
+body .cmd       { color: #007020; font-weight: bold }
+body .cmdline  { font-weight: bold }
+
+</style>
+</head>
+
+<body>
+<pre><a name="l-1"></a><span class="tm">02:00:55</span><span class="nk"> &lt;aj&gt;</span> <span class="cmd">#startmeeting</span><span class="cmdline"></span>
+<a name="l-2"></a><span class="tm">02:00:55</span><span class="nk"> &lt;lightningbot&gt;</span> Meeting started Thu Nov 14 02:00:55 2019 UTC.  The chair is aj. Information about MeetBot at http://wiki.debian.org/MeetBot.
+<a name="l-3"></a><span class="tm">02:00:55</span><span class="nk"> &lt;lightningbot&gt;</span> Useful Commands: #action #agreed #help #info #idea #link #topic.
+<a name="l-4"></a><span class="tm">02:01:38</span><span class="nk"> &lt;aj&gt;</span> hey all, might be an abbreviated session this time
+<a name="l-5"></a><span class="tm">02:05:45</span><span class="nk"> &lt;instagibbs&gt;</span> hi
+<a name="l-6"></a><span class="tm">02:06:09</span><span class="nk"> &lt;fanquake&gt;</span> hi
+<a name="l-7"></a><span class="tm">02:09:12</span><span class="nk"> &lt;instagibbs&gt;</span> did we run out of topics for this week or am i disconnected
+<a name="l-8"></a><span class="tm">02:09:58</span><span class="nk"> &lt;aj&gt;</span> doesn't seem like anyone's got any questions
+<a name="l-9"></a><span class="tm">02:10:01</span><span class="nk"> &lt;fanquake&gt;</span> instagibbs I'm not seeing any chatter either
+<a name="l-10"></a><span class="tm">02:11:03</span><span class="nk"> &lt;instagibbs&gt;</span> were they any lingering disccusions from last QA? I missed t
+<a name="l-11"></a><span class="tm">02:13:12</span><span class="nk"> &lt;aj&gt;</span> there was a fair bit of discussion about upgrade stuff -- OP_SUCCESS and annex things
+<a name="l-12"></a><span class="tm">02:16:54</span><span class="nk"> &lt;aj&gt;</span> there's also a few suggestions/PRs along the lines of improving motivation/rationale
+<a name="l-13"></a><span class="tm">02:17:45</span><span class="nk"> &lt;instagibbs&gt;</span> i found the rationale helped a lot with disambiguating the meaning of the text, especially successx section
+<a name="l-14"></a><span class="tm">02:17:55</span><span class="nk"> &lt;instagibbs&gt;</span> might mean a slight cleanup warranted
+<a name="l-15"></a><span class="tm">02:21:17</span><span class="nk"> &lt;aj&gt;</span> yeah, PRs welcome :)
+<a name="l-16"></a><span class="tm">02:21:38</span><span class="nk"> &lt;instagibbs&gt;</span> the only thing bothering me really is the definition of codeseparator_position, if we get 4GB+ blocks it is undefined what happens when the marked position is beyond 2^32 :P
+<a name="l-17"></a><span class="tm">02:22:13</span><span class="nk"> &lt;instagibbs&gt;</span> now that scripts are unbounded in size, only implicitly bounded by blockweight
+<a name="l-18"></a><span class="tm">02:22:22</span><span class="nk"> &lt;aj&gt;</span> we already bumped that from 16 bits when the 10k script length limit got dropped
+<a name="l-19"></a><span class="tm">02:28:15</span><span class="nk"> &lt;aj&gt;</span> anyway, big blocks would be a hard fork, so if we made it more of a hard fork we could add another spend_type bit to allow for encoding the codesep pos via compactsize (if 64bit numbers are enough for you) or similar
+<a name="l-20"></a><span class="tm">02:28:42</span><span class="nk"> &lt;aj&gt;</span> or we could reintroduce a script size limit that's more than 4M but less than 4G
+<a name="l-21"></a><span class="tm">02:31:15</span><span class="nk"> &lt;instagibbs&gt;</span> yes was not a particularly pressing/serious concern
+<a name="l-22"></a><span class="tm">02:32:48</span><span class="nk"> &lt;aj&gt;</span> any more progress with the multisig tree jupyter notebook?
+<a name="l-23"></a><span class="tm">02:33:42</span><span class="nk"> &lt;instagibbs&gt;</span> no sorry :) it works, dies a combinatoric death at 21-of-30
+<a name="l-24"></a><span class="tm">02:34:31</span><span class="nk"> &lt;instagibbs&gt;</span> vast majority of the computation is computing the musig pubkeys, someone noted that the tweak could just be the superset of all n signers, might bring down the computation
+<a name="l-25"></a><span class="tm">02:38:17</span><span class="nk"> &lt;aj&gt;</span> any thoughts on whether it makes more sense to stay below ~30 signers, or go unaccountable with threshold-musig, or use checksigadd or similar script?
+<a name="l-26"></a><span class="tm">02:39:57</span><span class="nk"> &lt;aj&gt;</span> ah, i see there's a magazine article where samson mow talks about having "hundreds" of functionaries
+<a name="l-27"></a><span class="tm">02:41:13</span><span class="nk"> &lt;instagibbs&gt;</span> there's a scheme for quasi-accountability, but I'd have to defer to andytoshi for that
+<a name="l-28"></a><span class="tm">02:42:31</span><span class="nk"> &lt;aj&gt;</span> i guess if you have that many, one approach might be to group them into sets of 5 and allow unaccountable 4/5 musig between them, and do checksigadd to require 18/20 groups to sign or similar for between 72 and 92 of 100 multisig
+<a name="l-29"></a><span class="tm">02:43:37</span><span class="nk"> &lt;aj&gt;</span> there's a scheme where the honest participants in the multisig can track who the other co-signers were, so long as you have some honest participants
+<a name="l-30"></a><span class="tm">02:44:49</span><span class="nk"> &lt;instagibbs&gt;</span> anyways, that's Future Work with threshold
+<a name="l-31"></a><span class="tm">02:46:25</span><span class="nk"> &lt;aj&gt;</span> okay, about time for me to put the laptop away, so i guess we'll call it
+<a name="l-32"></a><span class="tm">02:46:29</span><span class="nk"> &lt;aj&gt;</span> <span class="cmd">#endmeeting</span><span class="cmdline"></span></pre>
+</body></html>
